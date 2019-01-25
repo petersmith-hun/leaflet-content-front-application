@@ -1,0 +1,14 @@
+target/
+.settings
+.project
+.classpath
+.idea
+*.class
+*.iml
+*.jar
+*.csv
+*.mwb.bak
+.springBeans
+*/docs/*
+logs/
+/web/src/main/resources/application.yml
