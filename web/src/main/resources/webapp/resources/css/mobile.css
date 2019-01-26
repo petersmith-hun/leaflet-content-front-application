@@ -1,0 +1,222 @@
+@media all and (max-width: 900px) {
+	#mainMenu {
+		display: none;
+		position: fixed;
+		top: 50px;
+		width: 100%;
+		z-index: 9;
+		background-color: #fff;
+		padding-top: 20px;
+		border: 1px solid #ccc;
+	}
+	
+	#mainMenu li {
+		float: none !important;
+		padding-bottom: 10px;
+	}
+	
+	#mobileMenuBtn {
+		display: inline-block;
+		margin-top: 8px;
+		font-size: 22px;
+		margin-right: 20px;
+		border: 1px solid #ccc;
+		padding: 0px 10px;
+		border-radius: 5px;
+		cursor: pointer;
+		z-index: 10;
+		position: relative;
+	}
+	
+	#slider {
+		display: none;
+	}
+	
+	.mostReadTitle {
+		font-size: 18px !important;
+	}
+	
+	.entryInfoBar {
+		text-align: right;
+	}
+	
+	.entryInfoBar, .entryPrologue {
+		float: none;
+		clear: both;
+		width: 100%;
+	}
+	
+	.entryInfoBar span {
+		
+		float: none;
+		display: inline-block;
+		width: auto;
+		height: 40px;
+		font-size: 20px !important;
+		border: none;
+		padding: 0px 2px;
+		margin: 0px;
+	}
+	
+	.numRead {
+		width: 40px !important;
+		background-position: left -4px;
+		background-size: 70%;
+	}
+	
+	.numComment {
+		width: 40px !important;
+		background-position: left top;
+		background-size: 60%;
+	}
+	
+	.vote {
+		display: inline-block !important;
+		width: 40% !important;
+		height: 100px;
+		margin-right: 10px;
+		background-position: -15px center;
+		background-repeat: no-repeat;
+		border: 1px solid #ccc !important;
+		border-radius: 5px !important;
+		text-align: right;
+		padding: 0px !important;
+		margin: auto;
+	}
+	
+	.voteStatus {
+		border: 1px solid #ccc !important;
+		vertical-align: top;
+		padding: 8px 5px 0px 5px !important;
+		height: 32px !important;
+		display: inline-block;
+	}
+	
+	.vote a {
+		vertical-align: bottom;
+		display: inline-block;
+		width: 100%;
+		height: 100%;
+		text-align: right;
+	}
+
+	.vote a span {
+		top: 6px;
+		right: 12px;
+		padding: 0px !important;
+		display: inline !important;
+	}
+	
+	#voteControl {
+		text-align: center;
+	}
+	
+	.forms label, .forms input, .forms textarea {
+		display: block;
+		margin: auto;
+		text-align: center;
+		width: 90%;
+	}
+	
+	.forms textarea {
+		margin-bottom: 10px;
+	}
+	
+	.forms label {
+		padding: 0px;
+	}
+	
+	#footer .footerColumn {
+		width: 50%;
+	}
+	
+	#footer .footerColumn:nth-child(3) {
+		clear: both;
+	}
+	
+	.categoryList {
+		width: 100%;
+		float: none;
+	}
+	
+	#entryList {
+		width: 100%;
+		float: none;	
+	}
+	
+	#filter {
+		display: block;
+	}
+	
+	.categoryList {
+		display: none;
+	}
+	
+	.cmOpen {
+		display: none;
+	}
+	
+	.compactMenu {
+		height: auto;
+		overflow: auto;
+	}
+	
+	.voteData .control {
+		display: block;
+		width: 100%;
+		text-align: center;
+		margin-top: 5px;
+	}
+}
+
+@media all and (max-width: 480px) {
+	
+	#tags {
+		text-align: center;
+	}
+	
+	#tags .tag {
+		margin-top: 5px;
+	}
+	
+	.readMoreBtn {
+		float: none;
+		text-align: center;
+		margin: auto;
+		border-radius: 0px;
+	}
+	
+	#footer .footerColumn {
+		width: 100%;
+		float: none;
+	}
+	
+	.comment .header .date {
+		float: none;
+	}
+	
+	.comment .header {
+		font-size: 12px;
+	}
+	
+	#tagcloudContainer {
+		display: none;
+	}
+	
+	.voteData span {
+		display: block !important;
+		width: 100% !important;
+		margin-bottom: 5px;
+		text-align: center;
+		padding: 0px !important;
+	}
+	
+	.voteData .control a {
+		margin: 0px 5px 5px 5px !important;
+		display: block;
+	}
+	
+	#comments.user .control a {
+		margin: 5px 0px !important;
+	}
+}

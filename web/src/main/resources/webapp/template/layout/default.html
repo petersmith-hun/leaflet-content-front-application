@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>CHANGEME</title>
+        <meta name="description" content="CHANGEME" />
+        <meta name="keywords" content="CHANGEME" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <meta property="og:image" content="CHANGEME" />
+        <meta property="og:title" content="CHANGEME" />
+        <meta property="og:description" content="CHANGEME" />
+        <meta property="og:url" content="CHANGEME" />
+
+        <link rel="stylesheet" type="text/css" href="/css/site.css" th:href="@{/css/site.css}" />
+        <link rel="stylesheet" type="text/css" href="/css/mobile.css" th:href="@{/css/mobile.css}" />
+
+        <script type="text/javascript" src="/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
+        <script type="text/javascript" src="/js/site.js" th:src="@{/js/site.js}"></script>
+        <script type="text/javascript" src="/js/engine_basics.js" th:src="@{/js/engine_basics.js}"></script>
+        <script type="text/javascript" src="/js/tagcloud.jquery.min.js" th:src="@{/js/tagcloud.jquery.min.js}"></script>
+        <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#flash_bg').click(function() {
+                    $('#flash').hide();
+                });
+
+                $('.message').click(function() {
+                    $('#flash').hide();
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.scroll-to-top').click(function() {
+                    $('html, body').animate({ scrollTop: 0 }, 500);
+                });
+            });
+        </script>
+    </head>
+    <body>
+
+        <!-- TODO insert Google tracking code here -->
+        <!-- TODO insert flash here -->
+
+        <!-- header section -->
+        <div id="header">
+            <a id="logo" href="/"><img src="/img/logo.png" th:src="@{/images/logo.png}" /></a>
+            <ul class="" id="mainMenu">
+                <li class="">
+                    <a href="/" class="">Kezdőlap</a>
+                </li>
+                <li class="">
+                    <a href="/bemutatkozas" class="">Bemutatkozás</a>
+                </li>
+                <li class="">
+                    <a href="/blog" class="">Blog</a>
+                </li>
+                <li class="">
+                    <a href="/kapcsolat" class="">Kapcsolat</a>
+                <li style="float: right;">
+                    <a href="/regisztracio">Regisztráció</a>
+                </li>
+                <li style="float: right;">
+                    <a href="/belepes">Belépés</a>
+                </li>
+            </ul>
+            <span id="mobileMenuBtn">Menü</span>
+        </div>
+
+        <!-- content section -->
+        <div id="content">
+            <th:block layout:fragment="content"/>
+        </div>
+
+        <!-- footer section -->
+        <div id="footer">
+            <div id="footerWrapper">
+                <div class="footerColumn">
+                    <p class="footerColumnTitle">PSProg informatikai blog</p>
+                    <ul class="footerColumnData">
+                        <li>&copy; Kovács Péter, 2019</li>
+                        <li>&nbsp;</li>
+                        <li>Powered by <a href="https://spring.io/">Spring Framework</a></li>
+                        <li>Managed by <a href="https://github.com/petersmith-hun/leaflet-backend">Leaflet</a></li>
+                    </ul>
+                </div>
+                <div class="footerColumn">
+                    <p class="footerColumnTitle">Oldaltérkép</p>
+                    <ul class="footerColumnData" id="">
+                        <li class="">
+                            <a href="/" class="">Kezdőlap</a>
+                        </li>
+                        <li class="">
+                            <a href="/bemutatkozas" class="">Bemutatkozás</a>
+                        </li>
+                        <li class="">
+                            <a href="/blog" class="">Blog</a>
+                        </li>
+                        <li class="">
+                            <a href="/kapcsolat" class="">Kapcsolat</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footerColumn">
+                    <p class="footerColumnTitle">Legfrissebb bejegyzések</p>
+                    <ul class="footerColumnData">
+                        <li>
+                            <a href="/blog/bejegyzes/lightweight-dependency-injection-a-dagger-hasznalata-android-alatt/59">Lightweight dependency injection: a Dagger használata Android alatt</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footerColumn">
+                    <p class="footerColumnTitle">Kapcsolat</p>
+                    <ul class="footerColumnData">
+                        <li>email: <a href="mailto:CHANGEME">CHANGEME</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="clear">&nbsp;</div>
+            <a href="javascript:void(0)" class="scroll-to-top">
+                <div id="toTopBar">&nbsp;</div>
+            </a>
+        </div>
+    </body>
+</html>

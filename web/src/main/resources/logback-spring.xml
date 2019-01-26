@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- use base logback configuration provided by Boot -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+    <!-- overwrite default logging settings -->
+    <property name="root.level.console" value="OFF" />
+    <property name="root.level.file" value="OFF" />
+
+    <!-- prepare TLP properties -->
+    <springProperty name="tlp.enabled" source="tlp.enabled" />
+    <springProperty name="tlp.host" source="bridge.clients.tlp.host-url" />
+    <springProperty name="tlp.appID" source="tlp.app-id" />
+
+    <!-- configure TLP appender -->
+    <appender name="TLP" class="hu.psprog.leaflet.tlp.appender.TinyLogProcessorAppender">
+        <appID>${tlp.appID}</appID>
+        <enabled>${tlp.enabled}</enabled>
+        <host>${tlp.host}</host>
+    </appender>
+    <appender name="ASYNC-TLP" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="TLP" />
+    </appender>
+
+    <!-- set logging by profile -->
+    <springProfile name="default,development,local,maintenance">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+    <springProfile name="production">
+        <root level="INFO">
+            <appender-ref ref="FILE" />
+            <appender-ref ref="ASYNC-TLP" />
+        </root>
+    </springProfile>
+</configuration>
