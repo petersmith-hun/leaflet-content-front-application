@@ -2,8 +2,11 @@ package hu.psprog.leaflet.lcfa.web.config;
 
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.web.filter.RequestContextFilter;
 
 /**
@@ -12,7 +15,17 @@ import org.springframework.web.filter.RequestContextFilter;
  * @author Peter Smith
  */
 @Configuration
+@ComponentScan("hu.psprog.leaflet.translation.adapter") // TODO fix a4tms (no spring.factories)
 public class ApplicationContextConfig {
+
+    @Bean
+    public AsyncTaskExecutor contentAdapterAsyncTaskExecutor() {
+
+        SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
+        simpleAsyncTaskExecutor.setTaskDecorator(new RequestContextAwareTaskDecorator());
+
+        return simpleAsyncTaskExecutor;
+    }
 
     @Bean
     public RequestContextFilter requestContextFilter() {

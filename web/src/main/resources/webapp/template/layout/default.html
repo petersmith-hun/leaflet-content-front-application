@@ -2,9 +2,9 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>CHANGEME</title>
-        <meta name="description" content="CHANGEME" />
-        <meta name="keywords" content="CHANGEME" />
+        <title th:text="${seo.pageTitle}">placeholder:title</title>
+        <meta name="description" th:content="${seo.metaDescription}" />
+        <meta name="keywords" th:content="${seo.metaKeywords}" />
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -48,23 +48,9 @@
         <!-- header section -->
         <div id="header">
             <a id="logo" href="/"><img src="/img/logo.png" th:src="@{/images/logo.png}" /></a>
-            <ul class="" id="mainMenu">
-                <li class="">
-                    <a href="/" class="">Kezdőlap</a>
-                </li>
-                <li class="">
-                    <a href="/bemutatkozas" class="">Bemutatkozás</a>
-                </li>
-                <li class="">
-                    <a href="/blog" class="">Blog</a>
-                </li>
-                <li class="">
-                    <a href="/kapcsolat" class="">Kapcsolat</a>
-                <li style="float: right;">
-                    <a href="/regisztracio">Regisztráció</a>
-                </li>
-                <li style="float: right;">
-                    <a href="/belepes">Belépés</a>
+            <ul class="" id="mainMenu" th:if="${headerMenu != null}">
+                <li class="" th:each="item : ${headerMenu}">
+                    <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
                 </li>
             </ul>
             <span id="mobileMenuBtn">Menü</span>
@@ -88,32 +74,23 @@
                     </ul>
                 </div>
                 <div class="footerColumn">
-                    <p class="footerColumnTitle">Oldaltérkép</p>
-                    <ul class="footerColumnData" id="">
-                        <li class="">
-                            <a href="/" class="">Kezdőlap</a>
-                        </li>
-                        <li class="">
-                            <a href="/bemutatkozas" class="">Bemutatkozás</a>
-                        </li>
-                        <li class="">
-                            <a href="/blog" class="">Blog</a>
-                        </li>
-                        <li class="">
-                            <a href="/kapcsolat" class="">Kapcsolat</a>
+                    <p class="footerColumnTitle" th:text="#{common.sitemap}">placeholder:sitemap</p>
+                    <ul class="footerColumnData" th:if="${footerMenu != null}">
+                        <li th:each="item : ${footerMenu}">
+                            <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
                         </li>
                     </ul>
                 </div>
                 <div class="footerColumn">
-                    <p class="footerColumnTitle">Legfrissebb bejegyzések</p>
-                    <ul class="footerColumnData">
-                        <li>
-                            <a href="/blog/bejegyzes/lightweight-dependency-injection-a-dagger-hasznalata-android-alatt/59">Lightweight dependency injection: a Dagger használata Android alatt</a>
+                    <p class="footerColumnTitle" th:text="#{common.latest}">placeholder:latest</p>
+                    <ul class="footerColumnData" th:if="${latest != null}">
+                        <li th:each="entry : ${latest}">
+                            <a href="#" th:href="@{'/blog/bejegyzes/' + __${entry.link}__}" th:text="${entry.title}">placeholder:title</a>
                         </li>
                     </ul>
                 </div>
                 <div class="footerColumn">
-                    <p class="footerColumnTitle">Kapcsolat</p>
+                    <p class="footerColumnTitle" th:text="#{common.contact}">placeholder:contact</p>
                     <ul class="footerColumnData">
                         <li>email: <a href="mailto:CHANGEME">CHANGEME</a></li>
                     </ul>

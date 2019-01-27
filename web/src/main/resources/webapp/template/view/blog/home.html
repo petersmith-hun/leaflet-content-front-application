@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+    <div id="entries" layout:fragment="content">
+        <p id="filter"><a href="javascript:void(0)">Szűrők megjelenítése</a></p> <!-- TODO fix this -->
+        <div id="entryList" th:if="${entries != null}">
+            <div th:each="entry : ${entries}">
+                <div class="entryBox">
+                    <h1><span th:text="${entry.title}">placeholder:title</span></h1>
+                    <div class="entryInfoBar">
+                        <span class="small" th:text="${entry.author.name}">placeholder:author</span>
+                        <span class="small" th:text="${entry.creationDate}">placeholder:date</span>
+                    </div>
+                    <div class="entryPrologue">
+                        <div style="padding: 0px 20px;" th:text="${entry.prologue}">placeholder:prologue</div>
+                        <a href="#" th:href="@{/blog/bejegyzes/__${entry.link}__}">
+                            <div class="readMoreBtn">Tovább a cikkhez</div>
+                        </a>
+                        <div class="clear">&nbsp;</div>
+                    </div>
+                </div>
+                <div class="clear">&nbsp;</div>
+            </div>
+            <div class="clear">&nbsp;</div>
+            <p class="paginator" th:if="${pagination != null}">
+                <span class="prev" th:if="${pagination.hasPrevious}">
+                    <a href="#" th:href="@{/blog/bejegyzesek/__${pagination.pageNumber - 1}__}" rel="prev">&lt;&lt;</a>
+                </span>
+                <span class="numbers" th:if="${pagination.pageCount > 1}">
+				    <!--<span class="current">1</span> TODO fix current marker-->
+                    <span th:each="pageNum : ${#numbers.sequence(1, pagination.pageCount)}">
+                        <a href="#" th:href="@{/blog/bejegyzesek/__${pageNum}__}" th:text="${pageNum}">placeholder:pagenum</a>
+                    </span>
+                </span>
+                <span class="next" th:if="${pagination.hasNext}">
+                    <a href="#" th:href="@{/blog/bejegyzesek/__${pagination.pageNumber + 1}__}" rel="next">&gt;&gt;</a>
+                </span>
+            </p>
+        </div>
+        <div class="clear">&nbsp;</div>
+    </div>
+</body>
+</html>
