@@ -14,6 +14,7 @@ public enum ModelField {
     LIST_ENTRIES("entries"),
     LIST_TAGS("tags"),
 
+    CURRENT_PAGE_NUMBER("currentPageNumber"),
     PAGINATION("pagination");
 
     private String fieldName;

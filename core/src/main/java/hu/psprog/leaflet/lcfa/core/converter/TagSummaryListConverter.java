@@ -3,6 +3,7 @@ package hu.psprog.leaflet.lcfa.core.converter;
 import hu.psprog.leaflet.api.rest.response.tag.TagDataModel;
 import hu.psprog.leaflet.api.rest.response.tag.TagListDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.TagSummary;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,13 @@ import java.util.stream.Collectors;
 @Component
 public class TagSummaryListConverter implements Converter<TagListDataModel, List<TagSummary>> {
 
+    private LinkAliasGenerator linkAliasGenerator;
+
+    @Autowired
+    public TagSummaryListConverter(LinkAliasGenerator linkAliasGenerator) {
+        this.linkAliasGenerator = linkAliasGenerator;
+    }
+
     @Override
     public List<TagSummary> convert(TagListDataModel source) {
         return source.getTags().stream()
@@ -25,6 +33,10 @@ public class TagSummaryListConverter implements Converter<TagListDataModel, List
     }
 
     private TagSummary createTagSummary(TagDataModel tagDataModel) {
-        return new TagSummary(tagDataModel.getId(), tagDataModel.getName());
+        return TagSummary.builder()
+                .id(tagDataModel.getId())
+                .name(tagDataModel.getName())
+                .alias(linkAliasGenerator.generateAlias(tagDataModel.getName()))
+                .build();
     }
 }

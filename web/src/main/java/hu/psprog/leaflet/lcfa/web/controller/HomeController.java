@@ -7,8 +7,11 @@ import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 /**
  * Controller implementation for home page.
@@ -17,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Peter Smith
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping({"/", "/{page}"})
 public class HomeController {
 
     private static final String VIEW_BLOG_HOME = "view/blog/home";
@@ -33,21 +36,24 @@ public class HomeController {
     }
 
     /**
-     * GET /
+     * GET /[{page}]
      * Renders home page.
      *
+     * @param optionalPageNumber number of page to be requested (optional, defaults to DEFAULT_PAGE_NUMBER)
      * @return populated {@link ModelAndView}
      */
     @GetMapping
-    public ModelAndView getHomePage() {
+    public ModelAndView getHomePage(@PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
 
-        HomePageContent homePageContent = blogContentFacade.getHomePageContent(DEFAULT_PAGE_NUMBER);
+        int pageNumber = optionalPageNumber.orElse(DEFAULT_PAGE_NUMBER);
+        HomePageContent homePageContent = blogContentFacade.getHomePageContent(pageNumber);
 
         return modelAndViewFactory.createForView(VIEW_BLOG_HOME)
-                .withAttribute(ModelField.LIST_ENTRIES.getFieldName(), homePageContent.getEntries())
-                .withAttribute(ModelField.LIST_CATEGORIES.getFieldName(), homePageContent.getCategories())
-                .withAttribute(ModelField.LIST_TAGS.getFieldName(), homePageContent.getTags())
-                .withAttribute(ModelField.PAGINATION.getFieldName(), homePageContent.getPagination())
+                .withAttribute(ModelField.LIST_ENTRIES, homePageContent.getEntries())
+                .withAttribute(ModelField.LIST_CATEGORIES, homePageContent.getCategories())
+                .withAttribute(ModelField.LIST_TAGS, homePageContent.getTags())
+                .withAttribute(ModelField.PAGINATION, homePageContent.getPagination())
+                .withAttribute(ModelField.CURRENT_PAGE_NUMBER, pageNumber)
                 .build();
     }
 }

@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.domain.content;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -10,12 +10,13 @@ import lombok.ToString;
  *
  * @author Peter Smith
  */
-@AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class CategorySummary {
 
     private Long id;
     private String title;
+    private String alias;
 }

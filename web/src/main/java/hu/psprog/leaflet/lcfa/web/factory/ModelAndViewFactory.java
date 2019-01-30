@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.factory;
 
+import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -53,6 +54,18 @@ public class ModelAndViewFactory {
          */
         public ModelAndViewWrapper withAttribute(String key, Object value) {
             modelAndView.addObject(key, value);
+            return this;
+        }
+
+        /**
+         * Adds an attribute to the {@link ModelAndView}..
+         *
+         * @param key attribute key as enum of type {@link ModelField}, extracts field name
+         * @param value attribute value
+         * @return current ModelAndViewWrapper instance
+         */
+        public ModelAndViewWrapper withAttribute(ModelField key, Object value) {
+            modelAndView.addObject(key.getFieldName(), value);
             return this;
         }
 

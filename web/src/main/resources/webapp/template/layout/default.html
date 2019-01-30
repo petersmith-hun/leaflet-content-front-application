@@ -53,7 +53,7 @@
                     <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
                 </li>
             </ul>
-            <span id="mobileMenuBtn">Menü</span>
+            <span id="mobileMenuBtn" th:text="#{common.menu}">placeholder:menu</span>
         </div>
 
         <!-- content section -->
@@ -85,7 +85,7 @@
                     <p class="footerColumnTitle" th:text="#{common.latest}">placeholder:latest</p>
                     <ul class="footerColumnData" th:if="${latest != null}">
                         <li th:each="entry : ${latest}">
-                            <a href="#" th:href="@{'/blog/bejegyzes/' + __${entry.link}__}" th:text="${entry.title}">placeholder:title</a>
+                            <a href="#" th:href="@{/article/__${entry.link}__}" th:text="${entry.title}">placeholder:title</a>
                         </li>
                     </ul>
                 </div>
