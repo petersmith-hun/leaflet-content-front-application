@@ -65,7 +65,7 @@
         <div id="footer">
             <div id="footerWrapper">
                 <div class="footerColumn">
-                    <p class="footerColumnTitle">PSProg informatikai blog</p>
+                    <p class="footerColumnTitle" th:text="${@environment.getProperty('page-config.sitename')}">placeholder:sitename</p>
                     <ul class="footerColumnData">
                         <li>&copy; Kovács Péter, 2019</li>
                         <li>&nbsp;</li>
@@ -92,7 +92,8 @@
                 <div class="footerColumn">
                     <p class="footerColumnTitle" th:text="#{common.contact}">placeholder:contact</p>
                     <ul class="footerColumnData">
-                        <li>email: <a href="mailto:CHANGEME">CHANGEME</a></li>
+                        <li>email: <a href="#" th:href="'mailto:' + ${@environment.getProperty('page-config.contact-mail')}"
+                                      th:text="${@environment.getProperty('page-config.contact-mail')}">placeholder:contact_mail</a></li>
                     </ul>
                 </div>
             </div>
