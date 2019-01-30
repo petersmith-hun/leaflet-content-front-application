@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.config;
 
+import hu.psprog.leaflet.lcfa.web.interceptor.CommonPageDataInterceptor;
 import hu.psprog.leaflet.lcfa.web.interceptor.ModelAndViewDebuggerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -18,17 +19,21 @@ import java.util.Optional;
 public class WebMVCConfiguration implements WebMvcConfigurer {
 
     private WebAppResources webAppResources;
+    private CommonPageDataInterceptor commonPageDataInterceptor;
+
+    @Autowired
     private Optional<ModelAndViewDebuggerInterceptor> modelAndViewDebuggerInterceptor;
 
     @Autowired
-    public WebMVCConfiguration(WebAppResources webAppResources, Optional<ModelAndViewDebuggerInterceptor> modelAndViewDebuggerInterceptor) {
+    public WebMVCConfiguration(WebAppResources webAppResources, CommonPageDataInterceptor commonPageDataInterceptor) {
         this.webAppResources = webAppResources;
-        this.modelAndViewDebuggerInterceptor = modelAndViewDebuggerInterceptor;
+        this.commonPageDataInterceptor = commonPageDataInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         modelAndViewDebuggerInterceptor.ifPresent(registry::addInterceptor);
+        registry.addInterceptor(commonPageDataInterceptor);
     }
 
     @Override

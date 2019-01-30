@@ -28,5 +28,9 @@
             <groupId>hu.psprog.leaflet</groupId>
             <artifactId>backend-rest-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 </project>

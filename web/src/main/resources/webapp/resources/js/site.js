@@ -1,9 +1,3 @@
-$(function() {
-	$(".rslides").responsiveSlides({
-		timeout: 8000
-	});
-});
-
 $(document).ready(function() {
 	$('#mobileMenuBtn').click(function() {
 		$('#mainMenu').toggle();

@@ -48,6 +48,7 @@
         <commons.lang.version>3.8.1</commons.lang.version>
         <thymeleaf.extras.version>3.0.4.RELEASE</thymeleaf.extras.version>
         <thymeleaf.layout-dialect.version>2.3.0</thymeleaf.layout-dialect.version>
+        <lombok.version>1.18.4</lombok.version>
 
         <!-- Spring Boot overrides -->
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
@@ -214,6 +215,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
