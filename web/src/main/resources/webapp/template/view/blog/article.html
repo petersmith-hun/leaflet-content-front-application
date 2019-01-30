@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+<div id="entries" layout:fragment="content">
+
+    <th:block th:insert="fragment/common.html :: filter" />
+
+    <div id="entryList">
+        <div class="entryBox">
+            <h1><span th:text="${article.title}">placeholder:title</span></h1>
+            <div class="entryInfoBar">
+                <span class="small" th:text="${article.author.name}">placeholder:author</span>
+                <span class="small" th:text="${article.creationDate}">placeholder:date</span>
+            </div>
+            <div class="entryPrologue">
+                <div style="padding: 0px 20px;">
+                    <th:block th:text="${article.content}" />
+                    <div id="tags">
+                        <span class="tag" th:each="tag : ${article.tags}">
+                            <a href="#" th:href="@{/tag/__${tag.id}__/__${tag.alias}__}" th:text="${tag.name}">placeholder:tag</a>
+                        </span>
+                    </div>
+
+                    <!-- TODO add attachments -->
+                    <!-- TODO add comments -->
+
+                </div>
+                <div class="clear">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <div class="clear">&nbsp;</div>
+</div>
+</body>
+</html>
