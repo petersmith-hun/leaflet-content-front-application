@@ -49,7 +49,7 @@ abstract class AbstractParallelContentRequestAdapter<T, P> implements ContentReq
      * Actual calls should be declared as a map of a {@link CallType} (for differentiating the calls)
      * and a {@link Callable} implementation with a return type of {@link BaseBodyDataModel}.
      *
-     * @param contentRequestParameter additional request parameters (can be null)
+     * @param contentRequestParameter additional request parameter object (can be null)
      * @return Map of backend calls
      */
     abstract Map<CallType, Callable<BaseBodyDataModel>> callers(P contentRequestParameter);
