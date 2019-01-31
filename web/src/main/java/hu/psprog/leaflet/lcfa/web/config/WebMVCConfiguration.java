@@ -2,8 +2,14 @@ package hu.psprog.leaflet.lcfa.web.config;
 
 import hu.psprog.leaflet.lcfa.web.interceptor.CommonPageDataInterceptor;
 import hu.psprog.leaflet.lcfa.web.interceptor.ModelAndViewDebuggerInterceptor;
+import hu.psprog.leaflet.lcfa.web.thymeleaf.markdown.support.ExtendedLayoutDialect;
+import nz.net.ultraq.thymeleaf.LayoutDialect;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -42,5 +48,21 @@ public class WebMVCConfiguration implements WebMvcConfigurer {
                 .forEach(resource -> registry
                         .addResourceHandler(resource.getHandler())
                         .addResourceLocations(resource.getLocation()));
+    }
+
+    @Bean
+    public Parser commonmarkParser() {
+        return Parser.builder().build();
+    }
+
+    @Bean
+    public HtmlRenderer commonmarkHtmlRenderer() {
+        return HtmlRenderer.builder().build();
+    }
+
+    @Bean
+    @Primary
+    public LayoutDialect layoutDialect(Parser commonmarkParser, HtmlRenderer commonmarkHtmlRenderer) {
+        return new ExtendedLayoutDialect(commonmarkParser, commonmarkHtmlRenderer);
     }
 }

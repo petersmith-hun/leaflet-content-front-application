@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/default}">
+<head>
+    <th:block th:insert="fragment/common.html :: syntax-highlight" />
+</head>
 <body>
 <div id="entries" layout:fragment="content">
 
@@ -15,7 +18,7 @@
             </div>
             <div class="entryPrologue">
                 <div style="padding: 0px 20px;">
-                    <th:block th:text="${article.content}" />
+                    <th:block th:markdown="${article.content}" />
                     <div id="tags">
                         <span class="tag" th:each="tag : ${article.tags}">
                             <a href="#" th:href="@{/tag/__${tag.id}__/__${tag.alias}__}" th:text="${tag.name}">placeholder:tag</a>

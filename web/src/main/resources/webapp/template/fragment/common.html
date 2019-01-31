@@ -3,6 +3,21 @@
       layout:decorate="~{layout/default}">
 <body>
 
+<!-- highlight.js dependencies -->
+<th:block th:fragment="syntax-highlight">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.1/styles/default.min.css" />
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.1/highlight.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.6.0/highlightjs-line-numbers.min.js"></script>
+    <script type="text/javascript">
+        hljs.configure({
+            tabReplace: '    '
+        });
+        hljs.initHighlightingOnLoad();
+        hljs.initLineNumbersOnLoad();
+    </script>
+</th:block>
+
 <!-- filter fragment -->
 <th:block th:fragment="filter">
     <p id="filter"><a href="javascript:void(0)" th:text="#{section.filter.btn_show}">placeholder:show_filters</a></p>

@@ -763,5 +763,19 @@ pre.prettyprint {
 	border-left: 2px solid #aaa !important;
 }
 
+.hljs {
+	background-color: transparent !important;
+}
 
+.hljs-ln-code {
+	padding: 2px 5px 2px 10px !important;
+	width: 100%;
+}
 
+.hljs-ln tr:nth-child(odd) .hljs-ln-code {
+	background-color: #e5e5e5;
+}
+
+.hljs-ln-numbers {
+	padding-right: 5px !important;
+}
