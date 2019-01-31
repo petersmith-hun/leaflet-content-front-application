@@ -4,7 +4,9 @@ import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.Article;
+import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
+import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -15,17 +17,27 @@ import org.springframework.stereotype.Component;
  * @author Peter Smith
  */
 @Component
-public class ArticleConverter implements Converter<WrapperBodyDataModel<ExtendedEntryDataModel>, Article> {
+public class ArticleContentConverter implements Converter<ArticlePageRawResponseWrapper, ArticleContent> {
 
+    private CategorySummaryListConverter categorySummaryListConverter;
     private TagSummaryListConverter tagSummaryListConverter;
 
     @Autowired
-    public ArticleConverter(TagSummaryListConverter tagSummaryListConverter) {
+    public ArticleContentConverter(CategorySummaryListConverter categorySummaryListConverter, TagSummaryListConverter tagSummaryListConverter) {
+        this.categorySummaryListConverter = categorySummaryListConverter;
         this.tagSummaryListConverter = tagSummaryListConverter;
     }
 
     @Override
-    public Article convert(WrapperBodyDataModel<ExtendedEntryDataModel> source) {
+    public ArticleContent convert(ArticlePageRawResponseWrapper source) {
+        return ArticleContent.builder()
+                .article(convert(source.getWrappedExtendedEntryDataModel()))
+                .categories(categorySummaryListConverter.convert(source.getCategoryListDataModel()))
+                .tags(tagSummaryListConverter.convert(source.getWrappedTagListDataModel().getBody()))
+                .build();
+    }
+
+    private Article convert(WrapperBodyDataModel<ExtendedEntryDataModel> source) {
         return Article.builder()
                 .author(createAuthorSummary(source.getBody()))
                 .content(source.getBody().getRawContent())

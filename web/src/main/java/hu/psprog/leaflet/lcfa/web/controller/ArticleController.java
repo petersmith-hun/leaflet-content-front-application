@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.controller;
 
+import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
@@ -33,8 +34,12 @@ public class ArticleController {
     @GetMapping
     public ModelAndView showArticle(@PathVariable("link") String link) {
 
+        ArticleContent articleContent = blogContentFacade.getArticle(link);
+
         return modelAndViewFactory.createForView(VIEW_BLOG_DETAILS)
-                .withAttribute(ModelField.ARTICLE, blogContentFacade.getArticle(link))
+                .withAttribute(ModelField.ARTICLE, articleContent.getArticle())
+                .withAttribute(ModelField.LIST_CATEGORIES, articleContent.getCategories())
+                .withAttribute(ModelField.LIST_TAGS, articleContent.getTags())
                 .build();
     }
 }

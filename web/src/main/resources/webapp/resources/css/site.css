@@ -401,14 +401,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 	margin: auto;
 }
 
-.vote.up {
-	background-image: url('../images/appbar.chevron.up.png');
-}
-
-.vote.down {
-	background-image: url('../images/appbar.chevron.down.png');
-}
-
 .vote.up.selected {
 	background-color: #D2FCD4;
 }
@@ -505,14 +497,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 
 .attachment .download {
 	background-image: url('../images/appbar.disk.download.png');
-}
-
-.attachment .quickview {
-	background-image: url('../images/appbar.eye.png');
-}
-
-.attachment .protected {
-	background-image: url('../images/appbar.lock.png');
 }
 
 /* comments */
@@ -650,29 +634,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 
 .entryInfoBar span.so_big {
 	font-size: 40px;
-}
-
-.numRead {
-	height: 38px;
-	background: url('../images/appbar.book.hardcover.open.png') left center no-repeat;
-	background-size: 40%;
-	opacity: 0.7;
-	border-top: 1px solid #ccc;
-	padding-top: 5px;
-	margin-top: 5px;
-	font-size: 24px;
-	text-align: right !important;
-	padding-right: 5px;
-}
-
-.numComment {
-	height: 38px;
-	background: url('../images/appbar.draw.pen.reflection.png') left center no-repeat;
-	background-size: 30%;
-	opacity: 0.7;
-	font-size: 24px;
-	text-align: right !important;
-	padding-right: 5px;
 }
 
 .readMoreBtn {

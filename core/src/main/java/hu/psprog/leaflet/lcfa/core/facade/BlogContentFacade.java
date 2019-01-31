@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.facade;
 
-import hu.psprog.leaflet.lcfa.core.domain.content.Article;
+import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.HomePageContent;
 
 /**
@@ -19,10 +19,10 @@ public interface BlogContentFacade {
     HomePageContent getHomePageContent(int page);
 
     /**
-     * Retrieves an article for rendering its content.
+     * Retrieves an article for rendering its content; also returns categories and tags filter data.
      *
      * @param link identifier link of the article
-     * @return populated {@link Article} object
+     * @return populated {@link ArticleContent} object
      */
-    Article getArticle(String link);
+    ArticleContent getArticle(String link);
 }
