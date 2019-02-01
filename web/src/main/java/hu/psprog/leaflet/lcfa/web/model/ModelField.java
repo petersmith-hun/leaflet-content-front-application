@@ -15,6 +15,7 @@ public enum ModelField {
     LIST_TAGS("tags"),
 
     ARTICLE("article"),
+    COMMENTS("comments"),
     CURRENT_PAGE_NUMBER("currentPageNumber"),
     PAGINATION("pagination");
 

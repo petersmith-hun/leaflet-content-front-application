@@ -2,6 +2,7 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/default}">
 <head>
+    <title th:text="${seo.metaTitle} + ' - ' + ${seo.pageTitle}">placeholder:title</title>
     <th:block th:insert="fragment/common.html :: syntax-highlight" />
 </head>
 <body>
@@ -25,8 +26,8 @@
                         </span>
                     </div>
 
-                    <!-- TODO add attachments -->
-                    <!-- TODO add comments -->
+                    <th:block th:insert="fragment/article_page.html :: attachments" />
+                    <th:block th:insert="fragment/article_page.html :: comments" />
 
                 </div>
                 <div class="clear">&nbsp;</div>

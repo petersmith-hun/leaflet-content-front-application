@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+
+<!-- attachments fragment -->
+<div id="attachments" th:fragment="attachments" th:if="${!article.attachments.isEmpty()}">
+    <div class="sectionTitleType1"><span th:text="#{common.attachments}">placeholder:attachments</span></div>
+    <div class="attachment" th:each="attachment : ${article.attachments}">
+        <div class="control">
+            <span class="download bg">
+                <a href="#" th:href="${@environment.getProperty('bridge.clients.leaflet.host-url')} + '/files' + ${attachment.link}">
+                    <span th:text="#{common.btn_download}">placeholder:download</span>
+                </a>
+            </span>
+        </div>
+        <div class="info">
+            <span class="title" style="font-size: 18px;" th:text="${attachment.name}">placeholder:attachment_name</span>
+            <br />
+            <span class="title" th:text="#{common.attachment.type}">placeholder:att_type</span> <th:block th:text="#{'attachment.type.' + ${attachment.type}}"/>
+            <p>&nbsp;</p>
+            <span th:text="${attachment.description}">placeholder:att_desc</span>
+        </div>
+    </div>
+</div>
+
+<!-- comments fragment -->
+<th:block th:fragment="comments">
+    <div class="sectionTitleType1" th:text="#{common.comment_block.title}"><span>placeholder:comments</span></div>
+    <div id="comments">
+        <p th:if="${comments == null}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments}"></p>
+        <th:block th:if="${comments != null}" th:each="comment : ${comments}">
+            <div class="comment" th:class="${comment.createdByArticleAuthor ? 'comment admin' : 'comment'}">
+                <div class="header">
+                    <span class="sender" th:text="${comment.author.name}">placeholder:author</span>
+                    <span class="date" th:text="${comment.created}">placeholder:created</span>
+                </div>
+                <div class="content" th:text="${comment.content}">placeholder:content</div>
+            </div>
+            <div class="clear">&nbsp;</div>
+        </th:block>
+    </div>
+</th:block>
+</body>
+

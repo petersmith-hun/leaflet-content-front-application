@@ -740,3 +740,19 @@ pre.prettyprint {
 .hljs-ln-numbers {
 	padding-right: 5px !important;
 }
+
+.entryPrologue img {
+	width: 100%;
+}
+
+.entryPrologue p a {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	display: inline-block;
+	margin: 0px 3px;
+	padding: 5px 10px;
+}
+
+.entryPrologue p a:hover {
+	background-color: #eee;
+}

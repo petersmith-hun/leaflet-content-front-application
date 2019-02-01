@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.controller;
 
+import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageDataField;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
@@ -38,8 +39,10 @@ public class ArticleController {
 
         return modelAndViewFactory.createForView(VIEW_BLOG_DETAILS)
                 .withAttribute(ModelField.ARTICLE, articleContent.getArticle())
+                .withAttribute(ModelField.COMMENTS, articleContent.getComments())
                 .withAttribute(ModelField.LIST_CATEGORIES, articleContent.getCategories())
                 .withAttribute(ModelField.LIST_TAGS, articleContent.getTags())
+                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), articleContent.getSeo())
                 .build();
     }
 }

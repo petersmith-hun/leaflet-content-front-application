@@ -5,10 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.List;
-
 /**
- * Article details domain class.
+ * Comment summary domain class.
  *
  * @author Peter Smith
  */
@@ -16,13 +14,10 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class Article {
+public class CommentSummary {
 
-    private String title;
-    private String link;
-    private String creationDate;
     private AuthorSummary author;
     private String content;
-    private List<TagSummary> tags;
-    private List<AttachmentSummary> attachments;
+    private String created;
+    private boolean createdByArticleAuthor;
 }

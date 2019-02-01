@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.domain.content;
 
+import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,4 +22,6 @@ public class ArticleContent {
     private Article article;
     private List<CategorySummary> categories;
     private List<TagSummary> tags;
+    private SEOAttributes seo;
+    private List<CommentSummary> comments;
 }
