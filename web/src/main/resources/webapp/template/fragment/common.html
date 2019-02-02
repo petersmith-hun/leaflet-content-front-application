@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+
+<!-- highlight.js dependencies -->
+<th:block th:fragment="syntax-highlight">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.1/styles/default.min.css" />
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.1/highlight.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.6.0/highlightjs-line-numbers.min.js"></script>
+    <script type="text/javascript">
+        hljs.configure({
+            tabReplace: '    '
+        });
+        hljs.initHighlightingOnLoad();
+        hljs.initLineNumbersOnLoad();
+    </script>
+</th:block>
+
+<!-- filter fragment -->
+<th:block th:fragment="filter">
+    <p id="filter"><a href="javascript:void(0)" th:text="#{section.filter.btn_show}">placeholder:show_filters</a></p>
+    <div class="categoryList">
+        <p><span style="padding: 10px; display: inline-block;"
+                 th:text="#{section.filter.search}">placeholder:search</span></p>
+        <form id="searchForm" action="" method="get">
+            <input type="text" placeholder="placeholder:expression" name="content"
+                   th:placeholder="#{section.filter.expression}">
+            <input type="submit" value="placeholder:search" th:value="#{section.filter.btn_search}">
+        </form>
+
+        <p><span style="padding: 10px; display: inline-block;" th:text="#{section.filter.category}">placeholder:categories</span>
+        </p>
+        <ul>
+            <li><a href="#" th:href="@{/}" th:text="#{common.all_entries}">placeholder:all_entries</a></li>
+            <li th:each="category : ${categories}">
+                <a href="#" th:href="@{/category/__${category.id}__/__${category.alias}__}" th:text="${category.title}">placeholder:category</a>
+            </li>
+        </ul>
+
+        <p><span style="padding: 10px; display: inline-block;" th:text="#{section.filter.tags}">placeholder:tags</span>
+        </p>
+        <div class="compactMenu" id="cmTags">
+            <ul>
+                <li th:each="tag : ${tags}">
+                    <a href="#" th:href="@{/tag/__${tag.id}__/__${tag.alias}__}"
+                       th:text="${tag.name}">placeholder:tag</a>
+                </li>
+            </ul>
+        </div>
+        <span data-open="cmTags" class="cmOpen">&nbsp;</span>
+    </div>
+</th:block>
+
+<!-- paginator fragment -->
+<th:block th:fragment="pagination">
+    <p class="paginator" th:if="${pagination != null}">
+            <span class="prev" th:if="${pagination.hasPrevious}">
+                <a href="#" th:href="@{/__${pagination.pageNumber - 1}__}" rel="prev">&lt;&lt;</a>
+            </span>
+        <span class="numbers" th:if="${pagination.pageCount > 1}">
+                <span th:class="${currentPageNumber == pageNum ? 'current': null}"
+                      th:each="pageNum : ${#numbers.sequence(1, pagination.pageCount)}">
+                    <th:block th:if="${currentPageNumber != pageNum}">
+                        <a href="#" th:href="@{/__${pageNum}__}" th:text="${pageNum}">placeholder:pagenum</a>
+                    </th:block>
+                    <th:block th:if="${currentPageNumber == pageNum}" th:text="${pageNum}"/>
+                </span>
+            </span>
+        <span class="next" th:if="${pagination.hasNext}">
+            <a href="#" th:href="@{/__${pagination.pageNumber + 1}__}" rel="next">&gt;&gt;</a>
+        </span>
+    </p>
+</th:block>
+</body>
+</html>

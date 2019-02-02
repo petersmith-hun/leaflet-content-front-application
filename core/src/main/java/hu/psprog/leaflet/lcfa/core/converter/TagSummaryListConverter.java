@@ -27,7 +27,11 @@ public class TagSummaryListConverter implements Converter<TagListDataModel, List
 
     @Override
     public List<TagSummary> convert(TagListDataModel source) {
-        return source.getTags().stream()
+        return convert(source.getTags());
+    }
+
+    public List<TagSummary> convert(List<TagDataModel> source) {
+        return source.stream()
                 .map(this::createTagSummary)
                 .collect(Collectors.toList());
     }

@@ -20,7 +20,6 @@
         <script type="text/javascript" src="/js/site.js" th:src="@{/js/site.js}"></script>
         <script type="text/javascript" src="/js/engine_basics.js" th:src="@{/js/engine_basics.js}"></script>
         <script type="text/javascript" src="/js/tagcloud.jquery.min.js" th:src="@{/js/tagcloud.jquery.min.js}"></script>
-        <script type="text/javascript" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#flash_bg').click(function() {
@@ -50,7 +49,7 @@
             <a id="logo" href="/"><img src="/img/logo.png" th:src="@{/images/logo.png}" /></a>
             <ul class="" id="mainMenu" th:if="${headerMenu != null}">
                 <li class="" th:each="item : ${headerMenu}">
-                    <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
+                    <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="#{__${item.name}__}">placeholder:menuitem</a>
                 </li>
             </ul>
             <span id="mobileMenuBtn" th:text="#{common.menu}">placeholder:menu</span>
@@ -77,7 +76,7 @@
                     <p class="footerColumnTitle" th:text="#{common.sitemap}">placeholder:sitemap</p>
                     <ul class="footerColumnData" th:if="${footerMenu != null}">
                         <li th:each="item : ${footerMenu}">
-                            <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
+                            <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="#{__${item.name}__}">placeholder:menuitem</a>
                         </li>
                     </ul>
                 </div>
