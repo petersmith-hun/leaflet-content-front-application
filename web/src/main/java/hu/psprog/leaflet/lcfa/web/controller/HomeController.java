@@ -20,7 +20,7 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Controller
-@RequestMapping({"/", "/{page}"})
+@RequestMapping({"/", "/page/{page}"})
 public class HomeController {
 
     private static final String VIEW_BLOG_HOME = "view/blog/home";

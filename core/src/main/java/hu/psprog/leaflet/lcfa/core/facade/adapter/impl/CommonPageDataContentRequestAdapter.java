@@ -5,6 +5,7 @@ import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
+import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
@@ -41,7 +42,7 @@ public class CommonPageDataContentRequestAdapter implements ContentRequestAdapte
         try {
             response = entryBridgeService.getPageOfPublicEntries(contentRequestParameter.getPage(),
                     contentRequestParameter.getLimit(), mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));
-        } catch (CommunicationFailureException e) {
+        } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to retrieve common page data", e);
         }
 
