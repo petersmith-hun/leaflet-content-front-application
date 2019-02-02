@@ -17,7 +17,8 @@ public enum ModelField {
     ARTICLE("article"),
     COMMENTS("comments"),
     CURRENT_PAGE_NUMBER("currentPageNumber"),
-    PAGINATION("pagination");
+    PAGINATION("pagination"),
+    STATIC("static");
 
     private String fieldName;
 

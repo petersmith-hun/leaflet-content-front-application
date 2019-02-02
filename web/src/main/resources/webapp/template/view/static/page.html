@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<head>
+    <title th:text="${seo.metaTitle} + ' - ' + ${seo.pageTitle}">placeholder:title</title>
+</head>
+<body>
+<div id="entries" class="static" layout:fragment="content">
+    <h3 th:text="${static.title}">placeholder:title</h3>
+    <th:block th:markdown="${static.content}" />
+</div>
+</body>
+</html>
