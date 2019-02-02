@@ -42,7 +42,7 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
     @Autowired
     public CommonPageDataFacadeImpl(ContentRequestAdapter<WrapperBodyDataModel<EntryListDataModel>, PaginatedContentRequest> commonPageDataContentRequestAdapter,
                                     CommonPageDataCache commonPageDataCache, CommonPageDataConverter commonPageDataConverter,
-                                    @Value("${page-config.latest-entries.count}") int numberOfLatestEntries) {
+                                    @Value("${page-config.common-page-data-cache.latest-entries-count}") int numberOfLatestEntries) {
         this.commonPageDataContentRequestAdapter = commonPageDataContentRequestAdapter;
         this.commonPageDataCache = commonPageDataCache;
         this.commonPageDataConverter = commonPageDataConverter;

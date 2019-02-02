@@ -1,6 +1,7 @@
 package hu.psprog.leaflet.lcfa.core.domain.raw;
 
 import hu.psprog.leaflet.api.rest.response.category.CategoryListDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
 import hu.psprog.leaflet.api.rest.response.tag.TagListDataModel;
@@ -23,4 +24,5 @@ public class ArticlePageRawResponseWrapper {
     private CategoryListDataModel categoryListDataModel;
     private WrapperBodyDataModel<ExtendedEntryDataModel> wrappedExtendedEntryDataModel;
     private WrapperBodyDataModel<TagListDataModel> wrappedTagListDataModel;
+    private WrapperBodyDataModel<CommentListDataModel> wrappedCommentListDataModel;
 }

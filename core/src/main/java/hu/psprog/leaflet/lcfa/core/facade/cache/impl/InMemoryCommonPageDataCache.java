@@ -21,7 +21,7 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Component
-@ConfigurationProperties(prefix = "page-config.latest-entries")
+@ConfigurationProperties(prefix = "page-config.common-page-data-cache")
 public class InMemoryCommonPageDataCache implements CommonPageDataCache {
 
     private long cacheTimeout;

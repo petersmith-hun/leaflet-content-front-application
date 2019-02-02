@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.config;
 
+import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
 import hu.psprog.leaflet.lcfa.web.interceptor.CommonPageDataInterceptor;
 import hu.psprog.leaflet.lcfa.web.interceptor.ModelAndViewDebuggerInterceptor;
 import hu.psprog.leaflet.lcfa.web.thymeleaf.markdown.support.ExtendedLayoutDialect;
@@ -62,7 +63,7 @@ public class WebMVCConfiguration implements WebMvcConfigurer {
 
     @Bean
     @Primary
-    public LayoutDialect layoutDialect(Parser commonmarkParser, HtmlRenderer commonmarkHtmlRenderer) {
-        return new ExtendedLayoutDialect(commonmarkParser, commonmarkHtmlRenderer);
+    public LayoutDialect layoutDialect(Parser commonmarkParser, HtmlRenderer commonmarkHtmlRenderer, ResourcePathResolver resourcePathResolver) {
+        return new ExtendedLayoutDialect(commonmarkParser, commonmarkHtmlRenderer, resourcePathResolver);
     }
 }

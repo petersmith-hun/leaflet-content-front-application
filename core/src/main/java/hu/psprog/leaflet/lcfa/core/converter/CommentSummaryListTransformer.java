@@ -1,6 +1,7 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
 import hu.psprog.leaflet.api.rest.response.comment.CommentDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
@@ -18,8 +19,8 @@ import java.util.stream.Collectors;
 @Component
 public class CommentSummaryListTransformer {
 
-    public List<CommentSummary> convert(List<CommentDataModel> source, EntryDataModel entryDataModel) {
-        return source.stream()
+    public List<CommentSummary> convert(CommentListDataModel source, EntryDataModel entryDataModel) {
+        return source.getComments().stream()
                 .map(commentDataModel -> convert(commentDataModel, entryDataModel))
                 .collect(Collectors.toList());
     }

@@ -1,10 +1,8 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
-import hu.psprog.leaflet.api.rest.response.comment.CommentDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
-import hu.psprog.leaflet.api.rest.response.user.UserDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.Article;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
@@ -12,9 +10,6 @@ import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Converts {@link ExtendedEntryDataModel} wrapped in {@link WrapperBodyDataModel} to {@link Article} object.
@@ -48,7 +43,7 @@ public class ArticleContentConverter implements Converter<ArticlePageRawResponse
                 .categories(categorySummaryListConverter.convert(source.getCategoryListDataModel()))
                 .tags(tagSummaryListConverter.convert(source.getWrappedTagListDataModel().getBody()))
                 .seo(wrappedDataExtractor.extractSEOAttributes(source.getWrappedExtendedEntryDataModel()))
-                .comments(commentSummaryListTransformer.convert(createDummyComments(), source.getWrappedExtendedEntryDataModel().getBody())) // TODO fix after LFLT-325 is done
+                .comments(commentSummaryListTransformer.convert(source.getWrappedCommentListDataModel().getBody(), source.getWrappedExtendedEntryDataModel().getBody()))
                 .build();
     }
 
@@ -66,24 +61,5 @@ public class ArticleContentConverter implements Converter<ArticlePageRawResponse
 
     private AuthorSummary createAuthorSummary(EntryDataModel entryDataModel) {
         return new AuthorSummary(entryDataModel.getUser().getUsername());
-    }
-
-    private List<CommentDataModel> createDummyComments() {
-        return Arrays.asList(
-                CommentDataModel.getBuilder()
-                        .withContent("comment 1")
-                        .withCreated("formatted creation date 1")
-                        .withOwner(UserDataModel.getBuilder()
-                                .withUsername("user 1")
-                                .build())
-                        .build(),
-                CommentDataModel.getBuilder()
-                        .withContent("comment 2")
-                        .withCreated("formatted creation date 2")
-                        .withOwner(UserDataModel.getBuilder()
-                                .withId(1L)
-                                .withUsername("user 2")
-                                .build())
-                        .build());
     }
 }

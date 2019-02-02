@@ -9,6 +9,7 @@ package hu.psprog.leaflet.lcfa.core.domain;
 public enum CallType {
 
     CATEGORY,
+    COMMENT,
     ENTRY,
     TAG
 }

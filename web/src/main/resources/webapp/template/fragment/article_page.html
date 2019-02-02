@@ -9,7 +9,7 @@
     <div class="attachment" th:each="attachment : ${article.attachments}">
         <div class="control">
             <span class="download bg">
-                <a href="#" th:href="${@environment.getProperty('bridge.clients.leaflet.host-url')} + '/files' + ${attachment.link}">
+                <a href="#" th:href="${attachment.link}">
                     <span th:text="#{common.btn_download}">placeholder:download</span>
                 </a>
             </span>
@@ -28,7 +28,7 @@
 <th:block th:fragment="comments">
     <div class="sectionTitleType1" th:text="#{common.comment_block.title}"><span>placeholder:comments</span></div>
     <div id="comments">
-        <p th:if="${comments == null}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments}"></p>
+        <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments}"></p>
         <th:block th:if="${comments != null}" th:each="comment : ${comments}">
             <div class="comment" th:class="${comment.createdByArticleAuthor ? 'comment admin' : 'comment'}">
                 <div class="header">

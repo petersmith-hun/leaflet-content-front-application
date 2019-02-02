@@ -49,7 +49,7 @@
             <a id="logo" href="/"><img src="/img/logo.png" th:src="@{/images/logo.png}" /></a>
             <ul class="" id="mainMenu" th:if="${headerMenu != null}">
                 <li class="" th:each="item : ${headerMenu}">
-                    <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
+                    <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="#{__${item.name}__}">placeholder:menuitem</a>
                 </li>
             </ul>
             <span id="mobileMenuBtn" th:text="#{common.menu}">placeholder:menu</span>
@@ -76,7 +76,7 @@
                     <p class="footerColumnTitle" th:text="#{common.sitemap}">placeholder:sitemap</p>
                     <ul class="footerColumnData" th:if="${footerMenu != null}">
                         <li th:each="item : ${footerMenu}">
-                            <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="${item.name}">placeholder:menuitem</a>
+                            <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="#{__${item.name}__}">placeholder:menuitem</a>
                         </li>
                     </ul>
                 </div>

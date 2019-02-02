@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.thymeleaf.markdown.support;
 
+import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -26,11 +27,13 @@ public class MarkdownAttributeTagProcessor extends AbstractAttributeTagProcessor
 
     private final Parser parser;
     private final HtmlRenderer htmlRenderer;
+    private final ResourcePathResolver resourcePathResolver;
 
-    protected MarkdownAttributeTagProcessor(String dialectPrefix, Parser parser, HtmlRenderer htmlRenderer) {
+    protected MarkdownAttributeTagProcessor(String dialectPrefix, Parser parser, HtmlRenderer htmlRenderer, ResourcePathResolver resourcePathResolver) {
         super(TemplateMode.HTML, dialectPrefix, null, true, PROCESSOR_NAME, false, PROCESSOR_PRECEDENCE, true);
         this.parser = parser;
         this.htmlRenderer = htmlRenderer;
+        this.resourcePathResolver = resourcePathResolver;
     }
 
     @Override
@@ -38,7 +41,8 @@ public class MarkdownAttributeTagProcessor extends AbstractAttributeTagProcessor
         if (Objects.nonNull(attributeValue)) {
             Object expressionResult = evaluateExpressions(context, tag, attributeName, attributeValue);
             if (Objects.nonNull(expressionResult)) {
-                Node node = parser.parse(expressionResult.toString());
+                String resourceProcessed = resourcePathResolver.resolveInMarkdownSource(expressionResult.toString());
+                Node node = parser.parse(resourceProcessed);
                 structureHandler.setBody(htmlRenderer.render(node), true);
             }
         }
