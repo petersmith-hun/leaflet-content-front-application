@@ -4,6 +4,7 @@ import hu.psprog.leaflet.lcfa.core.domain.content.HomePageContent;
 import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +55,8 @@ public class HomeController {
                 .withAttribute(ModelField.LIST_TAGS, homePageContent.getTags())
                 .withAttribute(ModelField.PAGINATION, homePageContent.getPagination())
                 .withAttribute(ModelField.CURRENT_PAGE_NUMBER, pageNumber)
+                .withAttribute(ModelField.PAGINATION_LINK_PREFIX, StringUtils.EMPTY)
+                .withAttribute(ModelField.PAGINATION_LINK_SUFFIX, StringUtils.EMPTY)
                 .build();
     }
 }

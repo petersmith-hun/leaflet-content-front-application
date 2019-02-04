@@ -24,7 +24,7 @@
     <div class="categoryList">
         <p><span style="padding: 10px; display: inline-block;"
                  th:text="#{section.filter.search}">placeholder:search</span></p>
-        <form id="searchForm" action="" method="get">
+        <form id="searchForm" th:action="@{/content}" method="get">
             <input type="text" placeholder="placeholder:expression" name="content"
                    th:placeholder="#{section.filter.expression}">
             <input type="submit" value="placeholder:search" th:value="#{section.filter.btn_search}">
@@ -57,19 +57,19 @@
 <th:block th:fragment="pagination">
     <p class="paginator" th:if="${pagination != null}">
             <span class="prev" th:if="${pagination.hasPrevious}">
-                <a href="#" th:href="@{/page/__${pagination.pageNumber - 1}__}" rel="prev">&lt;&lt;</a>
+                <a href="#" th:href="@{__${paginationLinkPrefix}__/page/__${pagination.pageNumber - 1}____${paginationLinkSuffix}__}" rel="prev">&lt;&lt;</a>
             </span>
         <span class="numbers" th:if="${pagination.pageCount > 1}">
                 <span th:class="${currentPageNumber == pageNum ? 'current': null}"
                       th:each="pageNum : ${#numbers.sequence(1, pagination.pageCount)}">
                     <th:block th:if="${currentPageNumber != pageNum}">
-                        <a href="#" th:href="@{/page/__${pageNum}__}" th:text="${pageNum}">placeholder:pagenum</a>
+                        <a href="#" th:href="@{__${paginationLinkPrefix}__/page/__${pageNum}____${paginationLinkSuffix}__}" th:text="${pageNum}">placeholder:pagenum</a>
                     </th:block>
                     <th:block th:if="${currentPageNumber == pageNum}" th:text="${pageNum}"/>
                 </span>
             </span>
         <span class="next" th:if="${pagination.hasNext}">
-            <a href="#" th:href="@{/page/__${pagination.pageNumber + 1}__}" rel="next">&gt;&gt;</a>
+            <a href="#" th:href="@{__${paginationLinkPrefix}__/page/__${pagination.pageNumber + 1}____${paginationLinkSuffix}__}" rel="next">&gt;&gt;</a>
         </span>
     </p>
 </th:block>
