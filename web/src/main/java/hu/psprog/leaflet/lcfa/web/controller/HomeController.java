@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequestMapping({"/", "/page/{page}"})
 public class HomeController {
 
-    private static final String VIEW_BLOG_HOME = "view/blog/home";
+    private static final String VIEW_BLOG_LIST = "view/blog/list";
     private static final int DEFAULT_PAGE_NUMBER = 1;
 
     private ModelAndViewFactory modelAndViewFactory;
@@ -36,7 +36,7 @@ public class HomeController {
     }
 
     /**
-     * GET /[{page}]
+     * GET /[page/{page}]
      * Renders home page.
      *
      * @param optionalPageNumber number of page to be requested (optional, defaults to DEFAULT_PAGE_NUMBER)
@@ -48,7 +48,7 @@ public class HomeController {
         int pageNumber = optionalPageNumber.orElse(DEFAULT_PAGE_NUMBER);
         HomePageContent homePageContent = blogContentFacade.getHomePageContent(pageNumber);
 
-        return modelAndViewFactory.createForView(VIEW_BLOG_HOME)
+        return modelAndViewFactory.createForView(VIEW_BLOG_LIST)
                 .withAttribute(ModelField.LIST_ENTRIES, homePageContent.getEntries())
                 .withAttribute(ModelField.LIST_CATEGORIES, homePageContent.getCategories())
                 .withAttribute(ModelField.LIST_TAGS, homePageContent.getTags())

@@ -9,7 +9,7 @@ import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
-import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
+import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +19,26 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * {@link AbstractFilteringSupportParallelContentRequestAdapter} implementation returning all the necessary information for home page rendering.
- * Requests public lists of categories, public list of tags and public list of entries in parallel.
+ * {@link AbstractFilteringSupportParallelContentRequestAdapter} implementation returning all the necessary information for tag filter page.
+ * Requests public lists of categories, public list of tags and public list of entries under given tag in parallel.
  * Combinator implementation returns the responses as {@link HomePageRawResponseWrapper} for further processing.
  *
  * @author Peter Smith
  */
 @Component
-public class HomePageContentRequestAdapter extends AbstractFilteringSupportParallelContentRequestAdapter<HomePageRawResponseWrapper, PaginatedContentRequest> {
+public class TagFilteredContentRequestAdapter
+        extends AbstractFilteringSupportParallelContentRequestAdapter<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long>> {
 
     private EntryBridgeService entryBridgeService;
 
     @Autowired
-    public HomePageContentRequestAdapter(EntryBridgeService entryBridgeService) {
+    public TagFilteredContentRequestAdapter(EntryBridgeService entryBridgeService) {
         this.entryBridgeService = entryBridgeService;
     }
 
     @Override
-    void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, PaginatedContentRequest contentRequestParameter) {
-        callableMap.put(CallType.ENTRY, getPublicEntries(contentRequestParameter));
+    void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, FilteredPaginationContentRequest<Long> contentRequestParameter) {
+        callableMap.put(CallType.ENTRY, getPublicEntriesByTag(contentRequestParameter));
     }
 
     @Override
@@ -51,19 +52,19 @@ public class HomePageContentRequestAdapter extends AbstractFilteringSupportParal
 
     @Override
     public ContentRequestAdapterIdentifier getIdentifier() {
-        return ContentRequestAdapterIdentifier.HOME_PAGE;
+        return ContentRequestAdapterIdentifier.TAG_FILTER;
     }
 
-    private Callable<BaseBodyDataModel> getPublicEntries(PaginatedContentRequest contentRequestParameter) {
-        return () -> entryBridgeService.getPageOfPublicEntries(contentRequestParameter.getPage(), contentRequestParameter.getLimit(),
-                mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));
+    private Callable<BaseBodyDataModel> getPublicEntriesByTag(FilteredPaginationContentRequest<Long> contentRequestParameter) {
+        return () -> entryBridgeService.getPageOfPublicEntriesByTag(contentRequestParameter.getFilterValue(), contentRequestParameter.getPage(),
+                contentRequestParameter.getLimit(), mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));
     }
 
-    private OrderBy.Entry mapOrdering(PaginatedContentRequest paginatedContentRequest) {
+    private OrderBy.Entry mapOrdering(FilteredPaginationContentRequest<Long> paginatedContentRequest) {
         return OrderBy.Entry.valueOf(paginatedContentRequest.getEntryOrderBy().name());
     }
 
-    private OrderDirection mapOrderDirection(PaginatedContentRequest paginatedContentRequest) {
+    private OrderDirection mapOrderDirection(FilteredPaginationContentRequest<Long> paginatedContentRequest) {
         return OrderDirection.valueOf(paginatedContentRequest.getEntryOrderDirection().name());
     }
 }
