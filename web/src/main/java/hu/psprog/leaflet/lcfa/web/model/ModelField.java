@@ -17,6 +17,7 @@ public enum ModelField {
     ARTICLE("article"),
     COMMENTS("comments"),
     CURRENT_PAGE_NUMBER("currentPageNumber"),
+    LINK_TEMPLATE("linkTemplate"),
     PAGINATION("pagination"),
     STATIC("static");
 

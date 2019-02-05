@@ -18,4 +18,11 @@ public interface ContentRequestAdapter<T, P> {
      * @return returned (processed) response wrapped as {@link Optional}
      */
     Optional<T> getContent(P contentRequestParameter);
+
+    /**
+     * Returns the assigned identifier.
+     *
+     * @return identifier as {@link ContentRequestAdapterIdentifier} enum constant
+     */
+    ContentRequestAdapterIdentifier getIdentifier();
 }

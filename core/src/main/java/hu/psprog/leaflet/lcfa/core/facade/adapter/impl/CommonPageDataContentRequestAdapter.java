@@ -10,6 +10,7 @@ import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
+import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,11 @@ public class CommonPageDataContentRequestAdapter implements ContentRequestAdapte
         }
 
         return Optional.ofNullable(response);
+    }
+
+    @Override
+    public ContentRequestAdapterIdentifier getIdentifier() {
+        return ContentRequestAdapterIdentifier.COMMON_PAGE_DATA;
     }
 
     private OrderBy.Entry mapOrdering(PaginatedContentRequest paginatedContentRequest) {

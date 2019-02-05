@@ -11,6 +11,7 @@ import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
+import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,11 @@ public class HomePageContentRequestAdapter extends AbstractFilteringSupportParal
                 .wrappedEntryListDataModel((WrapperBodyDataModel<EntryListDataModel>) result.get(CallType.ENTRY))
                 .wrappedTagListDataModel((WrapperBodyDataModel<TagListDataModel>) result.get(CallType.TAG))
                 .build();
+    }
+
+    @Override
+    public ContentRequestAdapterIdentifier getIdentifier() {
+        return ContentRequestAdapterIdentifier.HOME_PAGE;
     }
 
     private Callable<BaseBodyDataModel> getPublicEntries(PaginatedContentRequest contentRequestParameter) {

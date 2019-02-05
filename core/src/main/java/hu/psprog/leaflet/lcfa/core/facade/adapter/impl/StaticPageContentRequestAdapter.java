@@ -6,6 +6,7 @@ import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
 import hu.psprog.leaflet.bridge.service.DocumentBridgeService;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
+import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,10 @@ public class StaticPageContentRequestAdapter implements ContentRequestAdapter<Wr
         }
 
         return Optional.ofNullable(response);
+    }
+
+    @Override
+    public ContentRequestAdapterIdentifier getIdentifier() {
+        return ContentRequestAdapterIdentifier.STATIC_PAGE;
     }
 }

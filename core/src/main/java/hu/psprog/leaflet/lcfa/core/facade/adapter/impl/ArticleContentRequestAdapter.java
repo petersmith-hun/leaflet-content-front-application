@@ -12,6 +12,7 @@ import hu.psprog.leaflet.bridge.service.CommentBridgeService;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
+import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +57,11 @@ public class ArticleContentRequestAdapter extends AbstractFilteringSupportParall
                 .wrappedTagListDataModel((WrapperBodyDataModel<TagListDataModel>) result.get(CallType.TAG))
                 .wrappedCommentListDataModel((WrapperBodyDataModel<CommentListDataModel>) result.get(CallType.COMMENT))
                 .build();
+    }
+
+    @Override
+    public ContentRequestAdapterIdentifier getIdentifier() {
+        return ContentRequestAdapterIdentifier.ARTICLE;
     }
 
     private Callable<BaseBodyDataModel> prepareCommentBridgeCallable(String contentRequestParameter) {
