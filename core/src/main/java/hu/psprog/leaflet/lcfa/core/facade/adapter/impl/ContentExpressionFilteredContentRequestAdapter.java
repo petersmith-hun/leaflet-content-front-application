@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 
 /**
  * {@link AbstractFilteredEntryPageContentRequestAdapter} implementation returning all the necessary information for content expression filter page.
- * Requests public lists of categories, public list of tags and public list of entries in which given expression is found in parallel.
+ * Requests public list of categories, public list of tags and public list of entries in which given expression is found in parallel.
  * Combinator implementation returns the responses as {@link HomePageRawResponseWrapper} for further processing.
  *
  * @author Peter Smith

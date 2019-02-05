@@ -26,6 +26,9 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
 
     private static final String FAILED_TO_RETRIEVE_HOME_PAGE_CONTENT = "Failed to retrieve home page content for page [%d]";
     private static final String FAILED_TO_RETRIEVE_ARTICLE = "Failed to retrieve article for link [%s]";
+    private static final String FAILED_TO_RETRIEVE_PAGE_OF_CATEGORY = "Failed to retrieve page [%d] of category [%d]";
+    private static final String FAILED_TO_RETRIEVE_PAGE_OF_TAG = "Failed to retrieve page [%d] of tag [%d]";
+    private static final String FAILED_TO_RETRIEVE_PAGE_OF_CONTENT_EXPRESSION = "Failed to retrieve page [%d] of content expression [%s]";
 
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private ConversionService conversionService;
@@ -60,7 +63,7 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
         return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long>>getContentRequestAdapter(ContentRequestAdapterIdentifier.CATEGORY_FILTER)
                 .getContent(createdFilteredPaginatedContentRequest(categoryID, page))
                 .map(homePageRawResponseWrapper -> conversionService.convert(homePageRawResponseWrapper, HomePageContent.class))
-                .orElseThrow(() -> new ContentRetrievalException(String.format("Failed to retrieve page [%d] of category [%d]", page, categoryID)));
+                .orElseThrow(() -> new ContentRetrievalException(String.format(FAILED_TO_RETRIEVE_PAGE_OF_CATEGORY, page, categoryID)));
     }
 
     @Override
@@ -68,7 +71,7 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
         return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long>>getContentRequestAdapter(ContentRequestAdapterIdentifier.TAG_FILTER)
                 .getContent(createdFilteredPaginatedContentRequest(tagID, page))
                 .map(homePageRawResponseWrapper -> conversionService.convert(homePageRawResponseWrapper, HomePageContent.class))
-                .orElseThrow(() -> new ContentRetrievalException(String.format("Failed to retrieve page [%d] of tag [%d]", page, tagID)));
+                .orElseThrow(() -> new ContentRetrievalException(String.format(FAILED_TO_RETRIEVE_PAGE_OF_TAG, page, tagID)));
     }
 
     @Override
@@ -76,7 +79,7 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
         return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<String>>getContentRequestAdapter(ContentRequestAdapterIdentifier.CONTENT_FILTER)
                 .getContent(createdFilteredPaginatedContentRequest(contentExpression, page))
                 .map(homePageRawResponseWrapper -> conversionService.convert(homePageRawResponseWrapper, HomePageContent.class))
-                .orElseThrow(() -> new ContentRetrievalException(String.format("Failed to retrieve page [%d] of content expression [%s]", page, contentExpression)));
+                .orElseThrow(() -> new ContentRetrievalException(String.format(FAILED_TO_RETRIEVE_PAGE_OF_CONTENT_EXPRESSION, page, contentExpression)));
     }
 
     private PaginatedContentRequest createHomePageContentRequest(int page) {

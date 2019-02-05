@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Registers all the available {@link ContentRequestAdapter} implementation, and creates a queryable map
+ * Registers all the available {@link ContentRequestAdapter} implementations, and creates a queryable map
  * by their assigned {@link ContentRequestAdapterIdentifier}.
  *
  * @author Peter Smith
@@ -35,7 +35,7 @@ public class ContentRequestAdapterRegistry implements InitializingBean {
     }
 
     /**
-     * Returns the {@link ContentRequestAdapter} implemented assigned to the given {@link ContentRequestAdapterIdentifier}.
+     * Returns the {@link ContentRequestAdapter} implementation assigned to the given {@link ContentRequestAdapterIdentifier}.
      *
      * @param identifier {@link ContentRequestAdapterIdentifier} value identifying a {@link ContentRequestAdapter} implementation
      * @param <T> return type of the {@link ContentRequestAdapter}
