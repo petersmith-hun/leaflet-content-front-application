@@ -17,9 +17,8 @@ public enum ModelField {
     ARTICLE("article"),
     COMMENTS("comments"),
     CURRENT_PAGE_NUMBER("currentPageNumber"),
+    LINK_TEMPLATE("linkTemplate"),
     PAGINATION("pagination"),
-    PAGINATION_LINK_PREFIX("paginationLinkPrefix"),
-    PAGINATION_LINK_SUFFIX("paginationLinkSuffix"),
     STATIC("static");
 
     private String fieldName;

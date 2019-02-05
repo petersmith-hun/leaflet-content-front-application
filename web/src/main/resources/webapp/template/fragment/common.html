@@ -57,19 +57,19 @@
 <th:block th:fragment="pagination">
     <p class="paginator" th:if="${pagination != null}">
             <span class="prev" th:if="${pagination.hasPrevious}">
-                <a href="#" th:href="@{__${paginationLinkPrefix}__/page/__${pagination.pageNumber - 1}____${paginationLinkSuffix}__}" rel="prev">&lt;&lt;</a>
+                <a href="#" th:href="@{__${linkTemplate}__(page=${pagination.pageNumber - 1})}" rel="prev">&lt;&lt;</a>
             </span>
         <span class="numbers" th:if="${pagination.pageCount > 1}">
                 <span th:class="${currentPageNumber == pageNum ? 'current': null}"
                       th:each="pageNum : ${#numbers.sequence(1, pagination.pageCount)}">
                     <th:block th:if="${currentPageNumber != pageNum}">
-                        <a href="#" th:href="@{__${paginationLinkPrefix}__/page/__${pageNum}____${paginationLinkSuffix}__}" th:text="${pageNum}">placeholder:pagenum</a>
+                        <a href="#" th:href="@{__${linkTemplate}__(page=${pageNum})}" th:text="${pageNum}">placeholder:pagenum</a>
                     </th:block>
                     <th:block th:if="${currentPageNumber == pageNum}" th:text="${pageNum}"/>
                 </span>
             </span>
         <span class="next" th:if="${pagination.hasNext}">
-            <a href="#" th:href="@{__${paginationLinkPrefix}__/page/__${pagination.pageNumber + 1}____${paginationLinkSuffix}__}" rel="next">&gt;&gt;</a>
+            <a href="#" th:href="@{__${linkTemplate}__(page=${pagination.pageNumber + 1})}" rel="next">&gt;&gt;</a>
         </span>
     </p>
 </th:block>

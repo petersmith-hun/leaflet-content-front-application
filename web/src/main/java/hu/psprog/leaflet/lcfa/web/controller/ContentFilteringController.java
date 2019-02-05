@@ -4,7 +4,6 @@ import hu.psprog.leaflet.lcfa.core.domain.content.HomePageContent;
 import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +28,10 @@ public class ContentFilteringController {
     private static final String VIEW_BLOG_LIST = "view/blog/list";
     private static final int DEFAULT_PAGE_NUMBER = 1;
 
-    private static final String PAGINATION_LINK_PREFIX_CATEGORY = "/category/%d/%s";
-    private static final String PAGINATION_LINK_PREFIX_TAG = "/tag/%d/%s";
-    private static final String PAGINATION_LINK_PREFIX_CONTENT = "/content";
-    private static final String PAGINATION_LINK_SUFFIX_CONTENT = "?content=%s";
+    private static final String PAGINATION_LINK_CATEGORY_TEMPLATE = "/category/%d/%s/page/{page}";
+    private static final String PAGINATION_LINK_TAG_TEMPLATE = "/tag/%d/%s/page/{page}";
+    private static final String PAGINATION_LINK_CONTENT_TEMPLATE = "/content/page/{page}?content=%s";
+    private static final String PAGINATION_LINK_HOME_TEMPLATE = "/page/{page}";
 
     private BlogContentFacade blogContentFacade;
     private ModelAndViewFactory modelAndViewFactory;
@@ -41,6 +40,22 @@ public class ContentFilteringController {
     public ContentFilteringController(BlogContentFacade blogContentFacade, ModelAndViewFactory modelAndViewFactory) {
         this.blogContentFacade = blogContentFacade;
         this.modelAndViewFactory = modelAndViewFactory;
+    }
+
+    /**
+     * GET /[page/{page}]
+     * Renders home page.
+     *
+     * @param optionalPageNumber number of page to be requested (optional, defaults to DEFAULT_PAGE_NUMBER)
+     * @return populated {@link ModelAndView}
+     */
+    @GetMapping({"/", "/page/{page}"})
+    public ModelAndView getHomePage(@PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
+
+        int pageNumber = optionalPageNumber.orElse(DEFAULT_PAGE_NUMBER);
+        HomePageContent homePageContent = blogContentFacade.getHomePageContent(pageNumber);
+
+        return populateModelAndView(PAGINATION_LINK_HOME_TEMPLATE, homePageContent, pageNumber);
     }
 
     /**
@@ -57,9 +72,9 @@ public class ContentFilteringController {
 
         int pageNumber = extractPageNumber(optionalPageNumber);
         HomePageContent homePageContent = blogContentFacade.getArticlesByCategory(categoryID, pageNumber);
-        String paginationLinkPrefix = String.format(PAGINATION_LINK_PREFIX_CATEGORY, categoryID, categoryAlias);
+        String paginationLinkTemplate = String.format(PAGINATION_LINK_CATEGORY_TEMPLATE, categoryID, categoryAlias);
 
-        return populateModelAndView(paginationLinkPrefix, homePageContent, pageNumber);
+        return populateModelAndView(paginationLinkTemplate, homePageContent, pageNumber);
     }
 
     /**
@@ -76,9 +91,9 @@ public class ContentFilteringController {
 
         int pageNumber = extractPageNumber(optionalPageNumber);
         HomePageContent homePageContent = blogContentFacade.getArticlesByTag(tagID, pageNumber);
-        String paginationLinkPrefix = String.format(PAGINATION_LINK_PREFIX_TAG, tagID, tagAlias);
+        String paginationLinkTemplate = String.format(PAGINATION_LINK_TAG_TEMPLATE, tagID, tagAlias);
 
-        return populateModelAndView(paginationLinkPrefix, homePageContent, pageNumber);
+        return populateModelAndView(paginationLinkTemplate, homePageContent, pageNumber);
     }
 
     /**
@@ -94,28 +109,23 @@ public class ContentFilteringController {
 
         int pageNumber = extractPageNumber(optionalPageNumber);
         HomePageContent homePageContent = blogContentFacade.getArticlesByContent(contentExpression, pageNumber);
-        String paginationLinkSuffix = String.format(PAGINATION_LINK_SUFFIX_CONTENT, contentExpression);
+        String paginationLinkTemplate = String.format(PAGINATION_LINK_CONTENT_TEMPLATE, contentExpression);
 
-        return populateModelAndView(PAGINATION_LINK_PREFIX_CONTENT, paginationLinkSuffix,  homePageContent, pageNumber);
+        return populateModelAndView(paginationLinkTemplate, homePageContent, pageNumber);
     }
 
     private int extractPageNumber(Optional<Integer> optionalPageNumber) {
         return optionalPageNumber.orElse(DEFAULT_PAGE_NUMBER);
     }
 
-    private ModelAndView populateModelAndView(String paginationLinkPrefix, HomePageContent homePageContent, int pageNumber) {
-        return populateModelAndView(paginationLinkPrefix, StringUtils.EMPTY, homePageContent, pageNumber);
-    }
-
-    private ModelAndView populateModelAndView(String paginationLinkPrefix, String paginationLinkSuffix, HomePageContent homePageContent, int pageNumber) {
+    private ModelAndView populateModelAndView(String linkTemplate, HomePageContent homePageContent, int pageNumber) {
         return modelAndViewFactory.createForView(VIEW_BLOG_LIST)
                 .withAttribute(ModelField.LIST_ENTRIES, homePageContent.getEntries())
                 .withAttribute(ModelField.LIST_CATEGORIES, homePageContent.getCategories())
                 .withAttribute(ModelField.LIST_TAGS, homePageContent.getTags())
                 .withAttribute(ModelField.PAGINATION, homePageContent.getPagination())
                 .withAttribute(ModelField.CURRENT_PAGE_NUMBER, pageNumber)
-                .withAttribute(ModelField.PAGINATION_LINK_PREFIX, paginationLinkPrefix)
-                .withAttribute(ModelField.PAGINATION_LINK_SUFFIX, paginationLinkSuffix)
+                .withAttribute(ModelField.LINK_TEMPLATE, linkTemplate)
                 .build();
     }
 }
