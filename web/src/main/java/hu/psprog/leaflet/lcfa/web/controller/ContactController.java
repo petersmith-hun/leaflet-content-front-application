@@ -58,8 +58,7 @@ public class ContactController extends BaseController {
     }
 
     /**
-     * POST
-     * /contact
+     * POST /contact
      * Processes contact request. Renders contact form with current {@link ContactRequestModel} in case of a validation error.
      *
      * @param contactRequestModel form contents as {@link ContactRequestModel}
