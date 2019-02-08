@@ -6,7 +6,7 @@ import hu.psprog.leaflet.lcfa.core.domain.content.StaticPageContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.StaticPageType;
 import hu.psprog.leaflet.lcfa.core.exception.ContentNotFoundException;
 import hu.psprog.leaflet.lcfa.core.facade.StaticPageContentFacade;
-import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
+import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.convert.ConversionService;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier.STATIC_PAGE;
 
 /**
  * Implementation of {@link StaticPageContentFacade}.
@@ -26,21 +28,21 @@ public class StaticPageContentFacadeImpl implements StaticPageContentFacade {
 
     private static final String FAILED_TO_RETRIEVE_STATIC_PAGE = "Failed to retrieve static page for link [%s]";
 
-    private ContentRequestAdapter<WrapperBodyDataModel<DocumentDataModel>, String> staticPageContentRequestAdapter;
+    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private ConversionService conversionService;
     private Map<StaticPageType, String> staticPageMapping = new HashMap<>();
 
     @Autowired
-    public StaticPageContentFacadeImpl(ContentRequestAdapter<WrapperBodyDataModel<DocumentDataModel>, String> staticPageContentRequestAdapter,
-                                       ConversionService conversionService) {
-        this.staticPageContentRequestAdapter = staticPageContentRequestAdapter;
+    public StaticPageContentFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, ConversionService conversionService) {
+        this.contentRequestAdapterRegistry = contentRequestAdapterRegistry;
         this.conversionService = conversionService;
     }
 
     @Override
     public StaticPageContent getStaticPage(StaticPageType staticPageType) {
         String staticPageLink = staticPageMapping.get(staticPageType);
-        return staticPageContentRequestAdapter.getContent(staticPageLink)
+        return contentRequestAdapterRegistry.<WrapperBodyDataModel<DocumentDataModel>, String>getContentRequestAdapter(STATIC_PAGE)
+                .getContent(staticPageLink)
                 .map(staticPage -> conversionService.convert(staticPage, StaticPageContent.class))
                 .orElseThrow(() -> new ContentNotFoundException(String.format(FAILED_TO_RETRIEVE_STATIC_PAGE, staticPageLink)));
     }

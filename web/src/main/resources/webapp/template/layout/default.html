@@ -42,7 +42,13 @@
     <body>
 
         <!-- TODO insert Google tracking code here -->
-        <!-- TODO insert flash here -->
+
+        <div id="flash" th:if="${flash != null}">
+            <div class="message">
+                <th:block th:text="#{__${flash}__}" />
+                <span class="hide_msg" th:text="#{common.flash.close}">placeholder:flash_close</span>
+            </div>
+        </div>
 
         <!-- header section -->
         <div id="header">

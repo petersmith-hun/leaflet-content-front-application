@@ -17,9 +17,11 @@ public enum ModelField {
     ARTICLE("article"),
     COMMENTS("comments"),
     CURRENT_PAGE_NUMBER("currentPageNumber"),
+    FLASH("flash"),
     LINK_TEMPLATE("linkTemplate"),
     PAGINATION("pagination"),
-    STATIC("static");
+    STATIC("static"),
+    VALIDATED_MODEL("validatedModel");
 
     private String fieldName;
 

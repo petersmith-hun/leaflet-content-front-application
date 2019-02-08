@@ -6,5 +6,7 @@ package hu.psprog.leaflet.lcfa.core.domain.content;
  * @author Peter Smith
  */
 public enum StaticPageType {
-    INTRODUCTION
+
+    INTRODUCTION,
+    CONTACT
 }

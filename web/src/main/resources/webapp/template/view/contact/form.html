@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<head>
+    <title th:text="${seo.metaTitle} + ' - ' + ${seo.pageTitle}">placeholder:title</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script type="text/javascript">
+        function populateTokenField(token) {
+            $('#recaptchaToken').val(token);
+        }
+    </script>
+</head>
+<body>
+<div id="entries" class="static" layout:fragment="content">
+    <h3 th:text="${static.title}">placeholder:title</h3>
+    <th:block th:markdown="${static.content}" />
+    <div class="forms">
+        <form th:object="${contactRequestModel}" th:action="@{/contact}" id="ContactContactForm" method="post" accept-charset="utf-8">
+            <div class="input text">
+                <label for="ContactName" th:text="#{form.contact.label.name}">placeholder:name</label>
+                <input name="name" placeholder="placeholder:name"
+                       th:value="${!(validatedModel == null || #fields.hasErrors('name')) ? validatedModel.name : null}"
+                       th:placeholder="#{form.contact.placeholder.name}" required="required" type="text" id="ContactName" />
+                <span class="validationError" th:if="${#fields.hasErrors('name')}" th:text="#{form.contact.validation.error.name}">placeholder:val_err_name</span>
+            </div>
+            <div class="input text">
+                <label for="ContactEmail" th:text="#{form.contact.label.email}">placeholder:email</label>
+                <input name="email"
+                       th:value="${!(validatedModel == null || #fields.hasErrors('email')) ? validatedModel.email : null}"
+                       th:placeholder="#{form.contact.placeholder.email}" placeholder="placeholder:email" required="required" type="text" id="ContactEmail" />
+                <span class="validationError" th:if="${#fields.hasErrors('email')}" th:text="#{form.contact.validation.error.email}">placeholder:val_err_email</span>
+            </div>
+            <div class="input textarea">
+                <label for="ContactMessage" th:text="#{form.contact.label.message}">placeholder:message</label>
+                <textarea name="message"
+                          th:text="${!(validatedModel == null || #fields.hasErrors('message')) ? validatedModel.message : null}"
+                          th:placeholder="#{form.contact.placeholder.message}" placeholder="placeholder:message" required="required" cols="30" rows="6" id="ContactMessage"></textarea>
+                <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.contact.validation.error.message}">placeholder:val_err_message</span>
+            </div>
+            <div>
+                <label for="recaptcha" th:text="#{form.contact.label.confirm}">placeholder:confirm</label>
+                <div style="display: inline-block;" id="recaptcha" class="g-recaptcha" th:data-sitekey="${@environment.getProperty('page-config.recaptcha-sitekey')}" data-callback="populateTokenField"></div>
+                <input type="hidden" id="recaptchaToken" name="recaptchaToken" required="required" />
+                <span class="validationError" th:if="${#fields.hasErrors('recaptchaToken')}" th:text="#{form.contact.validation.error.token}">placeholder:val_err_token</span>
+            </div>
+            <input type="submit" th:value="#{form.contact.label.send}" value="placeholder:send" />
+        </form>
+    </div>
+</div>
+</body>
+</html>
