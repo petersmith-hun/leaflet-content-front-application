@@ -756,3 +756,13 @@ pre.prettyprint {
 .entryPrologue p a:hover {
 	background-color: #eee;
 }
+
+.forms .validationError {
+	color: #f00;
+	text-align: right;
+	display: block;
+}
+
+.forms .validationError:before {
+	content: '* ';
+}

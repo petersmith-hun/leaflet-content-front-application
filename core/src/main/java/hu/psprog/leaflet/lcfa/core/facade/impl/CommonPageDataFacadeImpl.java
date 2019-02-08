@@ -9,7 +9,7 @@ import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderDirection;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
 import hu.psprog.leaflet.lcfa.core.exception.ContentRetrievalException;
 import hu.psprog.leaflet.lcfa.core.facade.CommonPageDataFacade;
-import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
+import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
 import hu.psprog.leaflet.lcfa.core.facade.cache.CommonPageDataCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Supplier;
+
+import static hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier.COMMON_PAGE_DATA;
 
 /**
  * Implementation of {@link CommonPageDataFacade}.
@@ -33,17 +35,17 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
     private static final OrderBy.Entry ORDER_BY = OrderBy.Entry.CREATED;
     private static final OrderDirection ORDER_DIRECTION = OrderDirection.DESC;
 
-    private ContentRequestAdapter<WrapperBodyDataModel<EntryListDataModel>, PaginatedContentRequest> commonPageDataContentRequestAdapter;
+    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private CommonPageDataCache commonPageDataCache;
     private CommonPageDataConverter commonPageDataConverter;
 
     private final PaginatedContentRequest latestEntries;
 
     @Autowired
-    public CommonPageDataFacadeImpl(ContentRequestAdapter<WrapperBodyDataModel<EntryListDataModel>, PaginatedContentRequest> commonPageDataContentRequestAdapter,
+    public CommonPageDataFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry,
                                     CommonPageDataCache commonPageDataCache, CommonPageDataConverter commonPageDataConverter,
                                     @Value("${page-config.common-page-data-cache.latest-entries-count}") int numberOfLatestEntries) {
-        this.commonPageDataContentRequestAdapter = commonPageDataContentRequestAdapter;
+        this.contentRequestAdapterRegistry = contentRequestAdapterRegistry;
         this.commonPageDataCache = commonPageDataCache;
         this.commonPageDataConverter = commonPageDataConverter;
         this.latestEntries = initLatestEntriesRequest(numberOfLatestEntries);
@@ -67,7 +69,8 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
     private Supplier<CommonPageData> requestCommonPageData() {
         return () -> {
             LOGGER.info("Updating common page data...");
-            CommonPageData commonPageData = commonPageDataContentRequestAdapter.getContent(latestEntries)
+            CommonPageData commonPageData = contentRequestAdapterRegistry.<WrapperBodyDataModel<EntryListDataModel>, PaginatedContentRequest>getContentRequestAdapter(COMMON_PAGE_DATA)
+                    .getContent(latestEntries)
                     .map(commonPageDataConverter::convert)
                     .orElseThrow(() -> new ContentRetrievalException("Failed to retrieve common page data."));
             commonPageDataCache.update(commonPageData);
