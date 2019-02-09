@@ -7,6 +7,7 @@ import hu.psprog.leaflet.lcfa.core.domain.content.Article;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
+import hu.psprog.leaflet.lcfa.core.formatter.DateFormatterUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -24,16 +25,18 @@ public class ArticleContentConverter implements Converter<ArticlePageRawResponse
     private CommentSummaryListTransformer commentSummaryListTransformer;
     private TagSummaryListConverter tagSummaryListConverter;
     private WrappedDataExtractor wrappedDataExtractor;
+    private DateFormatterUtility dateFormatterUtility;
 
     @Autowired
     public ArticleContentConverter(AttachmentSummaryListConverter attachmentSummaryListConverter, CategorySummaryListConverter categorySummaryListConverter,
                                    CommentSummaryListTransformer commentSummaryListTransformer, TagSummaryListConverter tagSummaryListConverter,
-                                   WrappedDataExtractor wrappedDataExtractor) {
+                                   WrappedDataExtractor wrappedDataExtractor, DateFormatterUtility dateFormatterUtility) {
         this.attachmentSummaryListConverter = attachmentSummaryListConverter;
         this.categorySummaryListConverter = categorySummaryListConverter;
         this.commentSummaryListTransformer = commentSummaryListTransformer;
         this.tagSummaryListConverter = tagSummaryListConverter;
         this.wrappedDataExtractor = wrappedDataExtractor;
+        this.dateFormatterUtility = dateFormatterUtility;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class ArticleContentConverter implements Converter<ArticlePageRawResponse
         return Article.builder()
                 .author(createAuthorSummary(source.getBody()))
                 .content(source.getBody().getRawContent())
-                .creationDate(source.getBody().getCreated())
+                .creationDate(dateFormatterUtility.formatGeneral(source.getBody().getCreated()))
                 .link(source.getBody().getLink())
                 .title(source.getBody().getTitle())
                 .tags(tagSummaryListConverter.convert(source.getBody().getTags()))
