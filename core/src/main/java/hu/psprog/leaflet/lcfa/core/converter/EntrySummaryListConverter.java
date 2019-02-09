@@ -4,6 +4,8 @@ import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.EntrySummary;
+import hu.psprog.leaflet.lcfa.core.formatter.DateFormatterUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,13 @@ import java.util.stream.Collectors;
 @Component
 public class EntrySummaryListConverter implements Converter<EntryListDataModel, List<EntrySummary>> {
 
+    private DateFormatterUtility dateFormatterUtility;
+
+    @Autowired
+    public EntrySummaryListConverter(DateFormatterUtility dateFormatterUtility) {
+        this.dateFormatterUtility = dateFormatterUtility;
+    }
+
     @Override
     public List<EntrySummary> convert(EntryListDataModel source) {
         return source.getEntries().stream()
@@ -30,7 +39,7 @@ public class EntrySummaryListConverter implements Converter<EntryListDataModel, 
                 .link(entryDataModel.getLink())
                 .title(entryDataModel.getTitle())
                 .author(createAuthorSummary(entryDataModel))
-                .creationDate(entryDataModel.getCreated())
+                .creationDate(dateFormatterUtility.formatGeneral(entryDataModel.getCreated()))
                 .prologue(entryDataModel.getPrologue())
                 .build();
     }

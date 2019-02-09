@@ -5,6 +5,8 @@ import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
+import hu.psprog.leaflet.lcfa.core.formatter.DateFormatterUtility;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,6 +21,13 @@ import java.util.stream.Collectors;
 @Component
 public class CommentSummaryListTransformer {
 
+    private DateFormatterUtility dateFormatterUtility;
+
+    @Autowired
+    public CommentSummaryListTransformer(DateFormatterUtility dateFormatterUtility) {
+        this.dateFormatterUtility = dateFormatterUtility;
+    }
+
     public List<CommentSummary> convert(CommentListDataModel source, EntryDataModel entryDataModel) {
         return source.getComments().stream()
                 .map(commentDataModel -> convert(commentDataModel, entryDataModel))
@@ -29,7 +38,7 @@ public class CommentSummaryListTransformer {
         return CommentSummary.builder()
                 .author(createAuthorSummary(source))
                 .content(source.getContent())
-                .created(source.getCreated())
+                .created(dateFormatterUtility.formatComments(source.getCreated()))
                 .createdByArticleAuthor(isCreatedByArticleAuthor(source, entryDataModel))
                 .build();
     }

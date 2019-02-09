@@ -30,9 +30,9 @@
         <java.version>11</java.version>
 
         <!-- leaflet internal dependency versions -->
-        <leaflet.rest-api.version>1.6.0</leaflet.rest-api.version>
+        <leaflet.rest-api.version>1.6.1</leaflet.rest-api.version>
         <leaflet.rcp.version>1.4.0</leaflet.rcp.version>
-        <leaflet.bridge.version>3.2.0</leaflet.bridge.version>
+        <leaflet.bridge.version>3.2.1</leaflet.bridge.version>
         <leaflet.tlp-appender.version>1.1.0</leaflet.tlp-appender.version>
         <leaflet.translation-adapter.version>2.1.0</leaflet.translation-adapter.version>
 
