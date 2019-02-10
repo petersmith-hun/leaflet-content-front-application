@@ -18,29 +18,27 @@ import org.springframework.stereotype.Component;
 public class ArticleContentConverter implements Converter<ArticlePageRawResponseWrapper, ArticleContent> {
 
     private ArticleConverter articleConverter;
-    private CategorySummaryListConverter categorySummaryListConverter;
-    private CommentSummaryListTransformer commentSummaryListTransformer;
     private TagSummaryListConverter tagSummaryListConverter;
     private WrappedDataExtractor wrappedDataExtractor;
+    private FilteringDataConversionSupport filteringDataConversionSupport;
 
     @Autowired
-    public ArticleContentConverter(CategorySummaryListConverter categorySummaryListConverter, CommentSummaryListTransformer commentSummaryListTransformer,
-                                   TagSummaryListConverter tagSummaryListConverter, WrappedDataExtractor wrappedDataExtractor, ArticleConverter articleConverter) {
-        this.categorySummaryListConverter = categorySummaryListConverter;
-        this.commentSummaryListTransformer = commentSummaryListTransformer;
+    public ArticleContentConverter(TagSummaryListConverter tagSummaryListConverter, WrappedDataExtractor wrappedDataExtractor,
+                                   ArticleConverter articleConverter, FilteringDataConversionSupport filteringDataConversionSupport) {
         this.tagSummaryListConverter = tagSummaryListConverter;
         this.wrappedDataExtractor = wrappedDataExtractor;
         this.articleConverter = articleConverter;
+        this.filteringDataConversionSupport = filteringDataConversionSupport;
     }
 
     @Override
     public ArticleContent convert(ArticlePageRawResponseWrapper source) {
         return ArticleContent.builder()
                 .article(articleConverter.convert(source.getWrappedExtendedEntryDataModel()))
-                .categories(categorySummaryListConverter.convert(source.getCategoryListDataModel()))
-                .tags(tagSummaryListConverter.convert(source.getWrappedTagListDataModel().getBody()))
+                .categories(filteringDataConversionSupport.mapCategories(source.getCategoryListDataModel()))
+                .tags(filteringDataConversionSupport.mapOptionalWrapped(source.getWrappedTagListDataModel(), tagSummaryListConverter))
                 .seo(wrappedDataExtractor.extractSEOAttributes(source.getWrappedExtendedEntryDataModel()))
-                .comments(commentSummaryListTransformer.convert(source.getWrappedCommentListDataModel().getBody(), source.getWrappedExtendedEntryDataModel().getBody()))
+                .comments(filteringDataConversionSupport.mapComments(source.getWrappedCommentListDataModel(), source.getWrappedExtendedEntryDataModel().getBody()))
                 .build();
     }
 }

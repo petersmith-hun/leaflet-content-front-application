@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -68,7 +69,7 @@ abstract class AbstractParallelContentRequestAdapter<T, P> implements ContentReq
                 .collect(Collectors.toMap(Map.Entry::getKey, callableEntry -> contentAdapterExecutor.submit(callableEntry.getValue())));
 
         return futureMap.entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, callableEntry -> extractResult(callableEntry.getValue())));
+                .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), extractResult(entry.getValue())), Map::putAll);
     }
 
     private BaseBodyDataModel extractResult(Future<BaseBodyDataModel> dataModelFuture) {

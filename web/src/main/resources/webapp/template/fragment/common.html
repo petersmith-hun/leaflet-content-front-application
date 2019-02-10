@@ -30,26 +30,30 @@
             <input type="submit" value="placeholder:search" th:value="#{section.filter.btn_search}">
         </form>
 
-        <p><span style="padding: 10px; display: inline-block;" th:text="#{section.filter.category}">placeholder:categories</span>
-        </p>
-        <ul>
-            <li><a href="#" th:href="@{/}" th:text="#{common.all_entries}">placeholder:all_entries</a></li>
-            <li th:each="category : ${categories}">
-                <a href="#" th:href="@{/category/__${category.id}__/__${category.alias}__}" th:text="${category.title}">placeholder:category</a>
-            </li>
-        </ul>
-
-        <p><span style="padding: 10px; display: inline-block;" th:text="#{section.filter.tags}">placeholder:tags</span>
-        </p>
-        <div class="compactMenu" id="cmTags">
+        <th:block th:unless="${categories.isEmpty()}">
+            <p><span style="padding: 10px; display: inline-block;" th:text="#{section.filter.category}">placeholder:categories</span>
+            </p>
             <ul>
-                <li th:each="tag : ${tags}">
-                    <a href="#" th:href="@{/tag/__${tag.id}__/__${tag.alias}__}"
-                       th:text="${tag.name}">placeholder:tag</a>
+                <li><a href="#" th:href="@{/}" th:text="#{common.all_entries}">placeholder:all_entries</a></li>
+                <li th:each="category : ${categories}">
+                    <a href="#" th:href="@{/category/__${category.id}__/__${category.alias}__}" th:text="${category.title}">placeholder:category</a>
                 </li>
             </ul>
-        </div>
-        <span data-open="cmTags" class="cmOpen">&nbsp;</span>
+        </th:block>
+
+        <th:block th:unless="${tags.isEmpty()}">
+            <p><span style="padding: 10px; display: inline-block;" th:text="#{section.filter.tags}">placeholder:tags</span>
+            </p>
+            <div class="compactMenu" id="cmTags">
+                <ul>
+                    <li th:each="tag : ${tags}">
+                        <a href="#" th:href="@{/tag/__${tag.id}__/__${tag.alias}__}"
+                           th:text="${tag.name}">placeholder:tag</a>
+                    </li>
+                </ul>
+            </div>
+            <span data-open="cmTags" class="cmOpen">&nbsp;</span>
+        </th:block>
     </div>
 </th:block>
 
