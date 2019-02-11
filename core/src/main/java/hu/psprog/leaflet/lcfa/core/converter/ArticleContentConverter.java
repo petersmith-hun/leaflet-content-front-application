@@ -1,13 +1,10 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
-import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.Article;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
-import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
-import hu.psprog.leaflet.lcfa.core.formatter.DateFormatterUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -20,49 +17,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class ArticleContentConverter implements Converter<ArticlePageRawResponseWrapper, ArticleContent> {
 
-    private AttachmentSummaryListConverter attachmentSummaryListConverter;
-    private CategorySummaryListConverter categorySummaryListConverter;
-    private CommentSummaryListTransformer commentSummaryListTransformer;
+    private ArticleConverter articleConverter;
     private TagSummaryListConverter tagSummaryListConverter;
     private WrappedDataExtractor wrappedDataExtractor;
-    private DateFormatterUtility dateFormatterUtility;
+    private FilteringDataConversionSupport filteringDataConversionSupport;
 
     @Autowired
-    public ArticleContentConverter(AttachmentSummaryListConverter attachmentSummaryListConverter, CategorySummaryListConverter categorySummaryListConverter,
-                                   CommentSummaryListTransformer commentSummaryListTransformer, TagSummaryListConverter tagSummaryListConverter,
-                                   WrappedDataExtractor wrappedDataExtractor, DateFormatterUtility dateFormatterUtility) {
-        this.attachmentSummaryListConverter = attachmentSummaryListConverter;
-        this.categorySummaryListConverter = categorySummaryListConverter;
-        this.commentSummaryListTransformer = commentSummaryListTransformer;
+    public ArticleContentConverter(TagSummaryListConverter tagSummaryListConverter, WrappedDataExtractor wrappedDataExtractor,
+                                   ArticleConverter articleConverter, FilteringDataConversionSupport filteringDataConversionSupport) {
         this.tagSummaryListConverter = tagSummaryListConverter;
         this.wrappedDataExtractor = wrappedDataExtractor;
-        this.dateFormatterUtility = dateFormatterUtility;
+        this.articleConverter = articleConverter;
+        this.filteringDataConversionSupport = filteringDataConversionSupport;
     }
 
     @Override
     public ArticleContent convert(ArticlePageRawResponseWrapper source) {
         return ArticleContent.builder()
-                .article(convert(source.getWrappedExtendedEntryDataModel()))
-                .categories(categorySummaryListConverter.convert(source.getCategoryListDataModel()))
-                .tags(tagSummaryListConverter.convert(source.getWrappedTagListDataModel().getBody()))
+                .article(articleConverter.convert(source.getWrappedExtendedEntryDataModel()))
+                .categories(filteringDataConversionSupport.mapCategories(source.getCategoryListDataModel()))
+                .tags(filteringDataConversionSupport.mapOptionalWrapped(source.getWrappedTagListDataModel(), tagSummaryListConverter))
                 .seo(wrappedDataExtractor.extractSEOAttributes(source.getWrappedExtendedEntryDataModel()))
-                .comments(commentSummaryListTransformer.convert(source.getWrappedCommentListDataModel().getBody(), source.getWrappedExtendedEntryDataModel().getBody()))
+                .comments(filteringDataConversionSupport.mapComments(source.getWrappedCommentListDataModel(), source.getWrappedExtendedEntryDataModel().getBody()))
                 .build();
-    }
-
-    private Article convert(WrapperBodyDataModel<ExtendedEntryDataModel> source) {
-        return Article.builder()
-                .author(createAuthorSummary(source.getBody()))
-                .content(source.getBody().getRawContent())
-                .creationDate(dateFormatterUtility.formatGeneral(source.getBody().getCreated()))
-                .link(source.getBody().getLink())
-                .title(source.getBody().getTitle())
-                .tags(tagSummaryListConverter.convert(source.getBody().getTags()))
-                .attachments(attachmentSummaryListConverter.convert(source.getBody().getAttachments()))
-                .build();
-    }
-
-    private AuthorSummary createAuthorSummary(EntryDataModel entryDataModel) {
-        return new AuthorSummary(entryDataModel.getUser().getUsername());
     }
 }

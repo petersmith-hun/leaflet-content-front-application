@@ -13,6 +13,8 @@ import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,8 @@ import java.util.concurrent.Callable;
  */
 @Component
 public class ArticleContentRequestAdapter extends AbstractFilteringSupportParallelContentRequestAdapter<ArticlePageRawResponseWrapper, String> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleContentRequestAdapter.class);
 
     private static final int COMMENT_PAGE = 1;
     private static final int COMMENT_LIMIT = 1000;
@@ -65,7 +69,18 @@ public class ArticleContentRequestAdapter extends AbstractFilteringSupportParall
     }
 
     private Callable<BaseBodyDataModel> prepareCommentBridgeCallable(String contentRequestParameter) {
-        // pagination does not seem to be needed now, so returning the first 1000 comments will do for now
-        return () -> commentBridgeService.getPageOfPublicCommentsForEntry(contentRequestParameter, COMMENT_PAGE, COMMENT_LIMIT, COMMENT_ORDER_BY, COMMENT_ORDER_DIRECTION);
+        return () -> {
+
+            WrapperBodyDataModel<CommentListDataModel> pageOfPublicCommentsForEntry = null;
+            try {
+                // pagination does not seem to be needed now, so returning the first 1000 comments will do for now
+                pageOfPublicCommentsForEntry = commentBridgeService
+                        .getPageOfPublicCommentsForEntry(contentRequestParameter, COMMENT_PAGE, COMMENT_LIMIT, COMMENT_ORDER_BY, COMMENT_ORDER_DIRECTION);
+            } catch (Exception e) {
+                LOGGER.warn("Failed to retrieve comments for entry identified by [{}]", contentRequestParameter, e);
+            }
+
+            return pageOfPublicCommentsForEntry;
+        };
     }
 }
