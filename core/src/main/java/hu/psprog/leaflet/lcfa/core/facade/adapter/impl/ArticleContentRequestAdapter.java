@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
@@ -55,12 +56,19 @@ public class ArticleContentRequestAdapter extends AbstractFilteringSupportParall
 
     @Override
     ArticlePageRawResponseWrapper combinator(Map<CallType, BaseBodyDataModel> result) {
-        return ArticlePageRawResponseWrapper.builder()
-                .categoryListDataModel((CategoryListDataModel) result.get(CallType.CATEGORY))
-                .wrappedExtendedEntryDataModel((WrapperBodyDataModel<ExtendedEntryDataModel>) result.get(CallType.ENTRY))
-                .wrappedTagListDataModel((WrapperBodyDataModel<TagListDataModel>) result.get(CallType.TAG))
-                .wrappedCommentListDataModel((WrapperBodyDataModel<CommentListDataModel>) result.get(CallType.COMMENT))
-                .build();
+
+        ArticlePageRawResponseWrapper articlePageRawResponseWrapper = null;
+        WrapperBodyDataModel<ExtendedEntryDataModel> entry = (WrapperBodyDataModel<ExtendedEntryDataModel>) result.get(CallType.ENTRY);
+        if (Objects.nonNull(entry)) {
+            articlePageRawResponseWrapper = ArticlePageRawResponseWrapper.builder()
+                    .categoryListDataModel((CategoryListDataModel) result.get(CallType.CATEGORY))
+                    .wrappedExtendedEntryDataModel(entry)
+                    .wrappedTagListDataModel((WrapperBodyDataModel<TagListDataModel>) result.get(CallType.TAG))
+                    .wrappedCommentListDataModel((WrapperBodyDataModel<CommentListDataModel>) result.get(CallType.COMMENT))
+                    .build();
+        }
+
+        return articlePageRawResponseWrapper;
     }
 
     @Override

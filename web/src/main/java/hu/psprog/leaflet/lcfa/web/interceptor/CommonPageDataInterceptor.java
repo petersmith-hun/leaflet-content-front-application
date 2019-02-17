@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ public class CommonPageDataInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 
-        if (Objects.nonNull(modelAndView) && !isCommonPageDataPopulated(modelAndView)) {
+        if (Objects.nonNull(modelAndView) && !isCommonPageDataPopulated(modelAndView) && isRequestDispatcher(request)) {
             CommonPageData commonPageData = commonPageDataFacade.getCommonPageData();
             Arrays.stream(CommonPageDataField.values()).forEach(field -> {
                 if (Objects.isNull(modelAndView.getModel().get(field.getFieldName()))) {
@@ -48,6 +49,10 @@ public class CommonPageDataInterceptor extends HandlerInterceptorAdapter {
                 }
             });
         }
+    }
+
+    private boolean isRequestDispatcher(HttpServletRequest request) {
+        return request.getDispatcherType() == DispatcherType.REQUEST;
     }
 
     private boolean isCommonPageDataPopulated(ModelAndView modelAndView) {
