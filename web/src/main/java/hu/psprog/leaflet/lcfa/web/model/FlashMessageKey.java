@@ -7,7 +7,8 @@ package hu.psprog.leaflet.lcfa.web.model;
  */
 public enum FlashMessageKey {
 
-    SUCCESSFUL_CONTACT_REQUEST("flash.contact.success");
+    SUCCESSFUL_CONTACT_REQUEST("flash.contact.success"),
+    SUCCESSFUL_SIGN_UP("flash.signup.success");
 
     private String messageKey;
 
