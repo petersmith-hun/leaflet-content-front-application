@@ -4,25 +4,31 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
- * Contact request model.
+ * Sign-up request model.
  * Includes ReCaptcha token field.
  *
  * @author Peter Smith
  */
 @Data
-public class ContactRequestModel {
+public class SignUpRequestModel {
 
     @NotEmpty
-    private String name;
+    @Size(max = 255)
+    private String username;
 
-    @NotEmpty
     @Email
+    @NotEmpty
+    @Size(max = 255)
     private String email;
 
     @NotEmpty
-    private String message;
+    private String password;
+
+    @NotEmpty
+    private String passwordConfirmation;
 
     @NotEmpty
     private String recaptchaToken;
