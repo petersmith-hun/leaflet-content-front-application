@@ -28,11 +28,11 @@ public class FormLoginFlashMessageHelper {
     /**
      * Maps the current sign-in/out result (extracted from {@link HttpServletRequest}) to the relevant flash message key.
      * Uses the 'auth' query parameter for decision.
-     * If a flash messages key is already set, leaves intact.
+     * If a flash message key is already set, leaves intact.
      *
      * @param request {@link HttpServletRequest} object to extract sign-in/out result from
-     * @param currentFlashMessageKey
-     * @return
+     * @param currentFlashMessageKey currently set flash message key (can be {@code null})
+     * @return resolved flash message key, or {@code null} if none set
      */
     public String getMessageKey(HttpServletRequest request, String currentFlashMessageKey) {
 

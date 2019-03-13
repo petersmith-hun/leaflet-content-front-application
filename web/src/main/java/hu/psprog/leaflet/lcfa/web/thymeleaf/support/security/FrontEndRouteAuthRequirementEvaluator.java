@@ -22,7 +22,7 @@ public class FrontEndRouteAuthRequirementEvaluator {
      *  - menu item does not specify any special authentication requirement (item will be always displayed)
      *  - menu item requires authenticated state and security context contains {@link JWTTokenAuthentication} in authenticated status
      *  - menu item requires anonymous state and security context contains {@link AnonymousAuthenticationToken}
-     * Any different combinations then the ones above will cause the item to remain hidden.
+     * Any different combinations than the ones above will cause the item to remain hidden.
      *
      * @param menuItem {@link MenuItem} object to be checked if it can be displayed
      * @return display status as boolean - {@code true} if the item can be displayed, {@code false} otherwise
