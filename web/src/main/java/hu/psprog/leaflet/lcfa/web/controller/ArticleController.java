@@ -32,6 +32,13 @@ public class ArticleController {
         this.blogContentFacade = blogContentFacade;
     }
 
+    /**
+     * GET /article/{link}
+     * Renders an article.
+     *
+     * @param link link of the article
+     * @return populated {@link ModelAndView} object
+     */
     @GetMapping
     public ModelAndView showArticle(@PathVariable("link") String link) {
 
