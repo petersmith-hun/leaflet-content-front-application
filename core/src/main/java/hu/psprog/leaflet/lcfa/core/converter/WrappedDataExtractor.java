@@ -2,6 +2,7 @@ package hu.psprog.leaflet.lcfa.core.converter;
 
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.routing.FrontEndRouteDataModel;
+import hu.psprog.leaflet.lcfa.core.domain.common.FrontEndRouteAuthRequirement;
 import hu.psprog.leaflet.lcfa.core.domain.common.MenuItem;
 import hu.psprog.leaflet.lcfa.core.domain.common.PaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
@@ -98,6 +99,7 @@ public class WrappedDataExtractor {
                         .name(frontEndRouteDataModel.getName())
                         .routeId(frontEndRouteDataModel.getRouteId())
                         .url(frontEndRouteDataModel.getUrl())
+                        .authRequirement(FrontEndRouteAuthRequirement.valueOf(frontEndRouteDataModel.getAuthRequirement()))
                         .build())
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());

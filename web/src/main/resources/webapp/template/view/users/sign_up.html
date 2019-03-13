@@ -9,14 +9,14 @@
         <div class="form-group">
             <label for="username" th:text="#{form.signup.label.username}">placeholder:username</label>
             <input name="username"
-                   th:value="${!(validatedModel == null || #fields.hasErrors('username')) ? validatedModel.name : null}"
+                   th:value="${!(validatedModel == null || #fields.hasErrors('username')) ? validatedModel.username : null}"
                    class="form-control" required="required" th:placeholder="#{form.signup.placeholder.username}" maxlength="255" type="text" id="username" />
             <span class="validationError" th:if="${#fields.hasErrors('username')}" th:text="#{form.signup.validation.error.username}">placeholder:val_err_email</span>
         </div>
         <div class="form-group">
             <label for="email" th:text="#{form.signup.label.email}">placeholder:email</label>
             <input name="email"
-                   th:value="${!(validatedModel == null || #fields.hasErrors('email')) ? validatedModel.name : null}"
+                   th:value="${!(validatedModel == null || #fields.hasErrors('email')) ? validatedModel.email : null}"
                    class="form-control" required="required" th:placeholder="#{form.signup.placeholder.email}" maxlength="255" type="text" id="email" />
             <span class="validationError" th:if="${#fields.hasErrors('email')}" th:text="#{form.signup.validation.error.email}">placeholder:val_err_email</span>
         </div>
@@ -28,7 +28,7 @@
         <div class="form-group">
             <label for="password_confirm" th:text="#{form.signup.label.password.confirm}">placeholder:passwordconf</label>
             <input name="passwordConfirmation" class="form-control" required="required" th:placeholder="#{form.signup.placeholder.password.confirm}" type="password" id="password_confirm" />
-            <span class="validationError" th:if="${#fields.hasErrors('passwordConfirmation')}" th:text="#{form.signup.validation.error.passwordConfirmation}">placeholder:val_err_email</span>
+            <span class="validationError" th:if="${#fields.hasGlobalErrors()}" th:text="#{form.signup.validation.error.passwordConfirmation}">placeholder:val_err_email</span>
         </div>
         <th:block th:insert="fragment/security.html :: recaptcha-widget" />
         <button type="submit" class="btn btn-default" th:text="#{form.signup.label.send}">placeholder:signup</button>

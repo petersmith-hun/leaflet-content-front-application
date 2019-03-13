@@ -19,4 +19,5 @@ public class MenuItem {
     private String routeId;
     private String name;
     private String url;
+    private FrontEndRouteAuthRequirement authRequirement;
 }

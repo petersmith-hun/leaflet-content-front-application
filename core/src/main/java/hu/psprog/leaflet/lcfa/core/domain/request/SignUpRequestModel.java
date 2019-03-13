@@ -1,6 +1,9 @@
 package hu.psprog.leaflet.lcfa.core.domain.request;
 
+import hu.psprog.leaflet.api.rest.request.user.UserPasswordRequestModel;
+import hu.psprog.leaflet.api.rest.request.validator.PasswordConfirmCheck;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +16,9 @@ import javax.validation.constraints.Size;
  * @author Peter Smith
  */
 @Data
-public class SignUpRequestModel {
+@PasswordConfirmCheck
+@EqualsAndHashCode(callSuper = true)
+public class SignUpRequestModel extends UserPasswordRequestModel {
 
     @NotEmpty
     @Size(max = 255)
@@ -23,12 +28,6 @@ public class SignUpRequestModel {
     @NotEmpty
     @Size(max = 255)
     private String email;
-
-    @NotEmpty
-    private String password;
-
-    @NotEmpty
-    private String passwordConfirmation;
 
     @NotEmpty
     private String recaptchaToken;

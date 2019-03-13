@@ -2,9 +2,11 @@ package hu.psprog.leaflet.lcfa.web.controller;
 
 import hu.psprog.leaflet.lcfa.core.domain.request.PasswordReclaimRequestModel;
 import hu.psprog.leaflet.lcfa.core.domain.request.SignUpRequestModel;
+import hu.psprog.leaflet.lcfa.core.domain.result.SignUpResult;
 import hu.psprog.leaflet.lcfa.core.facade.AuthenticationFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
+import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * Controller implementation for authentication related operations.
@@ -27,6 +32,11 @@ public class AuthenticationController extends BaseController {
 
     private static final String PATH_SIGN_IN = "/signin";
     private static final String PATH_SIGN_UP = "/signup";
+
+    private static final Map<SignUpResult, FlashMessageKey> SIGN_UP_RESULT_FLASH_MESSAGE_KEY_MAP = Map.of(
+            SignUpResult.SUCCESS, FlashMessageKey.SUCCESSFUL_SIGN_UP,
+            SignUpResult.ADDRESS_IN_USE, FlashMessageKey.FAILED_SIGN_UP_ADDRESS_ALREADY_IN_USE,
+            SignUpResult.FAILURE, FlashMessageKey.FAILED_SIGN_UP_UNKNOWN_ERROR);
 
     private ModelAndViewFactory modelAndViewFactory;
     private AuthenticationFacade authenticationFacade;
@@ -62,6 +72,7 @@ public class AuthenticationController extends BaseController {
     public ModelAndView renderSignUpForm(@ModelAttribute SignUpRequestModel signUpRequestModel) {
 
         return modelAndViewFactory.createForView(VIEW_USERS_SIGN_UP)
+                .withAttribute(ModelField.VALIDATED_MODEL, signUpRequestModel)
                 .build();
     }
 
@@ -74,19 +85,37 @@ public class AuthenticationController extends BaseController {
      * @param redirectAttributes redirection attributes for passing flash message
      * @return populated {@link ModelAndView} object
      */
-    @PostMapping
-    public ModelAndView processSignUpRequest(@ModelAttribute SignUpRequestModel signUpRequestModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    @PostMapping(PATH_SIGN_UP)
+    public ModelAndView processSignUpRequest(@ModelAttribute @Valid SignUpRequestModel signUpRequestModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         ModelAndView modelAndView;
         if (bindingResult.hasErrors()) {
             modelAndView = renderSignUpForm(signUpRequestModel);
         } else {
-            authenticationFacade.signUp(signUpRequestModel);
-            modelAndView = modelAndViewFactory.createRedirectionTo(PATH_SIGN_IN);
-            flash(redirectAttributes, FlashMessageKey.SUCCESSFUL_SIGN_UP);
+            SignUpResult signUpResult = authenticationFacade.signUp(signUpRequestModel);
+            modelAndView = handleSignUpResult(signUpResult, redirectAttributes);
         }
 
-
         return modelAndView;
+    }
+
+    private ModelAndView handleSignUpResult(SignUpResult signUpResult, RedirectAttributes redirectAttributes) {
+
+        String redirectionPath = mapResultToRedirectionPath(signUpResult);
+        FlashMessageKey flashMessageKey = mapResultToFlashMessageKey(signUpResult);
+        flash(redirectAttributes, flashMessageKey);
+
+        return modelAndViewFactory.createRedirectionTo(redirectionPath);
+    }
+
+    private String mapResultToRedirectionPath(SignUpResult signUpResult) {
+
+        return SignUpResult.SUCCESS == signUpResult
+                ? PATH_SIGN_IN
+                : PATH_SIGN_UP;
+    }
+
+    private FlashMessageKey mapResultToFlashMessageKey(SignUpResult signUpResult) {
+        return SIGN_UP_RESULT_FLASH_MESSAGE_KEY_MAP.getOrDefault(signUpResult, FlashMessageKey.FAILED_SIGN_UP_UNKNOWN_ERROR);
     }
 }

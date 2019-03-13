@@ -2,10 +2,12 @@ package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 
 import hu.psprog.leaflet.api.rest.request.user.UserInitializeRequestModel;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
+import hu.psprog.leaflet.bridge.client.exception.ConflictingRequestException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
 import hu.psprog.leaflet.bridge.service.UserBridgeService;
 import hu.psprog.leaflet.lcfa.core.converter.SignUpRequestConverter;
 import hu.psprog.leaflet.lcfa.core.domain.request.SignUpRequestModel;
+import hu.psprog.leaflet.lcfa.core.domain.result.SignUpResult;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Component
-public class SignUpRequestContentRequestAdapter implements ContentRequestAdapter<Boolean, SignUpRequestModel> {
+public class SignUpRequestContentRequestAdapter implements ContentRequestAdapter<SignUpResult, SignUpRequestModel> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignUpRequestContentRequestAdapter.class);
 
@@ -35,18 +37,21 @@ public class SignUpRequestContentRequestAdapter implements ContentRequestAdapter
     }
 
     @Override
-    public Optional<Boolean> getContent(SignUpRequestModel contentRequestParameter) {
+    public Optional<SignUpResult> getContent(SignUpRequestModel contentRequestParameter) {
 
         UserInitializeRequestModel userInitializeRequestModel = signUpRequestConverter.convert(contentRequestParameter);
-        Boolean success = null;
+        SignUpResult signUpResult = SignUpResult.SUCCESS;
         try {
             userBridgeService.signUp(userInitializeRequestModel, contentRequestParameter.getRecaptchaToken());
-            success = true;
+        } catch (ConflictingRequestException e) {
+            LOGGER.warn("Sign-up attempt with already used email address", e);
+            signUpResult = SignUpResult.ADDRESS_IN_USE;
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to process sign-up request", e);
+            signUpResult = SignUpResult.FAILURE;
         }
 
-        return Optional.ofNullable(success);
+        return Optional.of(signUpResult);
     }
 
     @Override

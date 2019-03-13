@@ -3,7 +3,7 @@ package hu.psprog.leaflet.lcfa.web.config;
 import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
 import hu.psprog.leaflet.lcfa.web.interceptor.CommonPageDataInterceptor;
 import hu.psprog.leaflet.lcfa.web.interceptor.ModelAndViewDebuggerInterceptor;
-import hu.psprog.leaflet.lcfa.web.thymeleaf.markdown.support.ExtendedLayoutDialect;
+import hu.psprog.leaflet.lcfa.web.thymeleaf.support.markdown.ExtendedLayoutDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
