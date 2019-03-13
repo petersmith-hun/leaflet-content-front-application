@@ -45,6 +45,14 @@
             <artifactId>tms-rest-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>hu.psprog.leaflet</groupId>
+            <artifactId>jwt-auth-support-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>hu.psprog.leaflet</groupId>
+            <artifactId>jwt-auth-front-end-support</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
         </dependency>

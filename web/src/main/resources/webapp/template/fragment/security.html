@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+
+<!-- ReCaptcha widget -->
+<div th:fragment="recaptcha-widget">
+    <label for="recaptcha" th:text="#{form.recaptcha.label.confirm}">placeholder:confirm</label>
+    <div style="display: inline-block;" id="recaptcha" class="g-recaptcha" th:data-sitekey="${@environment.getProperty('page-config.recaptcha-sitekey')}" data-callback="populateTokenField"></div>
+    <input type="hidden" id="recaptchaToken" name="recaptchaToken" required="required" />
+    <span class="validationError" th:if="${#fields.hasErrors('recaptchaToken')}" th:text="#{form.recaptcha.validation.error.token}">placeholder:val_err_token</span>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script type="text/javascript">
+        function populateTokenField(token) {
+            $('#recaptchaToken').val(token);
+        }
+    </script>
+</div>
+</body>

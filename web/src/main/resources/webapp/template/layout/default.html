@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
         <title th:text="${seo.pageTitle}">placeholder:title</title>
         <meta name="description" th:content="${seo.metaDescription}" />
@@ -43,19 +44,30 @@
 
         <!-- TODO insert Google tracking code here -->
 
-        <div id="flash" th:if="${flash != null}">
-            <div class="message">
-                <th:block th:text="#{__${flash}__}" />
-                <span class="hide_msg" th:text="#{common.flash.close}">placeholder:flash_close</span>
+        <th:block th:with="flash=${@formLoginFlashMessageHelper.getMessageKey(#request, flash)}">
+            <div id="flash" th:if="${flash != null}">
+                <div class="message">
+                    <th:block th:text="${flash == T(hu.psprog.leaflet.lcfa.web.model.FlashMessageKey).SUCCESSFUL_SIGN_IN.getMessageKey()}
+                                        ? #{__${flash}__(${#authentication.details.name})}
+                                        : #{__${flash}__}" />
+                    <span class="hide_msg" th:text="#{common.flash.close}">placeholder:flash_close</span>
+                </div>
             </div>
-        </div>
+        </th:block>
 
         <!-- header section -->
         <div id="header">
-            <a id="logo" href="/"><img src="/img/logo.png" th:src="@{/images/logo.png}" /></a>
+            <a id="logo" href="/" th:href="@{/}"><img src="/img/logo.png" th:src="@{/images/logo.png}" /></a>
             <ul class="" id="mainMenu" th:if="${headerMenu != null}">
-                <li class="" th:each="item : ${headerMenu}">
-                    <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="#{__${item.name}__}">placeholder:menuitem</a>
+                <th:block th:each="item : ${headerMenu}">
+                    <li th:if="${@frontEndRouteAuthRequirementEvaluator.canDisplay(item)}">
+                        <a href="#" th:href="@{__${item.url}__}" th:id="'menuitem_' + ${item.routeId}" th:text="#{__${item.name}__}">placeholder:menuitem</a>
+                    </li>
+                </th:block>
+                <li style="float: right;" sec:authorize="isAuthenticated()">
+                    <form th:action="@{__${@environment.getProperty('page-config.logout-endpoint')}__}" th:method="post" action="#" id="logoutForm">
+                        <a href="javascript:void(0)" onclick="$('#logoutForm').submit()" type="submit" th:text="#{menu.logout}">placeholder:signout</a>
+                    </form>
                 </li>
             </ul>
             <span id="mobileMenuBtn" th:text="#{common.menu}">placeholder:menu</span>
@@ -72,7 +84,7 @@
                 <div class="footerColumn">
                     <p class="footerColumnTitle" th:text="${@environment.getProperty('page-config.sitename')}">placeholder:sitename</p>
                     <ul class="footerColumnData">
-                        <li>&copy; Kovács Péter, 2019</li>
+                        <li th:text="${@environment.getProperty('page-config.copyright')}">placeholder:copyright</li>
                         <li>&nbsp;</li>
                         <li>Powered by <a href="https://spring.io/">Spring Framework</a></li>
                         <li>Managed by <a href="https://github.com/petersmith-hun/leaflet-backend">Leaflet</a></li>
@@ -97,8 +109,11 @@
                 <div class="footerColumn">
                     <p class="footerColumnTitle" th:text="#{common.contact}">placeholder:contact</p>
                     <ul class="footerColumnData">
-                        <li>email: <a href="#" th:href="'mailto:' + ${@environment.getProperty('page-config.contact-mail')}"
-                                      th:text="${@environment.getProperty('page-config.contact-mail')}">placeholder:contact_mail</a></li>
+                        <li>
+                            <span>email: </span>
+                            <a href="#" th:href="'mailto:' + ${@environment.getProperty('page-config.contact-mail')}"
+                               th:text="${@environment.getProperty('page-config.contact-mail')}">placeholder:contact_mail</a>
+                        </li>
                     </ul>
                 </div>
             </div>

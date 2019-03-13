@@ -30,11 +30,12 @@
         <java.version>11</java.version>
 
         <!-- leaflet internal dependency versions -->
-        <leaflet.rest-api.version>1.6.1</leaflet.rest-api.version>
-        <leaflet.rcp.version>1.5.0</leaflet.rcp.version>
+        <leaflet.rest-api.version>1.6.2</leaflet.rest-api.version>
+        <leaflet.rcp.version>1.5.1</leaflet.rcp.version>
         <leaflet.bridge.version>3.2.2</leaflet.bridge.version>
         <leaflet.tlp-appender.version>1.1.0</leaflet.tlp-appender.version>
         <leaflet.translation-adapter.version>2.1.0</leaflet.translation-adapter.version>
+        <leaflet.jwt-auth-support.version>1.0.0</leaflet.jwt-auth-support.version>
 
         <!-- Spring versions -->
         <spring.boot.version>2.1.1.RELEASE</spring.boot.version>
@@ -116,6 +117,21 @@
                 <groupId>hu.psprog.leaflet</groupId>
                 <artifactId>leaflet-translation-adapter</artifactId>
                 <version>${leaflet.translation-adapter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.psprog.leaflet</groupId>
+                <artifactId>jwt-auth-support-api</artifactId>
+                <version>${leaflet.jwt-auth-support.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.psprog.leaflet</groupId>
+                <artifactId>jwt-auth-handler</artifactId>
+                <version>${leaflet.jwt-auth-support.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>hu.psprog.leaflet</groupId>
+                <artifactId>jwt-auth-front-end-support</artifactId>
+                <version>${leaflet.jwt-auth-support.version}</version>
             </dependency>
 
             <!-- Spring Framework dependencies -->

@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/default}">
-<head>
-    <title th:text="${seo.metaTitle} + ' - ' + ${seo.pageTitle}">placeholder:title</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script type="text/javascript">
-        function populateTokenField(token) {
-            $('#recaptchaToken').val(token);
-        }
-    </script>
-</head>
 <body>
 <div id="entries" class="static" layout:fragment="content">
     <h3 th:text="${static.title}">placeholder:title</h3>
     <th:block th:markdown="${static.content}" />
     <div class="forms">
-        <form th:object="${contactRequestModel}" th:action="@{/contact}" id="ContactContactForm" method="post" accept-charset="utf-8">
+        <form th:object="${contactRequestModel}" th:action="@{/contact}" id="contact_form" method="post" accept-charset="utf-8">
             <div class="input text">
                 <label for="ContactName" th:text="#{form.contact.label.name}">placeholder:name</label>
                 <input name="name" placeholder="placeholder:name"
@@ -37,12 +28,7 @@
                           th:placeholder="#{form.contact.placeholder.message}" placeholder="placeholder:message" required="required" cols="30" rows="6" id="ContactMessage"></textarea>
                 <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.contact.validation.error.message}">placeholder:val_err_message</span>
             </div>
-            <div>
-                <label for="recaptcha" th:text="#{form.contact.label.confirm}">placeholder:confirm</label>
-                <div style="display: inline-block;" id="recaptcha" class="g-recaptcha" th:data-sitekey="${@environment.getProperty('page-config.recaptcha-sitekey')}" data-callback="populateTokenField"></div>
-                <input type="hidden" id="recaptchaToken" name="recaptchaToken" required="required" />
-                <span class="validationError" th:if="${#fields.hasErrors('recaptchaToken')}" th:text="#{form.contact.validation.error.token}">placeholder:val_err_token</span>
-            </div>
+            <th:block th:insert="fragment/security.html :: recaptcha-widget" />
             <input type="submit" th:value="#{form.contact.label.send}" value="placeholder:send" />
         </form>
     </div>

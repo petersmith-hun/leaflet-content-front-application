@@ -6,23 +6,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 /**
- * Contact request model.
+ * Password reclaim request model.
  * Includes ReCaptcha token field.
  *
  * @author Peter Smith
  */
 @Data
-public class ContactRequestModel {
-
-    @NotEmpty
-    private String name;
+public class PasswordReclaimRequestModel {
 
     @NotEmpty
     @Email
     private String email;
-
-    @NotEmpty
-    private String message;
 
     @NotEmpty
     private String recaptchaToken;

@@ -1,4 +1,4 @@
-package hu.psprog.leaflet.lcfa.web.thymeleaf.markdown.support;
+package hu.psprog.leaflet.lcfa.web.thymeleaf.support.markdown;
 
 import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
