@@ -28,12 +28,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String ROLE_ADMIN = "ADMIN";
     private static final String ROLE_EDITOR = "EDITOR";
     private static final String ROLE_USER = "USER";
-    private static final String ROLE_RECLAIM = "RECLAIM";
 
     private static final String PATH_LOGIN = "/signin";
     private static final String PATH_LOGIN_FAILURE = "/signin?auth=failure";
     private static final String PATH_PROFILE = "/profile/**";
-    private static final String PATH_RECLAIM = "/password-reset/**";
     private static final String PATH_LOGOUT_REDIRECT = "/?auth=signout";
 
     private final TokenRevokeLogoutHandler tokenRevokeLogoutHandler;
@@ -70,8 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers(PATH_PROFILE)
                     .hasAnyRole(ROLE_ADMIN, ROLE_EDITOR, ROLE_USER)
-                .antMatchers(PATH_RECLAIM)
-                    .hasRole(ROLE_RECLAIM)
                 .anyRequest()
                     .permitAll()
                 .and()

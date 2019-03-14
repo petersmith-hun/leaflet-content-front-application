@@ -14,6 +14,8 @@ public enum ContentRequestAdapterIdentifier {
     CONTACT_REQUEST,
     CONTENT_FILTER,
     HOME_PAGE,
+    PASSWORD_RESET_REQUEST,
+    PASSWORD_RESET_CONFIRMATION,
     SIGN_UP,
     STATIC_PAGE,
     TAG_FILTER
