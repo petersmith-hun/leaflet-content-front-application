@@ -115,7 +115,7 @@ public class AuthenticationController extends BaseController {
 
     /**
      * POST /password-reset
-     * Processed a password reset demand.
+     * Processes a password reset demand.
      * Redirects to home after successfully processing the request. On failure, redirects to self.
      *
      * @param passwordReclaimRequestModel form contents as {@link PasswordReclaimRequestModel}

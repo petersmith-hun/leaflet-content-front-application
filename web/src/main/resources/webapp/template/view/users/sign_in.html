@@ -17,7 +17,6 @@
     </form>
 
     <h3 th:text="#{form.reclaim.title}">placeholder:reclaim</h3>
-    <!-- TODO fix action -->
     <form th:action="@{/password-reset}" th:object="${passwordReclaimRequestModel}" method="post">
         <div class="form-group">
             <label for="forgetemail" th:text="#{form.reclaim.label.email}">placeholder:email</label>
