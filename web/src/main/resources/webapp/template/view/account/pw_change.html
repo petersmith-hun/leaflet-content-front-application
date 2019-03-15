@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+<div id="entries" class="forms" layout:fragment="content">
+
+    <th:block th:insert="fragment/profile.html :: profile-navigation" />
+    <form th:object="${passwordChangeRequestModel}" th:action="@{''}" method="post" accept-charset="utf-8">
+        <h3 class="" th:text="#{form.profile.pwchange.title}">placeholder:pwchange</h3>
+        <div class="form-group">
+            <label for="currentPassword" th:text="#{form.profile.pwchange.label.password.current}">placeholder:password</label>
+            <input name="currentPassword" class="form-control" required="required" th:placeholder="#{form.profile.pwchange.placeholder.password.current}" type="password" id="currentPassword" />
+            <span class="validationError" th:if="${#fields.hasErrors('currentPassword')}" th:text="#{form.profile.pwchange.validation.error.password.current}">placeholder:val_err_pw</span>
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="#{form.profile.pwchange.label.password.new}">placeholder:password</label>
+            <input name="password" class="form-control" required="required" th:placeholder="#{form.profile.pwchange.placeholder.password.new}" type="password" id="password" />
+            <span class="validationError" th:if="${#fields.hasErrors('password')}" th:text="#{form.profile.pwchange.validation.error.password.new}">placeholder:val_err_pw</span>
+        </div>
+        <div class="form-group">
+            <label for="password_confirm" th:text="#{form.profile.pwchange.label.password.confirm}">placeholder:passwordconf</label>
+            <input name="passwordConfirmation" class="form-control" required="required" th:placeholder="#{form.profile.pwchange.placeholder.password.confirm}" type="password" id="password_confirm" />
+            <span class="validationError" th:if="${#fields.hasGlobalErrors()}" th:text="#{form.profile.pwchange.validation.error.passwordConfirmation}">placeholder:val_err_pw</span>
+        </div>
+        <button type="submit" class="btn btn-default" th:text="#{form.profile.pwchange.label.send}">placeholder:reset</button>
+    </form>
+
+</div>
+</body>
+</html>

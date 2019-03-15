@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/default}">
+<body>
+
+<!-- profile navigation bar -->
+<th:block th:fragment="profile-navigation">
+    <p>&nbsp;</p>
+    <div class="intro" style="padding-bottom: 20px;">
+        <a class="commentBtn" style="margin: 5px;" th:href="@{/profile}" th:text="#{section.profile.navigation.baseinfo}">placeholder:baseinfo</a>
+        <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/change-password}" th:text="#{section.profile.navigation.pwchange}">placeholder:pwchange</a>
+        <!-- TODO uncomment once comment handling is done -->
+        <!--<a class="commentBtn" style="margin: 5px;" th:href="@{/profile/my-comments}" th:text="#{section.profile.navigation.comments}">placeholder:mycomments</a>-->
+        <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/delete-account}" th:text="#{section.profile.navigation.delete}">placeholder:deleteaccount</a>
+        <form th:action="@{__${@environment.getProperty('page-config.logout-endpoint')}__}" th:method="post" action="#" id="logoutFormOnProfile">
+            <a class="commentBtn" href="javascript:void(0)" onclick="$('#logoutFormOnProfile').submit()" type="submit" th:text="#{menu.logout}">placeholder:signout</a>
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

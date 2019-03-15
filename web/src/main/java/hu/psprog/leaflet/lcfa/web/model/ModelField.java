@@ -14,6 +14,7 @@ public enum ModelField {
     LIST_ENTRIES("entries"),
     LIST_TAGS("tags"),
 
+    ACCOUNT("account"),
     ARTICLE("article"),
     COMMENTS("comments"),
     CURRENT_PAGE_NUMBER("currentPageNumber"),

@@ -17,6 +17,10 @@
             <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
             <groupId>hu.psprog.leaflet</groupId>
             <artifactId>bridge-implementation</artifactId>
         </dependency>
