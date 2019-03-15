@@ -40,10 +40,10 @@ class AccountDeletionHandler {
     /**
      * Deletes the given (currently authenticated) user.
      * Account deletion is a complex operation, consists of the following steps:
-     *  1) Re-authentication: user is re-authenticated to ensure their intention. Re-authenticated claims a new authenticated token, and revokes the current one.
+     *  1) Re-authentication: user is re-authenticated to ensure their intention. Re-authentication claims a new authentication token, and revokes the current one.
      *     If this step fails, we cannot move on with processing the deletion request.
      *  2) Actually deleting the account (via Bridge).
-     *  3) Forcibly log the user out and destroying the security context.
+     *  3) Forcibly logging the user out and destroying the security context.
      *
      * @param userID ID of the authenticated user
      * @param accountDeletionRequest {@link AccountDeletionRequest} object containing confirmation information
