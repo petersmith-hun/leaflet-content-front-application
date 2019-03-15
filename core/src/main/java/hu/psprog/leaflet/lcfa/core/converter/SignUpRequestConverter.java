@@ -15,7 +15,7 @@ import java.util.Locale;
 @Component
 public class SignUpRequestConverter implements Converter<SignUpRequestModel, UserInitializeRequestModel> {
 
-    private static final Locale DEFAULT_LOCALE = Locale.forLanguageTag("hu_HU");
+    private static final Locale DEFAULT_LOCALE = Locale.forLanguageTag("HU");
 
     @Override
     public UserInitializeRequestModel convert(SignUpRequestModel source) {
