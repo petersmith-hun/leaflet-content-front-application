@@ -62,6 +62,7 @@ public class ArticleController extends BaseController {
                 .withAttribute(ModelField.LIST_CATEGORIES, articleContent.getCategories())
                 .withAttribute(ModelField.LIST_TAGS, articleContent.getTags())
                 .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), articleContent.getSeo())
+                .withAttribute(ModelField.VALIDATED_MODEL, articleCommentRequest)
                 .build();
     }
 

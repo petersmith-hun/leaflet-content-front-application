@@ -37,11 +37,17 @@
             <th:block sec:authorize="isAnonymous()">
                 <div class="input text">
                     <label for="name" th:text="#{form.comment.label.name}">placeholder:name</label>
-                    <input name="name" th:placeholder="#{form.comment.placeholder.name}" required="required" maxlength="255" type="text" id="name" />
+                    <input name="name"
+                           th:value="${!(validatedModel == null || #fields.hasErrors('name')) ? validatedModel.name : null}"
+                           th:placeholder="#{form.comment.placeholder.name}" required="required" maxlength="255" type="text" id="name" />
+                    <span class="validationError" th:if="${#fields.hasErrors('name')}" th:text="#{form.comment.validation.error.name}">placeholder:val_err_name</span>
                 </div>
                 <div class="input text">
                     <label for="email" th:text="#{form.comment.label.email}">placeholder:email</label>
-                    <input name="email" th:placeholder="#{form.comment.placeholder.email}" required="required" maxlength="255" type="email" id="email" />
+                    <input name="email"
+                           th:value="${!(validatedModel == null || #fields.hasErrors('email')) ? validatedModel.email : null}"
+                           th:placeholder="#{form.comment.placeholder.email}" required="required" maxlength="255" type="email" id="email" />
+                    <span class="validationError" th:if="${#fields.hasErrors('email')}" th:text="#{form.comment.validation.error.email}">placeholder:val_err_email</span>
                 </div>
             </th:block>
 
@@ -52,7 +58,10 @@
 
             <div class="input textarea">
                 <label for="message" th:text="#{form.comment.label.message}">placeholder:message</label>
-                <textarea name="message" th:placeholder="#{form.comment.placeholder.message}" required="required" cols="30" rows="6" id="message"></textarea>
+                <textarea name="message"
+                          th:text="${!(validatedModel == null || #fields.hasErrors('message')) ? validatedModel.message : null}"
+                          th:placeholder="#{form.comment.placeholder.message}" maxlength="2000" required="required" cols="30" rows="6" id="message"></textarea>
+                <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.comment.validation.error.message}">placeholder:val_err_message</span>
             </div>
             <th:block th:insert="fragment/security.html :: recaptcha-widget" />
             <input type="submit" value="placeholder:send" th:value="#{form.comment.label.send}" />
