@@ -10,6 +10,7 @@ public enum ContentRequestAdapterIdentifier {
 
     ARTICLE,
     CATEGORY_FILTER,
+    COMMENT_POST,
     COMMON_PAGE_DATA,
     CONTACT_REQUEST,
     CONTENT_FILTER,

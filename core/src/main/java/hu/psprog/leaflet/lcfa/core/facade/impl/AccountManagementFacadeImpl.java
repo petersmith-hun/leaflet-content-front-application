@@ -11,6 +11,7 @@ import hu.psprog.leaflet.lcfa.core.exception.UserRequestProcessingException;
 import hu.psprog.leaflet.lcfa.core.facade.AccountManagementFacade;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
+import hu.psprog.leaflet.lcfa.core.facade.impl.utility.AccountDeletionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

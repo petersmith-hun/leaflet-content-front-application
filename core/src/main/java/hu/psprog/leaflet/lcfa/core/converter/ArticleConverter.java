@@ -33,6 +33,7 @@ public class ArticleConverter implements Converter<WrapperBodyDataModel<Extended
     @Override
     public Article convert(WrapperBodyDataModel<ExtendedEntryDataModel> source) {
         return Article.builder()
+                .id(source.getBody().getId())
                 .author(createAuthorSummary(source.getBody()))
                 .content(source.getBody().getRawContent())
                 .creationDate(dateFormatterUtility.formatGeneral(source.getBody().getCreated()))

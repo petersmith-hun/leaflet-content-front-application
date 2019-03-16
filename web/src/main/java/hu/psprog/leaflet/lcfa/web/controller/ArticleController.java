@@ -2,34 +2,46 @@ package hu.psprog.leaflet.lcfa.web.controller;
 
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageDataField;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
+import hu.psprog.leaflet.lcfa.core.domain.request.ArticleCommentRequest;
+import hu.psprog.leaflet.lcfa.core.facade.ArticleOperationFacade;
 import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
+import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 /**
- * Controller implementation for rendering articles.
+ * Controller implementation for rendering articles and handling article related user operations.
  *
  * @author Peter Smith
  */
 @Controller
-@RequestMapping("/article/{link}")
-public class ArticleController {
+public class ArticleController extends BaseController {
 
     private static final String VIEW_BLOG_DETAILS = "view/blog/article";
 
+    private static final String PATH_ARTICLE_BY_LINK = "/article/{link}";
+    private static final String PATH_COMMENT = "/article/{link}/comment";
+
     private ModelAndViewFactory modelAndViewFactory;
     private BlogContentFacade blogContentFacade;
+    private ArticleOperationFacade articleOperationFacade;
 
     @Autowired
-    public ArticleController(ModelAndViewFactory modelAndViewFactory, BlogContentFacade blogContentFacade) {
+    public ArticleController(ModelAndViewFactory modelAndViewFactory, BlogContentFacade blogContentFacade, ArticleOperationFacade articleOperationFacade) {
         this.modelAndViewFactory = modelAndViewFactory;
         this.blogContentFacade = blogContentFacade;
+        this.articleOperationFacade = articleOperationFacade;
     }
 
     /**
@@ -39,8 +51,8 @@ public class ArticleController {
      * @param link link of the article
      * @return populated {@link ModelAndView} object
      */
-    @GetMapping
-    public ModelAndView showArticle(@PathVariable("link") String link) {
+    @GetMapping(PATH_ARTICLE_BY_LINK)
+    public ModelAndView showArticle(@PathVariable("link") String link, @ModelAttribute ArticleCommentRequest articleCommentRequest) {
 
         ArticleContent articleContent = blogContentFacade.getArticle(link);
 
@@ -51,5 +63,37 @@ public class ArticleController {
                 .withAttribute(ModelField.LIST_TAGS, articleContent.getTags())
                 .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), articleContent.getSeo())
                 .build();
+    }
+
+    /**
+     * POST /article/{link}/comment
+     * Processes an article comment request.
+     *
+     * @param link link of the article
+     * @param articleCommentRequest form contents as {@link ArticleCommentRequest}
+     * @param bindingResult validation results
+     * @param redirectAttributes redirection attributes
+     * @return populated {@link ModelAndView} object
+     */
+    @PostMapping(PATH_COMMENT)
+    public ModelAndView processCommentRequest(@PathVariable("link") String link, @ModelAttribute @Valid ArticleCommentRequest articleCommentRequest,
+                                              BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        ModelAndView modelAndView;
+        if (bindingResult.hasErrors()) {
+            modelAndView = showArticle(link, articleCommentRequest);
+        } else {
+            FlashMessageKey flashMessageKey = articleOperationFacade.processCommentRequest(currentUserID(), articleCommentRequest)
+                    ? FlashMessageKey.SUCCESSFUL_COMMENT_REQUEST
+                    : FlashMessageKey.FAILED_COMMENT_REQUEST;
+            flash(redirectAttributes, flashMessageKey);
+            modelAndView = modelAndViewFactory.createRedirectionTo(replaceEntryLinkInPath(link));
+        }
+
+        return modelAndView;
+    }
+
+    private String replaceEntryLinkInPath(String link) {
+        return PATH_ARTICLE_BY_LINK.replace("{link}", link);
     }
 }
