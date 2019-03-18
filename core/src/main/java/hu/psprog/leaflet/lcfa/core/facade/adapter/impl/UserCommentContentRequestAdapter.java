@@ -1,6 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 
-import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
@@ -23,7 +23,7 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Component
-public class UserCommentContentRequestAdapter implements ContentRequestAdapter<WrapperBodyDataModel<CommentListDataModel>, FilteredPaginationContentRequest<Long, OrderBy.Comment>> {
+public class UserCommentContentRequestAdapter implements ContentRequestAdapter<WrapperBodyDataModel<ExtendedCommentListDataModel>, FilteredPaginationContentRequest<Long, OrderBy.Comment>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCommentContentRequestAdapter.class);
 
@@ -35,9 +35,9 @@ public class UserCommentContentRequestAdapter implements ContentRequestAdapter<W
     }
 
     @Override
-    public Optional<WrapperBodyDataModel<CommentListDataModel>> getContent(FilteredPaginationContentRequest<Long, OrderBy.Comment> contentRequestParameter) {
+    public Optional<WrapperBodyDataModel<ExtendedCommentListDataModel>> getContent(FilteredPaginationContentRequest<Long, OrderBy.Comment> contentRequestParameter) {
 
-        WrapperBodyDataModel<CommentListDataModel> commentListDataModel = null;
+        WrapperBodyDataModel<ExtendedCommentListDataModel> commentListDataModel = null;
         try {
             commentListDataModel = commentBridgeService.getPageOfCommentsForUser(contentRequestParameter.getFilterValue(), contentRequestParameter.getPage(),
                     contentRequestParameter.getLimit(), mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));

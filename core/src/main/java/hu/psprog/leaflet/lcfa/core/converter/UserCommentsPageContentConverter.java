@@ -1,6 +1,7 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
 import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @author Peter Smith
  */
 @Component
-public class UserCommentsPageContentConverter implements Converter<WrapperBodyDataModel<CommentListDataModel>, UserCommentsPageContent> {
+public class UserCommentsPageContentConverter implements Converter<WrapperBodyDataModel<ExtendedCommentListDataModel>, UserCommentsPageContent> {
 
     private CommentSummaryListTransformer commentSummaryListTransformer;
     private WrappedDataExtractor wrappedDataExtractor;
@@ -25,7 +26,7 @@ public class UserCommentsPageContentConverter implements Converter<WrapperBodyDa
     }
 
     @Override
-    public UserCommentsPageContent convert(WrapperBodyDataModel<CommentListDataModel> source) {
+    public UserCommentsPageContent convert(WrapperBodyDataModel<ExtendedCommentListDataModel> source) {
         return UserCommentsPageContent.builder()
                 .comments(commentSummaryListTransformer.convert(source.getBody()))
                 .paginationAttributes(wrappedDataExtractor.extractPaginationAttributes(source))

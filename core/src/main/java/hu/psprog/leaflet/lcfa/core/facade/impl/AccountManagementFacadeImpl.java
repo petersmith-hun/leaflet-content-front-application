@@ -2,7 +2,7 @@ package hu.psprog.leaflet.lcfa.core.facade.impl;
 
 import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
 import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
-import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.user.ExtendedUserDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
@@ -84,7 +84,7 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
 
         assertUserIsAuthenticated(userID);
 
-        return contentRequestAdapterRegistry.<WrapperBodyDataModel<CommentListDataModel>, FilteredPaginationContentRequest<Long, OrderBy.Comment>>getContentRequestAdapter(ContentRequestAdapterIdentifier.COMMENTS_OF_USER)
+        return contentRequestAdapterRegistry.<WrapperBodyDataModel<ExtendedCommentListDataModel>, FilteredPaginationContentRequest<Long, OrderBy.Comment>>getContentRequestAdapter(ContentRequestAdapterIdentifier.COMMENTS_OF_USER)
                 .getContent(createFilteredRequest(userID, page))
                 .map(response -> conversionService.convert(response, UserCommentsPageContent.class))
                 .orElse(UserCommentsPageContent.EMPTY_CONTENT);

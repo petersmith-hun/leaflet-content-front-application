@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.domain.content;
 
+import hu.psprog.leaflet.lcfa.core.converter.CommentArticleData;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import lombok.ToString;
 @Builder
 public class CommentSummary {
 
+    private CommentArticleData article;
     private AuthorSummary author;
     private String content;
     private String created;

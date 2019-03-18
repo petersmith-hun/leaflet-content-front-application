@@ -2,6 +2,8 @@ package hu.psprog.leaflet.lcfa.core.converter;
 
 import hu.psprog.leaflet.api.rest.response.comment.CommentDataModel;
 import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentDataModel;
+import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
@@ -29,25 +31,57 @@ public class CommentSummaryListTransformer {
         this.dateFormatterUtility = dateFormatterUtility;
     }
 
+    /**
+     * Converts a {@link CommentListDataModel} to a {@link List} of {@link CommentSummary} objects.
+     *
+     * @param source source of type {@link CommentListDataModel}
+     * @return converted {@link List} of {@link CommentSummary} objects.
+     */
     public List<CommentSummary> convert(CommentListDataModel source) {
-        return convert(source, null);
+        return convert(source.getComments(), null);
     }
 
-    public List<CommentSummary> convert(CommentListDataModel source, EntryDataModel entryDataModel) {
-        return source.getComments().stream()
+    /**
+     * Converts an {@link ExtendedCommentListDataModel} to a {@link List} of {@link CommentSummary} objects.
+     * Includes article information as {@link CommentArticleData}.
+     *
+     * @param source source of type {@link CommentListDataModel}
+     * @return converted {@link List} of {@link CommentSummary} objects.
+     */
+    public List<CommentSummary> convert(ExtendedCommentListDataModel source) {
+        return convert(source.getComments(), null);
+    }
+
+    /**
+     * Converts a {@link CommentListDataModel} to a {@link List} of {@link CommentSummary} objects.
+     * Also checks if the given comment is created by the same user as the provided article.
+     *
+     * @param source source of type {@link CommentListDataModel}
+     * @param entryDataModel {@link EntryDataModel} object to check if the author is the same.
+     * @return converted {@link List} of {@link CommentSummary} objects.
+     */
+    public List<CommentSummary> convert(List<? extends CommentDataModel> source, EntryDataModel entryDataModel) {
+        return source.stream()
                 .map(commentDataModel -> convert(commentDataModel, entryDataModel))
                 .collect(Collectors.toList());
     }
 
     private CommentSummary convert(CommentDataModel source, EntryDataModel entryDataModel) {
-        return CommentSummary.builder()
+
+        CommentSummary.CommentSummaryBuilder builder = CommentSummary.builder()
                 .author(createAuthorSummary(source))
                 .content(source.getContent())
                 .created(dateFormatterUtility.formatComments(source.getCreated()))
                 .enabled(source.isEnabled())
                 .deleted(source.isDeleted())
-                .createdByArticleAuthor(isCreatedByArticleAuthor(source, entryDataModel))
-                .build();
+                .createdByArticleAuthor(isCreatedByArticleAuthor(source, entryDataModel));
+
+        if (source instanceof ExtendedCommentDataModel) {
+            EntryDataModel entry = ((ExtendedCommentDataModel) source).getAssociatedEntry();
+            builder.article(new CommentArticleData(entry.getTitle(), entry.getLink()));
+        }
+
+        return builder.build();
     }
 
     private AuthorSummary createAuthorSummary(CommentDataModel commentDataModel) {
