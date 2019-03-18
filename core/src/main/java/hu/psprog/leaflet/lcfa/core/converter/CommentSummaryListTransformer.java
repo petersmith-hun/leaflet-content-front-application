@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +29,10 @@ public class CommentSummaryListTransformer {
         this.dateFormatterUtility = dateFormatterUtility;
     }
 
+    public List<CommentSummary> convert(CommentListDataModel source) {
+        return convert(source, null);
+    }
+
     public List<CommentSummary> convert(CommentListDataModel source, EntryDataModel entryDataModel) {
         return source.getComments().stream()
                 .map(commentDataModel -> convert(commentDataModel, entryDataModel))
@@ -39,6 +44,8 @@ public class CommentSummaryListTransformer {
                 .author(createAuthorSummary(source))
                 .content(source.getContent())
                 .created(dateFormatterUtility.formatComments(source.getCreated()))
+                .enabled(source.isEnabled())
+                .deleted(source.isDeleted())
                 .createdByArticleAuthor(isCreatedByArticleAuthor(source, entryDataModel))
                 .build();
     }
@@ -48,6 +55,8 @@ public class CommentSummaryListTransformer {
     }
 
     private boolean isCreatedByArticleAuthor(CommentDataModel source, EntryDataModel entryDataModel) {
-        return entryDataModel.getUser().getId() == source.getOwner().getId();
+        return Optional.ofNullable(entryDataModel)
+                .map(entry -> entry.getUser().getId() == source.getOwner().getId())
+                .orElse(false);
     }
 }

@@ -3,6 +3,7 @@ package hu.psprog.leaflet.lcfa.core.facade;
 import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
 import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
 import hu.psprog.leaflet.lcfa.core.domain.account.AccountBaseInfo;
+import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
 
 /**
@@ -37,6 +38,15 @@ public interface AccountManagementFacade {
      * @return operation result as boolean - {@code true} on success, {@code false} otherwise
      */
     boolean updatePassword(Long userID, PasswordChangeRequestModel passwordChangeRequestModel);
+
+    /**
+     * Retrieves list of comments created by the given (currently authenticated) user.
+     *
+     * @param userID ID of the authenticated user
+     * @param page page number
+     * @return list of existing comments with pagination information as {@link UserCommentsPageContent}
+     */
+    UserCommentsPageContent getCommentsForUser(Long userID, int page);
 
     /**
      * Deletes the given (currently authenticated) user.

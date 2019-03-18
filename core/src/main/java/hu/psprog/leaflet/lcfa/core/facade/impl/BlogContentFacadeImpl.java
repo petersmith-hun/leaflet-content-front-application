@@ -4,6 +4,7 @@ import hu.psprog.leaflet.lcfa.core.config.DefaultPaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.HomePageContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
+import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
@@ -65,7 +66,7 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
 
     @Override
     public HomePageContent getArticlesByCategory(long categoryID, int page) {
-        return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long>>getContentRequestAdapter(CATEGORY_FILTER)
+        return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long, OrderBy.Entry>>getContentRequestAdapter(CATEGORY_FILTER)
                 .getContent(createdFilteredPaginatedContentRequest(categoryID, page))
                 .map(homePageRawResponseWrapper -> conversionService.convert(homePageRawResponseWrapper, HomePageContent.class))
                 .orElseThrow(() -> new ContentRetrievalException(String.format(FAILED_TO_RETRIEVE_PAGE_OF_CATEGORY, page, categoryID)));
@@ -73,7 +74,7 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
 
     @Override
     public HomePageContent getArticlesByTag(long tagID, int page) {
-        return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long>>getContentRequestAdapter(TAG_FILTER)
+        return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<Long, OrderBy.Entry>>getContentRequestAdapter(TAG_FILTER)
                 .getContent(createdFilteredPaginatedContentRequest(tagID, page))
                 .map(homePageRawResponseWrapper -> conversionService.convert(homePageRawResponseWrapper, HomePageContent.class))
                 .orElseThrow(() -> new ContentRetrievalException(String.format(FAILED_TO_RETRIEVE_PAGE_OF_TAG, page, tagID)));
@@ -81,7 +82,7 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
 
     @Override
     public HomePageContent getArticlesByContent(String contentExpression, int page) {
-        return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<String>>getContentRequestAdapter(CONTENT_FILTER)
+        return contentRequestAdapterRegistry.<HomePageRawResponseWrapper, FilteredPaginationContentRequest<String, OrderBy.Entry>>getContentRequestAdapter(CONTENT_FILTER)
                 .getContent(createdFilteredPaginatedContentRequest(contentExpression, page))
                 .map(homePageRawResponseWrapper -> conversionService.convert(homePageRawResponseWrapper, HomePageContent.class))
                 .orElseThrow(() -> new ContentRetrievalException(String.format(FAILED_TO_RETRIEVE_PAGE_OF_CONTENT_EXPRESSION, page, contentExpression)));
@@ -96,13 +97,13 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
                 .build();
     }
 
-    private <T> FilteredPaginationContentRequest<T> createdFilteredPaginatedContentRequest(T filterValue, int page) {
-        return FilteredPaginationContentRequest.<T>builder()
+    private <T> FilteredPaginationContentRequest<T, OrderBy.Entry> createdFilteredPaginatedContentRequest(T filterValue, int page) {
+        return FilteredPaginationContentRequest.<T, OrderBy.Entry>builder()
                 .filterValue(filterValue)
                 .page(page)
                 .limit(defaultPaginationAttributes.getLimit())
-                .entryOrderBy(defaultPaginationAttributes.getOrderBy())
-                .entryOrderDirection(defaultPaginationAttributes.getOrderDirection())
+                .orderBy(defaultPaginationAttributes.getOrderBy())
+                .orderDirection(defaultPaginationAttributes.getOrderDirection())
                 .build();
     }
 }

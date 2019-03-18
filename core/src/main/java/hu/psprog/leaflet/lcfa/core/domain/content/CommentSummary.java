@@ -19,5 +19,7 @@ public class CommentSummary {
     private AuthorSummary author;
     private String content;
     private String created;
+    private boolean enabled;
+    private boolean deleted;
     private boolean createdByArticleAuthor;
 }

@@ -140,6 +140,7 @@ public class AccountController extends BaseController {
     public ModelAndView renderComments() {
 
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_COMMENTS)
+                .withAttribute(ModelField.COMMENTS, accountManagementFacade.getCommentsForUser(currentUserID(), 1)) // TODO pagination
                 .build();
     }
 
