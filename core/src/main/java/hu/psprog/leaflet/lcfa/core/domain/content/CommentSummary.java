@@ -17,6 +17,7 @@ import lombok.ToString;
 @Builder
 public class CommentSummary {
 
+    private Long id;
     private CommentArticleData article;
     private AuthorSummary author;
     private String content;

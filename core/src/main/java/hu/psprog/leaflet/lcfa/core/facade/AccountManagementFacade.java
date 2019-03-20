@@ -56,4 +56,13 @@ public interface AccountManagementFacade {
      * @return operation result as boolean - {@code true} on success, {@code false} otherwise
      */
     boolean deleteAccount(Long userID, AccountDeletionRequest accountDeletionRequest);
+
+    /**
+     * Performs logical deletion of the comment identified by given ID.
+     * Users are able to logically delete their own comments!
+     *
+     * @param commentID ID of the comment to be deleted
+     * @return operation result as boolean - {@code true} on success, {@code false} otherwise
+     */
+    boolean deleteComment(Long commentID);
 }

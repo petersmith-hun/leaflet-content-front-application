@@ -16,6 +16,7 @@ public enum FlashMessageKey {
     SUCCESSFUL_PROFILE_UPDATE("flash.profile.update.success"),
     SUCCESSFUL_ACCOUNT_DELETION("flash.profile.delete.success"),
     SUCCESSFUL_COMMENT_REQUEST("flash.comment.success"),
+    SUCCESSFUL_COMMENT_DELETION("flash.comment.delete.success"),
     FAILED_PASSWORD_RESET_DEMAND("flash.pwreset.demand.failure"),
     FAILED_PASSWORD_RESET_CONFIRMATION("flash.pwreset.confirm.failure"),
     FAILED_SIGN_IN("flash.signin.failure"),
@@ -23,7 +24,8 @@ public enum FlashMessageKey {
     FAILED_SIGN_UP_UNKNOWN_ERROR("flash.signup.failure.unknown"),
     FAILED_PROFILE_UPDATE("flash.profile.update.failure"),
     FAILED_ACCOUNT_DELETION("flash.profile.delete.failure"),
-    FAILED_COMMENT_REQUEST("flash.comment.failure");
+    FAILED_COMMENT_REQUEST("flash.comment.failure"),
+    FAILED_COMMENT_DELETION("flash.comment.delete.failure");
 
     private String messageKey;
 

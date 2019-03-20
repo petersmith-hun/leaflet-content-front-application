@@ -69,6 +69,7 @@ public class CommentSummaryListTransformer {
     private CommentSummary convert(CommentDataModel source, EntryDataModel entryDataModel) {
 
         CommentSummary.CommentSummaryBuilder builder = CommentSummary.builder()
+                .id(source.getId())
                 .author(createAuthorSummary(source))
                 .content(source.getContent())
                 .created(dateFormatterUtility.formatComments(source.getCreated()))

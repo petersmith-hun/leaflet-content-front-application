@@ -95,6 +95,13 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
         return accountDeletionHandler.deleteAccount(userID, accountDeletionRequest);
     }
 
+    @Override
+    public boolean deleteComment(Long commentID) {
+        return contentRequestAdapterRegistry.<Boolean, Long>getContentRequestAdapter(ContentRequestAdapterIdentifier.COMMENT_DELETION)
+                .getContent(commentID)
+                .orElse(false);
+    }
+
     private void assertUserIsAuthenticated(Long userID) {
         if (Objects.isNull(userID)) {
             throw new UserRequestProcessingException("User is not authenticated");
@@ -116,7 +123,7 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
                 .filterValue(userID)
                 .page(page)
                 .limit(defaultPaginationAttributes.getLimit())
-                .orderBy(OrderBy.Comment.valueOf(defaultPaginationAttributes.getOrderBy().name())) // TODO separate config!
+                .orderBy(OrderBy.Comment.valueOf(defaultPaginationAttributes.getOrderBy().name()))
                 .orderDirection(defaultPaginationAttributes.getOrderDirection())
                 .build();
     }

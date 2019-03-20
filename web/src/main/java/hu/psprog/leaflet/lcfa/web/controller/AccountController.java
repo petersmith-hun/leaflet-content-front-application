@@ -41,12 +41,15 @@ public class AccountController extends BaseController {
     private static final String PATH_CHANGE_PASSWORD = "/change-password";
     private static final String PATH_MY_COMMENTS = "/my-comments";
     private static final String PATH_MY_COMMENTS_PAGED = "/my-comments/{page}";
+    private static final String PATH_MY_COMMENTS_DELETE = "/my-comments/delete";
     private static final String PATH_DELETE_ACCOUNT = "/delete-account";
     private static final String PATH_PROFILE_DELETE_ACCOUNT = PATH_PROFILE + PATH_DELETE_ACCOUNT;
     private static final String PATH_PROFILE_CHANGE_PASSWORD = PATH_PROFILE + PATH_CHANGE_PASSWORD;
+    private static final String PATH_PROFILE_MY_COMMENTS = PATH_PROFILE + PATH_MY_COMMENTS;
     private static final String PATH_HOME = "/";
 
     private static final int DEFAULT_PAGE_NUMBER = 1;
+    private static final String COMMENT_PAGINATION_LINK_TEMPLATE = "/profile/my-comments/{page}";
 
     private ModelAndViewFactory modelAndViewFactory;
     private AccountManagementFacade accountManagementFacade;
@@ -150,7 +153,26 @@ public class AccountController extends BaseController {
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_COMMENTS)
                 .withAttribute(ModelField.COMMENTS, pageContent.getComments())
                 .withAttribute(ModelField.PAGINATION, pageContent.getPaginationAttributes())
+                .withAttribute(ModelField.LINK_TEMPLATE, COMMENT_PAGINATION_LINK_TEMPLATE)
                 .build();
+    }
+
+    /**
+     * Processes a comment deletion request.
+     *
+     * @param commentID ID of the comment to be deleted
+     * @param redirectAttributes redirection attributes
+     * @return populated {@link ModelAndView} object
+     */
+    @PostMapping(PATH_MY_COMMENTS_DELETE)
+    public ModelAndView deleteComment(@ModelAttribute("commentID") long commentID, RedirectAttributes redirectAttributes) {
+
+        FlashMessageKey flashMessageKey = accountManagementFacade.deleteComment(commentID)
+                ? FlashMessageKey.SUCCESSFUL_COMMENT_DELETION
+                : FlashMessageKey.FAILED_COMMENT_DELETION;
+        flash(redirectAttributes, flashMessageKey);
+
+        return modelAndViewFactory.createRedirectionTo(PATH_PROFILE_MY_COMMENTS);
     }
 
     /**

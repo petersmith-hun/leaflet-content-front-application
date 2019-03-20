@@ -80,7 +80,8 @@
                     <span class="sender" th:text="${comment.author.name}">placeholder:author</span>
                     <span class="date" th:text="${comment.created}">placeholder:created</span>
                 </div>
-                <div class="content" th:text="${comment.content}">placeholder:content</div>
+                <div class="content" th:unless="${comment.deleted}" th:text="${comment.content}">placeholder:content</div>
+                <div class="content" th:if="${comment.deleted}" th:text="#{common.comment_block.deleted}">placeholder:content</div>
             </div>
             <div class="clear">&nbsp;</div>
         </th:block>

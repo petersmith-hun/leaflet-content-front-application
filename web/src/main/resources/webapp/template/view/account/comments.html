@@ -5,7 +5,33 @@
 <div id="entries" class="forms" layout:fragment="content">
 
     <th:block th:insert="fragment/profile.html :: profile-navigation" />
-
+    <div id="comments" class="user">
+        <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments}"></p>
+        <th:block th:if="${comments != null}" th:each="comment : ${comments}">
+            <div class="comment">
+                <div class="header" th:if="${comment.article != null}">
+                    <span class="sender">
+                        <span th:text="${comment.article.title}">placeholder:author</span>
+                        <span th:unless="${comment.enabled or comment.deleted}" th:text="#{common.comment_block.disabled}">placeholder:to_be_accepted</span>
+                    </span>
+                    <span class="date" th:text="${comment.created}">placeholder:created</span>
+                </div>
+                <div class="content">
+                    <th:block th:unless="${comment.deleted}" th:text="${comment.content}">placeholder:content</th:block>
+                    <th:block th:if="${comment.deleted}" th:text="#{common.comment_block.deleted}">placeholder:content</th:block>
+                    <div class="control">
+                        <a class="commentBtn" th:if="${comment.article != null}" th:href="@{/article/__${comment.article.link}__}" th:text="#{common.comment_block.jump_to_article}">placeholder:jump</a>
+                        <form th:unless="${comment.deleted}" th:action="@{/profile/my-comments/delete}" th:method="post" action="#" id="commentDeletionForm">
+                            <input type="hidden" name="commentID" th:value="${comment.id}" />
+                            <a class="commentBtn" href="javascript:void(0)" onclick="$('#commentDeletionForm').submit()" th:text="#{common.comment_block.delete_comment}">placeholder:delete_comment</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="clear">&nbsp;</div>
+        </th:block>
+        <th:block th:insert="fragment/common.html :: pagination" />
+    </div>
 
 </div>
 </body>
