@@ -38,11 +38,11 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
 
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private ConversionService conversionService;
-    private DefaultPaginationAttributes defaultPaginationAttributes;
+    private DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
 
     @Autowired
     public BlogContentFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, ConversionService conversionService,
-                                 DefaultPaginationAttributes defaultPaginationAttributes) {
+                                 DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes) {
         this.contentRequestAdapterRegistry = contentRequestAdapterRegistry;
         this.conversionService = conversionService;
         this.defaultPaginationAttributes = defaultPaginationAttributes;

@@ -5,11 +5,11 @@ import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
 import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.user.ExtendedUserDataModel;
-import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.lcfa.core.config.DefaultPaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.domain.account.AccountBaseInfo;
 import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
+import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
 import hu.psprog.leaflet.lcfa.core.exception.UserRequestProcessingException;
@@ -37,11 +37,11 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private AccountDeletionHandler accountDeletionHandler;
     private ConversionService conversionService;
-    private DefaultPaginationAttributes defaultPaginationAttributes;
+    private DefaultPaginationAttributes<OrderBy.Comment> defaultPaginationAttributes;
 
     @Autowired
     public AccountManagementFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, AccountDeletionHandler accountDeletionHandler,
-                                       ConversionService conversionService, DefaultPaginationAttributes defaultPaginationAttributes) {
+                                       ConversionService conversionService, DefaultPaginationAttributes<OrderBy.Comment> defaultPaginationAttributes) {
         this.contentRequestAdapterRegistry = contentRequestAdapterRegistry;
         this.accountDeletionHandler = accountDeletionHandler;
         this.conversionService = conversionService;
