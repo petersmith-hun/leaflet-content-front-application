@@ -8,17 +8,19 @@ import lombok.ToString;
 /**
  * Request domain class for pageable and filtered content requests.
  *
+ * @param <T> type of filtering parameter
+ * @param <BY> enum type of order by parameter
  * @author Peter Smith
  */
 @Getter
 @EqualsAndHashCode
 @ToString
 @Builder
-public class FilteredPaginationContentRequest<T> {
+public class FilteredPaginationContentRequest<T, BY extends Enum<BY>> {
 
     private T filterValue;
     private int page;
     private int limit;
-    private OrderBy.Entry entryOrderBy;
-    private OrderDirection entryOrderDirection;
+    private BY orderBy;
+    private OrderDirection orderDirection;
 }

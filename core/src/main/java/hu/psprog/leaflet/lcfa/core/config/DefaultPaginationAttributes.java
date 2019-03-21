@@ -1,22 +1,18 @@
 package hu.psprog.leaflet.lcfa.core.config;
 
-import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderDirection;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * Domain class for default pagination settings.
  *
+ * @param <T> order by parameter enum type
  * @author Peter Smith
  */
-@Component
-@ConfigurationProperties(prefix = "pagination.default")
 @Data
-public class DefaultPaginationAttributes {
+public class DefaultPaginationAttributes<T extends Enum<T>> {
 
     private int limit;
-    private OrderBy.Entry orderBy;
+    private T orderBy;
     private OrderDirection orderDirection;
 }

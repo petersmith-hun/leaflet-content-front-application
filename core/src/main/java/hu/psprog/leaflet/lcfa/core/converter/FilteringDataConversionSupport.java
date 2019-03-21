@@ -56,7 +56,8 @@ public class FilteringDataConversionSupport {
     public List<CommentSummary> mapComments(WrapperBodyDataModel<CommentListDataModel> wrappedCommentListDataModel, ExtendedEntryDataModel entryDataModel) {
         return Optional.ofNullable(wrappedCommentListDataModel)
                 .map(WrapperBodyDataModel::getBody)
-                .map(commentListDataModel -> commentSummaryListTransformer.convert(commentListDataModel, entryDataModel))
+                .map(CommentListDataModel::getComments)
+                .map(commentList -> commentSummaryListTransformer.convert(commentList, entryDataModel))
                 .orElse(Collections.emptyList());
     }
 

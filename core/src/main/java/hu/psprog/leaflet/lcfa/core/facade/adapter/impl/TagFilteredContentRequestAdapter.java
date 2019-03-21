@@ -4,6 +4,7 @@ import hu.psprog.leaflet.api.rest.response.common.BaseBodyDataModel;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
+import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.concurrent.Callable;
  * @author Peter Smith
  */
 @Component
-public class TagFilteredContentRequestAdapter extends AbstractFilteredEntryPageContentRequestAdapter<FilteredPaginationContentRequest<Long>> {
+public class TagFilteredContentRequestAdapter extends AbstractFilteredEntryPageContentRequestAdapter<FilteredPaginationContentRequest<Long, OrderBy.Entry>> {
 
     private EntryBridgeService entryBridgeService;
 
@@ -30,7 +31,7 @@ public class TagFilteredContentRequestAdapter extends AbstractFilteredEntryPageC
     }
 
     @Override
-    void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, FilteredPaginationContentRequest<Long> contentRequestParameter) {
+    void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, FilteredPaginationContentRequest<Long, OrderBy.Entry> contentRequestParameter) {
         callableMap.put(CallType.ENTRY, getPublicEntriesByTag(contentRequestParameter));
     }
 
@@ -39,7 +40,7 @@ public class TagFilteredContentRequestAdapter extends AbstractFilteredEntryPageC
         return ContentRequestAdapterIdentifier.TAG_FILTER;
     }
 
-    private Callable<BaseBodyDataModel> getPublicEntriesByTag(FilteredPaginationContentRequest<Long> contentRequestParameter) {
+    private Callable<BaseBodyDataModel> getPublicEntriesByTag(FilteredPaginationContentRequest<Long, OrderBy.Entry> contentRequestParameter) {
         return () -> entryBridgeService.getPageOfPublicEntriesByTag(contentRequestParameter.getFilterValue(), contentRequestParameter.getPage(),
                 contentRequestParameter.getLimit(), mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));
     }

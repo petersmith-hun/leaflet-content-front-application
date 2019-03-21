@@ -1,4 +1,4 @@
-package hu.psprog.leaflet.lcfa.core.facade.impl;
+package hu.psprog.leaflet.lcfa.core.facade.impl.utility;
 
 import hu.psprog.leaflet.api.rest.response.user.ExtendedUserDataModel;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author Peter Smith
  */
 @Component
-class AccountDeletionHandler {
+public class AccountDeletionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountDeletionHandler.class);
 
@@ -49,7 +49,7 @@ class AccountDeletionHandler {
      * @param accountDeletionRequest {@link AccountDeletionRequest} object containing confirmation information
      * @return operation result as boolean - {@code true} on success, {@code false} otherwise
      */
-    boolean deleteAccount(Long userID, AccountDeletionRequest accountDeletionRequest) {
+    public boolean deleteAccount(Long userID, AccountDeletionRequest accountDeletionRequest) {
 
         assertUserIsAuthenticated(userID);
         boolean successful = false;

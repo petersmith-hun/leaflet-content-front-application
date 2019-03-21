@@ -2,6 +2,7 @@ package hu.psprog.leaflet.lcfa.web.controller;
 
 import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
 import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
+import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
 import hu.psprog.leaflet.lcfa.core.facade.AccountManagementFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
@@ -12,12 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 /**
  * Controller implementation for account related operations.
@@ -37,10 +40,16 @@ public class AccountController extends BaseController {
 
     private static final String PATH_CHANGE_PASSWORD = "/change-password";
     private static final String PATH_MY_COMMENTS = "/my-comments";
+    private static final String PATH_MY_COMMENTS_PAGED = "/my-comments/{page}";
+    private static final String PATH_MY_COMMENTS_DELETE = "/my-comments/delete";
     private static final String PATH_DELETE_ACCOUNT = "/delete-account";
     private static final String PATH_PROFILE_DELETE_ACCOUNT = PATH_PROFILE + PATH_DELETE_ACCOUNT;
     private static final String PATH_PROFILE_CHANGE_PASSWORD = PATH_PROFILE + PATH_CHANGE_PASSWORD;
+    private static final String PATH_PROFILE_MY_COMMENTS = PATH_PROFILE + PATH_MY_COMMENTS;
     private static final String PATH_HOME = "/";
+
+    private static final int DEFAULT_PAGE_NUMBER = 1;
+    private static final String COMMENT_PAGINATION_LINK_TEMPLATE = "/profile/my-comments/{page}";
 
     private ModelAndViewFactory modelAndViewFactory;
     private AccountManagementFacade accountManagementFacade;
@@ -131,16 +140,39 @@ public class AccountController extends BaseController {
     }
 
     /**
-     * GET /profile/my-comments
+     * GET /profile/my-comments[/{page}]
      * Renders list of authenticated user's existing comments.
      *
      * @return populated {@link ModelAndView} object
      */
-    @GetMapping(PATH_MY_COMMENTS)
-    public ModelAndView renderComments() {
+    @GetMapping({PATH_MY_COMMENTS, PATH_MY_COMMENTS_PAGED})
+    public ModelAndView renderComments(@PathVariable(value = "page", required = false) Optional<Integer> page) {
+
+        UserCommentsPageContent pageContent = accountManagementFacade.getCommentsForUser(currentUserID(), extractPageNumber(page));
 
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_COMMENTS)
+                .withAttribute(ModelField.COMMENTS, pageContent.getComments())
+                .withAttribute(ModelField.PAGINATION, pageContent.getPaginationAttributes())
+                .withAttribute(ModelField.LINK_TEMPLATE, COMMENT_PAGINATION_LINK_TEMPLATE)
                 .build();
+    }
+
+    /**
+     * Processes a comment deletion request.
+     *
+     * @param commentID ID of the comment to be deleted
+     * @param redirectAttributes redirection attributes
+     * @return populated {@link ModelAndView} object
+     */
+    @PostMapping(PATH_MY_COMMENTS_DELETE)
+    public ModelAndView deleteComment(@ModelAttribute("commentID") long commentID, RedirectAttributes redirectAttributes) {
+
+        FlashMessageKey flashMessageKey = accountManagementFacade.deleteComment(commentID)
+                ? FlashMessageKey.SUCCESSFUL_COMMENT_DELETION
+                : FlashMessageKey.FAILED_COMMENT_DELETION;
+        flash(redirectAttributes, flashMessageKey);
+
+        return modelAndViewFactory.createRedirectionTo(PATH_PROFILE_MY_COMMENTS);
     }
 
     /**
@@ -186,5 +218,9 @@ public class AccountController extends BaseController {
         return successful
                 ? FlashMessageKey.SUCCESSFUL_PROFILE_UPDATE
                 : FlashMessageKey.FAILED_PROFILE_UPDATE;
+    }
+
+    private int extractPageNumber(Optional<Integer> page) {
+        return page.orElse(DEFAULT_PAGE_NUMBER);
     }
 }

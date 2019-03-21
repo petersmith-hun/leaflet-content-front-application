@@ -30,11 +30,11 @@ abstract class AbstractFilteredEntryPageContentRequestAdapter<P> extends Abstrac
                 .build();
     }
 
-    OrderBy.Entry mapOrdering(FilteredPaginationContentRequest<?> paginatedContentRequest) {
-        return OrderBy.Entry.valueOf(paginatedContentRequest.getEntryOrderBy().name());
+    OrderBy.Entry mapOrdering(FilteredPaginationContentRequest<?, ?> paginatedContentRequest) {
+        return OrderBy.Entry.valueOf(paginatedContentRequest.getOrderBy().name());
     }
 
-    OrderDirection mapOrderDirection(FilteredPaginationContentRequest<?> paginatedContentRequest) {
-        return OrderDirection.valueOf(paginatedContentRequest.getEntryOrderDirection().name());
+    OrderDirection mapOrderDirection(FilteredPaginationContentRequest<?, ?> paginatedContentRequest) {
+        return OrderDirection.valueOf(paginatedContentRequest.getOrderDirection().name());
     }
 }

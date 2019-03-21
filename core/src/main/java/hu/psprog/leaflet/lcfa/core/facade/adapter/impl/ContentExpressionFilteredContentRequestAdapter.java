@@ -4,6 +4,7 @@ import hu.psprog.leaflet.api.rest.response.common.BaseBodyDataModel;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
+import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.concurrent.Callable;
  * @author Peter Smith
  */
 @Component
-public class ContentExpressionFilteredContentRequestAdapter extends AbstractFilteredEntryPageContentRequestAdapter<FilteredPaginationContentRequest<String>> {
+public class ContentExpressionFilteredContentRequestAdapter extends AbstractFilteredEntryPageContentRequestAdapter<FilteredPaginationContentRequest<String, OrderBy.Entry>> {
 
     private EntryBridgeService entryBridgeService;
 
@@ -30,7 +31,7 @@ public class ContentExpressionFilteredContentRequestAdapter extends AbstractFilt
     }
 
     @Override
-    void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, FilteredPaginationContentRequest<String> contentRequestParameter) {
+    void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, FilteredPaginationContentRequest<String, OrderBy.Entry> contentRequestParameter) {
         callableMap.put(CallType.ENTRY, getPublicEntriesByContentExpression(contentRequestParameter));
     }
 
@@ -39,7 +40,7 @@ public class ContentExpressionFilteredContentRequestAdapter extends AbstractFilt
         return ContentRequestAdapterIdentifier.CONTENT_FILTER;
     }
 
-    private Callable<BaseBodyDataModel> getPublicEntriesByContentExpression(FilteredPaginationContentRequest<String> contentRequestParameter) {
+    private Callable<BaseBodyDataModel> getPublicEntriesByContentExpression(FilteredPaginationContentRequest<String, OrderBy.Entry> contentRequestParameter) {
         return () -> entryBridgeService.getPageOfPublicEntriesByContent(contentRequestParameter.getFilterValue(), contentRequestParameter.getPage(),
                 contentRequestParameter.getLimit(), mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));
     }
