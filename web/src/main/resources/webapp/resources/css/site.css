@@ -766,3 +766,22 @@ pre.prettyprint {
 .forms .validationError:before {
 	content: '* ';
 }
+
+#errorPage {
+	text-align: center;
+	margin-top: 50px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+#errorPage img {
+	max-width: 100%;
+}
+
+#errorStatus {
+	font-size: xx-large;
+}
+
+#errorPageMessage {
+	font-size: x-large;
+}
