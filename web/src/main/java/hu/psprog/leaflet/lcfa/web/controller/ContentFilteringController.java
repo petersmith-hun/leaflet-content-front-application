@@ -23,7 +23,7 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Controller
-public class ContentFilteringController {
+public class ContentFilteringController extends BaseController {
 
     private static final String VIEW_BLOG_LIST = "view/blog/list";
     private static final int DEFAULT_PAGE_NUMBER = 1;

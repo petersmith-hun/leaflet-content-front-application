@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Peter Smith
  */
 @Controller
-public class StaticPageController {
+public class StaticPageController extends BaseController {
 
     private static final String VIEW_STATIC_PAGE = "view/static/page";
 
