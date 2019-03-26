@@ -6,6 +6,7 @@ import hu.psprog.leaflet.lcfa.core.domain.content.StaticPageType;
 import hu.psprog.leaflet.lcfa.core.facade.StaticPageContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
+import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +24,14 @@ public class StaticPageController extends BaseController {
 
     private ModelAndViewFactory modelAndViewFactory;
     private StaticPageContentFacade staticPageContentFacade;
+    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
-    public StaticPageController(ModelAndViewFactory modelAndViewFactory, StaticPageContentFacade staticPageContentFacade) {
+    public StaticPageController(ModelAndViewFactory modelAndViewFactory, StaticPageContentFacade staticPageContentFacade,
+                                NavigationItemFactoryRegistry navigationItemFactoryRegistry) {
         this.modelAndViewFactory = modelAndViewFactory;
         this.staticPageContentFacade = staticPageContentFacade;
+        this.navigationItemFactoryRegistry = navigationItemFactoryRegistry;
     }
 
     /**
@@ -36,7 +40,7 @@ public class StaticPageController extends BaseController {
      *
      * @return populated {@link ModelAndView} object
      */
-    @GetMapping("/introduction")
+    @GetMapping(PATH_INTRODUCTION)
     public ModelAndView introduction() {
         return renderPage(StaticPageType.INTRODUCTION);
     }
@@ -48,6 +52,9 @@ public class StaticPageController extends BaseController {
         return modelAndViewFactory.createForView(VIEW_STATIC_PAGE)
                 .withAttribute(ModelField.STATIC, staticPageContent.getPage())
                 .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), staticPageContent.getSeo())
+                .withAttribute(ModelField.NAVIGATION, navigationItemFactoryRegistry
+                        .getFactory(String.class)
+                        .create(staticPageContent.getPage().getTitle()))
                 .build();
     }
 }

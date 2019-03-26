@@ -30,6 +30,32 @@ public class BaseController {
     private static final String ERROR_404 = "error/404";
     private static final String ERROR_500 = "error/500";
 
+    public static final String PATH_FILTER_BY_CATEGORY_PAGED = "/category/{categoryID}/{categoryAlias}/page/{page}";
+    public static final String PATH_FILTER_BY_CATEGORY = "/category/{categoryID}/{categoryAlias}";
+    public static final String PATH_HOME = "/";
+    public static final String PATH_HOME_PAGED = "/page/{page}";
+    public static final String PATH_FILTER_BY_TAG = "/tag/{tagID}/{tagAlias}";
+    public static final String PATH_FILTER_BY_TAG_PAGED = "/tag/{tagID}/{tagAlias}/page/{page}";
+    public static final String PATH_FILTER_BY_CONTENT = "/content";
+    public static final String PATH_FILTER_BY_CONTENT_PAGED = "/content/page/{page}";
+    public static final String PATH_INTRODUCTION = "/introduction";
+    public static final String PATH_CONTACT = "/contact";
+    public static final String PATH_SIGN_IN = "/signin";
+    public static final String PATH_SIGN_UP = "/signup";
+    public static final String PATH_PASSWORD_RESET_CONFIRMATION = "/password-reset/{token:.+}";
+    public static final String PATH_PASSWORD_RESET_REQUEST = "/password-reset";
+    public static final String PATH_COMMENT = "/article/{link}/comment";
+    public static final String PATH_ARTICLE_BY_LINK = "/article/{link}";
+    public static final String PATH_CHANGE_PASSWORD = "/change-password";
+    public static final String PATH_MY_COMMENTS = "/my-comments";
+    public static final String PATH_MY_COMMENTS_PAGED = "/my-comments/{page}";
+    public static final String PATH_MY_COMMENTS_DELETE = "/my-comments/delete";
+    public static final String PATH_DELETE_ACCOUNT = "/delete-account";
+    public static final String PATH_PROFILE = "/profile";
+    public static final String PATH_PROFILE_DELETE_ACCOUNT = PATH_PROFILE + PATH_DELETE_ACCOUNT;
+    public static final String PATH_PROFILE_CHANGE_PASSWORD = PATH_PROFILE + PATH_CHANGE_PASSWORD;
+    public static final String PATH_PROFILE_MY_COMMENTS = PATH_PROFILE + PATH_MY_COMMENTS;
+
     /**
      * Sets the given flash message in the redirect attributes.
      *

@@ -7,6 +7,7 @@ import hu.psprog.leaflet.lcfa.core.facade.ContactPageFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
+import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,19 +26,21 @@ import javax.validation.Valid;
  * @author Peter Smith
  */
 @Controller
-@RequestMapping(ContactController.PATH_CONTACT)
+@RequestMapping(BaseController.PATH_CONTACT)
 public class ContactController extends BaseController {
 
     private static final String VIEW_CONTACT_FORM = "view/contact/form";
-    static final String PATH_CONTACT = "/contact";
 
     private ModelAndViewFactory modelAndViewFactory;
     private ContactPageFacade contactPageFacade;
+    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
-    public ContactController(ModelAndViewFactory modelAndViewFactory, ContactPageFacade contactPageFacade) {
+    public ContactController(ModelAndViewFactory modelAndViewFactory, ContactPageFacade contactPageFacade,
+                             NavigationItemFactoryRegistry navigationItemFactoryRegistry) {
         this.modelAndViewFactory = modelAndViewFactory;
         this.contactPageFacade = contactPageFacade;
+        this.navigationItemFactoryRegistry = navigationItemFactoryRegistry;
     }
 
     /**
@@ -54,6 +57,9 @@ public class ContactController extends BaseController {
                 .withAttribute(ModelField.STATIC, contactPageContent.getContactInfo().getPage())
                 .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), contactPageContent.getContactInfo().getSeo())
                 .withAttribute(ModelField.VALIDATED_MODEL, contactRequestModel)
+                .withAttribute(ModelField.NAVIGATION, navigationItemFactoryRegistry
+                        .getFactory(String.class)
+                        .create(contactPageContent.getContactInfo().getPage().getTitle()))
                 .build();
     }
 

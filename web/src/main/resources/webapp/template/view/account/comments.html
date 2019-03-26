@@ -6,7 +6,7 @@
 
     <th:block th:insert="fragment/profile.html :: profile-navigation" />
     <div id="comments" class="user">
-        <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments}"></p>
+        <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments_by_user}"></p>
         <th:block th:if="${comments != null}" th:each="comment : ${comments}">
             <div class="comment">
                 <div class="header" th:if="${comment.article != null}">
@@ -21,9 +21,9 @@
                     <th:block th:if="${comment.deleted}" th:text="#{common.comment_block.deleted}">placeholder:content</th:block>
                     <div class="control">
                         <a class="commentBtn" th:if="${comment.article != null}" th:href="@{/article/__${comment.article.link}__}" th:text="#{common.comment_block.jump_to_article}">placeholder:jump</a>
-                        <form th:unless="${comment.deleted}" th:action="@{/profile/my-comments/delete}" th:method="post" action="#" id="commentDeletionForm">
+                        <form th:unless="${comment.deleted}" th:action="@{/profile/my-comments/delete}" th:id="'deleteComment_cid' + ${comment.id}" th:method="post" action="#" style="display: inline-block;">
                             <input type="hidden" name="commentID" th:value="${comment.id}" />
-                            <a class="commentBtn" href="javascript:void(0)" onclick="$('#commentDeletionForm').submit()" th:text="#{common.comment_block.delete_comment}">placeholder:delete_comment</a>
+                            <a class="commentBtn" href="javascript:void(0)" onclick="deleteComment($(this).context.parentNode)" th:text="#{common.comment_block.delete_comment}">placeholder:delete_comment</a>
                         </form>
                     </div>
                 </div>
@@ -33,6 +33,14 @@
         <th:block th:insert="fragment/common.html :: pagination" />
     </div>
 
+    <script th:inline="javascript" type="text/javascript">
+        var message = /*[[#{common.comment_block.delete_confirm}]]*/ 'confirm_deletion';
+        function deleteComment(formToSubmit) {
+            if (confirm(message)) {
+                $(formToSubmit).submit();
+            }
+        }
+    </script>
 </div>
 </body>
 </html>

@@ -61,11 +61,10 @@ a:link, a:visited, a:active {
 }
 
 #statusBar span {
-	padding: 15px 20px;
 	display: inline-block;
 }
 
-input[type=text], input[type=password], input[type=email], textarea {
+input[type=text], input[type=password], input[type=email], textarea, select {
 	padding: 5px 10px;
 	font-family: "exo_regular";
 	color: #555;
@@ -185,107 +184,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 	border-bottom: 2px solid #ccc;
 }
 
-/* slider */
-#sliderHolder {
-	max-height: 340px;
-}
-
-.slideContent {
-	position: absolute;
-	bottom: 0px;
-	height: 105px;
-	color: #fff;
-	text-align: center;
-	width: 100%;
-	z-index: 5;
-}
-
-.slideContent .slideTitle {
-	font-size: 22px;
-	padding-top: 10px;
-	padding-bottom: 5px;
-}
-
-.slideContentBg {
-	position: absolute;
-	bottom: 0px;
-	height: 105px;
-	background-color: #000;
-	opacity: 0.8;
-	z-index: 4;
-	width: 100%;
-}
-
-/* responsive slides css */
-.rslides {
-  position: relative;
-  list-style: none;
-  overflow: hidden;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  }
-
-.rslides li {
-  -webkit-backface-visibility: hidden;
-  position: absolute;
-  display: none;
-  width: 100%;
-  left: 0;
-  top: 0;
-  }
-
-.rslides li:first-child {
-  position: relative;
-  display: block;
-  float: left;
-  }
-
-.rslides img {
-  display: block;
-  height: auto;
-  float: left;
-  width: 100%;
-  border: 0;
-  }
-  
-/* most read entries */
-#mostReadEntries {
-	text-align: center;
-	width: 100%;
-	padding-bottom: 10px;
-	background-color: #ddd;
-}
-#mostReadEntries .mostReadTitle {
-	padding: 0px 10px;
-	margin-bottom: 0px;
-}
-
-#mostReadEntries .mostReadNumReads {
-	font-size: 14px !important;
-	display: inline-block;
-	margin-bottom: 15px;
-}
-
-#mostReadEntries .mostReadTitle.lvl1 {
-	font-size: 30px;
-}
-
-#mostReadEntries .mostReadTitle.lvl2 {
-	font-size: 26px;
-}
-
-#mostReadEntries .mostReadTitle.lvl3 {
-	font-size: 24px;
-}
-
-#mostReadEntries .mostReadTitle.lvl4 {
-	font-size: 22px;
-}
-
-#mostReadEntries .mostReadTitle.lvl5 {
-	font-size: 20px;
-}
 
 /* home latest */
 #homeLatest {
@@ -387,40 +285,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 }
 
 /* entry details */
-.vote {
-	display: block;
-	width: 100px;
-	height: 100px;
-	margin-right: 10px;
-	background-position: center top;
-	background-repeat: no-repeat;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	text-align: center;
-	padding: 0px !important;
-	margin: auto;
-}
-
-.vote.up.selected {
-	background-color: #D2FCD4;
-}
-
-.vote.down.selected {
-	background-color: #FCD2D2;
-}
-
-.voteStatus {
-	margin: 5px auto;
-	padding: 0px !important;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	font-weight: bold;
-}
-
-#voteControl {
-	margin-top: 10px;
-}
-
 #tags {
 	text-align: right;
 }
@@ -596,7 +460,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 	padding-bottom: 10px;
 	border-bottom: 1px solid #999;
 	width: 100%;
-	margin-bottom: 20px;
 	font-size: 22px;
 }
 
@@ -607,37 +470,38 @@ input[type=submit]:hover, button[type=submit]:hover {
 }
 
 .entryInfoBar {
-	width: 15%;
-	float: left;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-wrap: wrap;;
 }
 
 .entryPrologue {
-	width: 85%;
-	float: left;
 	text-align: justify;
 }
 
-.entryPrologue * {
-	/*padding: 0px 20px;*/
+.entryInfoBar .author {
+	color: #333333;
+	padding: 10px;
+	position: relative;
 }
 
-.entryInfoBar span {
-	display: block;
-	width: 90%;
-	text-align: center;
-	padding-left: 10px;
+.entryInfoBar .author:after{
+	content: '|';
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
 }
 
-.entryInfoBar span.big {
-	font-size: 24px;
-}
-
-.entryInfoBar span.so_big {
-	font-size: 40px;
+.entryInfoBar .published {
+	color: #666666;
+	font-style: italic;
+	padding: 10px;
 }
 
 .readMoreBtn {
-	float: right;
 	border: 1px solid #ccc;
 	padding: 10px 40px;
 	margin-right: 30px;
@@ -677,32 +541,6 @@ input[type=submit]:hover, button[type=submit]:hover {
 .compactMenu {
 	height: 200px;
 	overflow: hidden;
-}
-
-/* profile / votes */
-.voteData {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 5px;
-	margin-bottom: 20px;
-	clear: both;
-}
-
-.voteData .title {
-	display: inline-block;
-	width: 40%;
-	padding-left: 10px;
-}
-
-.voteData .userVote {
-	font-weight: bold;
-	display: inline-block;
-	width: 20%;
-}
-
-.voteData .control {
-	display: inline-block;
-	text-align: right;
-	width: 38%;
 }
 
 /* profile / comments */

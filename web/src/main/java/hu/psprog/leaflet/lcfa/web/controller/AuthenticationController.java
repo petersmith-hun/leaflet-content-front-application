@@ -9,6 +9,7 @@ import hu.psprog.leaflet.lcfa.core.facade.AuthenticationFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
+import hu.psprog.leaflet.lcfa.web.ui.support.navigation.AccountNavigationBarSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,12 +36,6 @@ public class AuthenticationController extends BaseController {
     private static final String VIEW_USERS_SIGN_UP = "view/users/sign_up";
     private static final String VIEW_USERS_PW_RESET = "view/users/pw_reset";
 
-    private static final String PATH_HOME = "/";
-    private static final String PATH_SIGN_IN = "/signin";
-    private static final String PATH_SIGN_UP = "/signup";
-    private static final String PATH_PASSWORD_RESET_CONFIRMATION = "/password-reset/{token:.+}";
-    private static final String PATH_PASSWORD_RESET_REQUEST = "/password-reset";
-
     private static final Map<SignUpResult, FlashMessageKey> SIGN_UP_RESULT_FLASH_MESSAGE_KEY_MAP = Map.of(
             SignUpResult.SUCCESS, FlashMessageKey.SUCCESSFUL_SIGN_UP,
             SignUpResult.ADDRESS_IN_USE, FlashMessageKey.FAILED_SIGN_UP_ADDRESS_ALREADY_IN_USE,
@@ -54,11 +49,14 @@ public class AuthenticationController extends BaseController {
 
     private ModelAndViewFactory modelAndViewFactory;
     private AuthenticationFacade authenticationFacade;
+    private AccountNavigationBarSupport accountNavigationBarSupport;
 
     @Autowired
-    public AuthenticationController(ModelAndViewFactory modelAndViewFactory, AuthenticationFacade authenticationFacade) {
+    public AuthenticationController(ModelAndViewFactory modelAndViewFactory, AuthenticationFacade authenticationFacade,
+                                    AccountNavigationBarSupport accountNavigationBarSupport) {
         this.modelAndViewFactory = modelAndViewFactory;
         this.authenticationFacade = authenticationFacade;
+        this.accountNavigationBarSupport = accountNavigationBarSupport;
     }
 
     /**
@@ -72,6 +70,7 @@ public class AuthenticationController extends BaseController {
     public ModelAndView renderSignInForm(@ModelAttribute PasswordReclaimRequestModel passwordReclaimRequestModel) {
 
         return modelAndViewFactory.createForView(VIEW_USERS_SIGN_IN)
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.signIn())
                 .build();
     }
 
@@ -87,6 +86,7 @@ public class AuthenticationController extends BaseController {
 
         return modelAndViewFactory.createForView(VIEW_USERS_SIGN_UP)
                 .withAttribute(ModelField.VALIDATED_MODEL, signUpRequestModel)
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.signUp())
                 .build();
     }
 
@@ -151,6 +151,7 @@ public class AuthenticationController extends BaseController {
                                                             @ModelAttribute PasswordResetConfirmationRequestModel passwordResetConfirmationRequestModel) {
 
         return modelAndViewFactory.createForView(VIEW_USERS_PW_RESET)
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.passwordReset())
                 .build();
     }
 

@@ -1,13 +1,17 @@
 package hu.psprog.leaflet.lcfa.web.controller;
 
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageDataField;
+import hu.psprog.leaflet.lcfa.core.domain.content.Article;
 import hu.psprog.leaflet.lcfa.core.domain.content.ArticleContent;
+import hu.psprog.leaflet.lcfa.core.domain.content.CategorySummary;
 import hu.psprog.leaflet.lcfa.core.domain.request.ArticleCommentRequest;
 import hu.psprog.leaflet.lcfa.core.facade.ArticleOperationFacade;
 import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
+import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
+import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Controller implementation for rendering articles and handling article related user operations.
@@ -30,18 +36,18 @@ public class ArticleController extends BaseController {
 
     private static final String VIEW_BLOG_DETAILS = "view/blog/article";
 
-    private static final String PATH_ARTICLE_BY_LINK = "/article/{link}";
-    private static final String PATH_COMMENT = "/article/{link}/comment";
-
     private ModelAndViewFactory modelAndViewFactory;
     private BlogContentFacade blogContentFacade;
     private ArticleOperationFacade articleOperationFacade;
+    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
-    public ArticleController(ModelAndViewFactory modelAndViewFactory, BlogContentFacade blogContentFacade, ArticleOperationFacade articleOperationFacade) {
+    public ArticleController(ModelAndViewFactory modelAndViewFactory, BlogContentFacade blogContentFacade,
+                             ArticleOperationFacade articleOperationFacade, NavigationItemFactoryRegistry navigationItemFactoryRegistry) {
         this.modelAndViewFactory = modelAndViewFactory;
         this.blogContentFacade = blogContentFacade;
         this.articleOperationFacade = articleOperationFacade;
+        this.navigationItemFactoryRegistry = navigationItemFactoryRegistry;
     }
 
     /**
@@ -63,6 +69,7 @@ public class ArticleController extends BaseController {
                 .withAttribute(ModelField.LIST_TAGS, articleContent.getTags())
                 .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), articleContent.getSeo())
                 .withAttribute(ModelField.VALIDATED_MODEL, articleCommentRequest)
+                .withAttribute(ModelField.NAVIGATION, createNavigation(articleContent))
                 .build();
     }
 
@@ -92,6 +99,22 @@ public class ArticleController extends BaseController {
         }
 
         return modelAndView;
+    }
+
+    private List<NavigationItem> createNavigation(ArticleContent articleContent) {
+        return Arrays.asList(getCategoryNavigationItem(articleContent), getArticleNavigationItem(articleContent));
+    }
+
+    private NavigationItem getArticleNavigationItem(ArticleContent articleContent) {
+        return navigationItemFactoryRegistry
+                .getFactory(Article.class)
+                .create(articleContent.getArticle());
+    }
+
+    private NavigationItem getCategoryNavigationItem(ArticleContent articleContent) {
+        return navigationItemFactoryRegistry
+                .getFactory(CategorySummary.class)
+                .create(articleContent.getArticle().getCategory());
     }
 
     private String replaceEntryLinkInPath(String link) {

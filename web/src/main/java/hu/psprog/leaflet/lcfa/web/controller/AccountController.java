@@ -8,6 +8,7 @@ import hu.psprog.leaflet.lcfa.core.facade.AccountManagementFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
+import hu.psprog.leaflet.lcfa.web.ui.support.navigation.AccountNavigationBarSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,36 +29,27 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Controller
-@RequestMapping(AccountController.PATH_PROFILE)
+@RequestMapping(BaseController.PATH_PROFILE)
 public class AccountController extends BaseController {
-
-    static final String PATH_PROFILE = "/profile";
 
     private static final String VIEW_ACCOUNT_PROFILE = "view/account/profile";
     private static final String VIEW_ACCOUNT_PASSWORD_CHANGE = "view/account/pw_change";
     private static final String VIEW_ACCOUNT_COMMENTS = "view/account/comments";
     private static final String VIEW_ACCOUNT_DELETE = "view/account/delete";
 
-    private static final String PATH_CHANGE_PASSWORD = "/change-password";
-    private static final String PATH_MY_COMMENTS = "/my-comments";
-    private static final String PATH_MY_COMMENTS_PAGED = "/my-comments/{page}";
-    private static final String PATH_MY_COMMENTS_DELETE = "/my-comments/delete";
-    private static final String PATH_DELETE_ACCOUNT = "/delete-account";
-    private static final String PATH_PROFILE_DELETE_ACCOUNT = PATH_PROFILE + PATH_DELETE_ACCOUNT;
-    private static final String PATH_PROFILE_CHANGE_PASSWORD = PATH_PROFILE + PATH_CHANGE_PASSWORD;
-    private static final String PATH_PROFILE_MY_COMMENTS = PATH_PROFILE + PATH_MY_COMMENTS;
-    private static final String PATH_HOME = "/";
-
     private static final int DEFAULT_PAGE_NUMBER = 1;
     private static final String COMMENT_PAGINATION_LINK_TEMPLATE = "/profile/my-comments/{page}";
 
     private ModelAndViewFactory modelAndViewFactory;
     private AccountManagementFacade accountManagementFacade;
+    private AccountNavigationBarSupport accountNavigationBarSupport;
 
     @Autowired
-    public AccountController(ModelAndViewFactory modelAndViewFactory, AccountManagementFacade accountManagementFacade) {
+    public AccountController(ModelAndViewFactory modelAndViewFactory, AccountManagementFacade accountManagementFacade,
+                             AccountNavigationBarSupport accountNavigationBarSupport) {
         this.modelAndViewFactory = modelAndViewFactory;
         this.accountManagementFacade = accountManagementFacade;
+        this.accountNavigationBarSupport = accountNavigationBarSupport;
     }
 
     /**
@@ -72,6 +64,7 @@ public class AccountController extends BaseController {
 
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_PROFILE)
                 .withAttribute(ModelField.ACCOUNT, accountManagementFacade.getAccountBaseInfo(currentUserID()))
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.profile())
                 .build();
     }
 
@@ -111,6 +104,7 @@ public class AccountController extends BaseController {
     public ModelAndView renderPasswordChangeForm(@ModelAttribute PasswordChangeRequestModel passwordChangeRequestModel) {
 
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_PASSWORD_CHANGE)
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.passwordChange())
                 .build();
     }
 
@@ -154,10 +148,12 @@ public class AccountController extends BaseController {
                 .withAttribute(ModelField.COMMENTS, pageContent.getComments())
                 .withAttribute(ModelField.PAGINATION, pageContent.getPaginationAttributes())
                 .withAttribute(ModelField.LINK_TEMPLATE, COMMENT_PAGINATION_LINK_TEMPLATE)
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.myComments())
                 .build();
     }
 
     /**
+     * POST /profile/my-comments/delete
      * Processes a comment deletion request.
      *
      * @param commentID ID of the comment to be deleted
@@ -185,6 +181,7 @@ public class AccountController extends BaseController {
     public ModelAndView renderAccountDeletionForm() {
 
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_DELETE)
+                .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.accountDeletion())
                 .build();
     }
 

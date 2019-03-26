@@ -21,13 +21,15 @@ public class ArticleConverter implements Converter<WrapperBodyDataModel<Extended
     private AttachmentSummaryListConverter attachmentSummaryListConverter;
     private TagSummaryListConverter tagSummaryListConverter;
     private DateFormatterUtility dateFormatterUtility;
+    private CategorySummaryConverter categorySummaryConverter;
 
     @Autowired
     public ArticleConverter(AttachmentSummaryListConverter attachmentSummaryListConverter, TagSummaryListConverter tagSummaryListConverter,
-                            DateFormatterUtility dateFormatterUtility) {
+                            DateFormatterUtility dateFormatterUtility, CategorySummaryConverter categorySummaryConverter) {
         this.attachmentSummaryListConverter = attachmentSummaryListConverter;
         this.tagSummaryListConverter = tagSummaryListConverter;
         this.dateFormatterUtility = dateFormatterUtility;
+        this.categorySummaryConverter = categorySummaryConverter;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class ArticleConverter implements Converter<WrapperBodyDataModel<Extended
                 .title(source.getBody().getTitle())
                 .tags(tagSummaryListConverter.convert(source.getBody().getTags()))
                 .attachments(attachmentSummaryListConverter.convert(source.getBody().getAttachments()))
+                .category(categorySummaryConverter.convert(source.getBody().getCategory()))
                 .build();
     }
 
