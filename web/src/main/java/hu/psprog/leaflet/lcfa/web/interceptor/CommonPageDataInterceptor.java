@@ -1,5 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.interceptor;
 
+import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageDataField;
 import hu.psprog.leaflet.lcfa.core.facade.CommonPageDataFacade;
@@ -22,20 +23,25 @@ import java.util.stream.Collectors;
  * fields are populated. If any of them is missing, populates it based on the retrieved {@link CommonPageData} object.
  * Already populated fields (for example overridden SEO attributes) are left unchanged.
  *
+ * Also adds contents of {@link PageConfigModel}.
+ *
  * @author Peter Smith
  */
 @Component
 public class CommonPageDataInterceptor extends HandlerInterceptorAdapter {
 
+    private static final String PAGE_CONFIG_ATTRIBUTE = "pageConfig";
     private static final List<String> COMMON_PAGE_DATE_FIELDS = Arrays.stream(CommonPageDataField.values())
             .map(CommonPageDataField::getFieldName)
             .collect(Collectors.toList());
 
     private CommonPageDataFacade commonPageDataFacade;
+    private PageConfigModel pageConfigModel;
 
     @Autowired
-    public CommonPageDataInterceptor(CommonPageDataFacade commonPageDataFacade) {
+    public CommonPageDataInterceptor(CommonPageDataFacade commonPageDataFacade, PageConfigModel pageConfigModel) {
         this.commonPageDataFacade = commonPageDataFacade;
+        this.pageConfigModel = pageConfigModel;
     }
 
     @Override
@@ -48,6 +54,7 @@ public class CommonPageDataInterceptor extends HandlerInterceptorAdapter {
                     modelAndView.getModel().put(field.getFieldName(), field.getMapperFunction().apply(commonPageData));
                 }
             });
+            modelAndView.addObject(PAGE_CONFIG_ATTRIBUTE, pageConfigModel);
         }
     }
 

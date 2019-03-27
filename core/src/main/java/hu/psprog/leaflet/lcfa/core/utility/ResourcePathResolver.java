@@ -1,7 +1,7 @@
 package hu.psprog.leaflet.lcfa.core.utility;
 
+import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,8 +20,8 @@ public class ResourcePathResolver {
 
     private String resourceServerUrl;
 
-    public ResourcePathResolver(@Value("${page-config.resource-server-url}") String resourceServerUrl) {
-        this.resourceServerUrl = resourceServerUrl;
+    public ResourcePathResolver(PageConfigModel pageConfigModel) {
+        this.resourceServerUrl = pageConfigModel.getResourceServerUrl();
     }
 
     /**

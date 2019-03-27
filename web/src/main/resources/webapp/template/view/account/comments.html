@@ -6,7 +6,7 @@
 
     <th:block th:insert="fragment/profile.html :: profile-navigation" />
     <div id="comments" class="user">
-        <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold;" th:text="#{common.comment_block.no_comments_by_user}"></p>
+        <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold; padding-left: 10px;" th:text="#{common.comment_block.no_comments_by_user}"></p>
         <th:block th:if="${comments != null}" th:each="comment : ${comments}">
             <div class="comment">
                 <div class="header" th:if="${comment.article != null}">

@@ -67,10 +67,16 @@
 	
 	.forms textarea {
 		margin-bottom: 10px;
+		text-align: left;
 	}
 	
 	.forms label {
 		padding: 0px;
+	}
+
+	#recaptchaWidgetWrapper {
+		text-align: center;
+		width: 100%;
 	}
 	
 	#footer .footerColumn {

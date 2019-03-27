@@ -2,6 +2,7 @@ package hu.psprog.leaflet.lcfa.core.facade.impl;
 
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
+import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.converter.CommonPageDataConverter;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
@@ -14,7 +15,6 @@ import hu.psprog.leaflet.lcfa.core.facade.cache.CommonPageDataCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.function.Supplier;
@@ -42,13 +42,12 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
     private final PaginatedContentRequest latestEntries;
 
     @Autowired
-    public CommonPageDataFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry,
-                                    CommonPageDataCache commonPageDataCache, CommonPageDataConverter commonPageDataConverter,
-                                    @Value("${page-config.common-page-data-cache.latest-entries-count}") int numberOfLatestEntries) {
+    public CommonPageDataFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, CommonPageDataCache commonPageDataCache,
+                                    CommonPageDataConverter commonPageDataConverter, PageConfigModel pageConfigModel) {
         this.contentRequestAdapterRegistry = contentRequestAdapterRegistry;
         this.commonPageDataCache = commonPageDataCache;
         this.commonPageDataConverter = commonPageDataConverter;
-        this.latestEntries = initLatestEntriesRequest(numberOfLatestEntries);
+        this.latestEntries = initLatestEntriesRequest(pageConfigModel.getCommonPageDataCache().getLatestEntriesCount());
     }
 
     @Override

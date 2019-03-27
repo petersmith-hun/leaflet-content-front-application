@@ -111,6 +111,10 @@ input[type=submit]:hover, button[type=submit]:hover {
 	width: 50%;
 }
 
+#recaptchaWidgetWrapper {
+	display: inline-block;
+}
+
 .static {
 	text-align: justify;
 	padding: 0px 10px;
@@ -599,6 +603,7 @@ pre.prettyprint {
 	color: #f00;
 	text-align: right;
 	display: block;
+	padding-right: 10px;
 }
 
 .forms .validationError:before {

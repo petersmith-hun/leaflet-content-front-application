@@ -2,9 +2,9 @@ package hu.psprog.leaflet.lcfa.web.config;
 
 import hu.psprog.leaflet.jwt.auth.support.filter.SessionExtensionFilter;
 import hu.psprog.leaflet.jwt.auth.support.logout.TokenRevokeLogoutHandler;
+import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.rcp.hystrix.support.filter.HystrixContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -42,13 +42,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SecurityConfiguration(TokenRevokeLogoutHandler tokenRevokeLogoutHandler, SessionExtensionFilter sessionExtensionFilter,
-                                 HystrixContextFilter hystrixContextFilter, WebAppResources webAppResources,
-                                 @Value("${page-config.logout-endpoint:/signout}") String logoutEndpoint) {
+                                 HystrixContextFilter hystrixContextFilter, WebAppResources webAppResources, PageConfigModel pageConfigModel) {
         this.tokenRevokeLogoutHandler = tokenRevokeLogoutHandler;
         this.sessionExtensionFilter = sessionExtensionFilter;
         this.hystrixContextFilter = hystrixContextFilter;
         this.webAppResources = webAppResources;
-        this.logoutEndpoint = logoutEndpoint;
+        this.logoutEndpoint = pageConfigModel.getLogoutEndpoint();
     }
 
     @Override
