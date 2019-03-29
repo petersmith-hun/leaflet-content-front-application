@@ -11,10 +11,11 @@
         <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/change-password}" th:text="#{section.profile.navigation.pwchange}">placeholder:pwchange</a>
         <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/my-comments}" th:text="#{section.profile.navigation.comments}">placeholder:mycomments</a>
         <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/delete-account}" th:text="#{section.profile.navigation.delete}">placeholder:deleteaccount</a>
-        <form th:action="@{__${@environment.getProperty('page-config.logout-endpoint')}__}" th:method="post" action="#" id="logoutFormOnProfile">
+        <form th:action="@{__${pageConfig.logoutEndpoint}__}" th:method="post" action="#" id="logoutFormOnProfile" style="display: inline-block; margin: 5px;">
             <a class="commentBtn" href="javascript:void(0)" onclick="$('#logoutFormOnProfile').submit()" type="submit" th:text="#{menu.logout}">placeholder:signout</a>
         </form>
     </div>
 </th:block>
+
 </body>
 </html>

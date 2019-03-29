@@ -7,7 +7,7 @@
     <th:block th:insert="fragment/profile.html :: profile-navigation" />
     <form th:action="@{''}" method="post" accept-charset="utf-8">
         <h3 th:text="#{form.profile.delete.title}">placeholder:delete_account</h3>
-        <p style="margin: 10px 0px; font-weight: bold; color: #ff0000;" th:text="#{form.profile.delete.warn}">placeholder:warn</p>
+        <p style="margin: 10px 0px; font-weight: bold; color: #ff0000; padding: 0px 10px;" th:text="#{form.profile.delete.warn}">placeholder:warn</p>
         <div class="form-group">
             <label for="password" th:text="#{form.profile.delete.label.password}">placeholder:password</label>
             <input name="password" class="form-control" required="required" th:placeholder="#{form.profile.delete.placeholder.password}" type="password" id="password" />

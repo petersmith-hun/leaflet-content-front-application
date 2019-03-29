@@ -26,4 +26,5 @@ public class Article {
     private String content;
     private List<TagSummary> tags;
     private List<AttachmentSummary> attachments;
+    private CategorySummary category;
 }

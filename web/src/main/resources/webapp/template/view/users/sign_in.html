@@ -20,7 +20,7 @@
     <form th:action="@{/password-reset}" th:object="${passwordReclaimRequestModel}" method="post">
         <div class="form-group">
             <label for="forgetemail" th:text="#{form.reclaim.label.email}">placeholder:email</label>
-            <input name="email" type="email" class="form-control" id="forgetemail" th:placeholder="#{form.reclaim.placeholder.email}" placeholder="placeholder:email" />
+            <input name="email" type="email" class="form-control" id="forgetemail" th:placeholder="#{form.reclaim.placeholder.email}" placeholder="placeholder:email" required="required" />
             <span class="validationError" th:if="${#fields.hasErrors('email')}" th:text="#{form.reclaim.validation.error.email}">placeholder:val_err_email</span>
         </div>
         <th:block th:insert="fragment/security.html :: recaptcha-widget" />

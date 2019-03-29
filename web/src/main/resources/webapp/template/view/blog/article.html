@@ -14,8 +14,8 @@
         <div class="entryBox">
             <h1><span th:text="${article.title}">placeholder:title</span></h1>
             <div class="entryInfoBar">
-                <span class="small" th:text="${article.author.name}">placeholder:author</span>
-                <span class="small" th:text="${article.creationDate}">placeholder:date</span>
+                <span class="author" th:text="${article.author.name}">placeholder:author</span>
+                <span class="published" th:text="${article.creationDate}">placeholder:date</span>
             </div>
             <div class="entryPrologue">
                 <div style="padding: 0px 20px;">

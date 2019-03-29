@@ -1,12 +1,13 @@
 package hu.psprog.leaflet.lcfa.core.facade.cache.impl;
 
+import hu.psprog.leaflet.lcfa.core.config.CommonPageDataCacheConfigModel;
+import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.facade.cache.CommonPageDataCache;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,14 +22,16 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Component
-@ConfigurationProperties(prefix = "page-config.common-page-data-cache")
 public class InMemoryCommonPageDataCache implements CommonPageDataCache {
 
-    private long cacheTimeout;
-    private ChronoUnit cacheTimeoutUnit;
-
+    private CommonPageDataCacheConfigModel cacheConfig;
     private ZonedDateTime lastUpdate = null;
     private CommonPageData cachedCommonPageData = null;
+
+    @Autowired
+    public InMemoryCommonPageDataCache(PageConfigModel pageConfig) {
+        this.cacheConfig = pageConfig.getCommonPageDataCache();
+    }
 
     @Override
     public Optional<CommonPageData> getCached() {
@@ -47,14 +50,6 @@ public class InMemoryCommonPageDataCache implements CommonPageDataCache {
         lastUpdate = ZonedDateTime.now();
     }
 
-    public void setCacheTimeout(long cacheTimeout) {
-        this.cacheTimeout = cacheTimeout;
-    }
-
-    public void setCacheTimeoutUnit(ChronoUnit cacheTimeoutUnit) {
-        this.cacheTimeoutUnit = cacheTimeoutUnit;
-    }
-
     private boolean updatedNeeded() {
         return Objects.isNull(cachedCommonPageData)
                 || Objects.isNull(lastUpdate)
@@ -63,7 +58,7 @@ public class InMemoryCommonPageDataCache implements CommonPageDataCache {
 
     private boolean isOutdated() {
         return ZonedDateTime.now()
-                .minus(cacheTimeout, cacheTimeoutUnit)
+                .minus(cacheConfig.getCacheTimeout(), cacheConfig.getCacheTimeoutUnit())
                 .isAfter(lastUpdate);
     }
 }

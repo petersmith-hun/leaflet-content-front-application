@@ -9,13 +9,14 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
-        <meta property="og:image" content="CHANGEME" />
-        <meta property="og:title" content="CHANGEME" />
-        <meta property="og:description" content="CHANGEME" />
-        <meta property="og:url" content="CHANGEME" />
+        <meta property="og:image" th:content="@{__${pageConfig.ogImage}__}" />
+        <meta property="og:title" th:content="${seo.pageTitle}" />
+        <meta property="og:description" th:content="${seo.metaDescription}" />
+        <meta property="og:url" th:content="${#request.getRequestURL()}" />
 
         <link rel="stylesheet" type="text/css" href="/css/site.css" th:href="@{/css/site.css}" />
         <link rel="stylesheet" type="text/css" href="/css/mobile.css" th:href="@{/css/mobile.css}" />
+        <link rel="shortcut icon" th:href="@{/images/leaflet.png}" type="image/x-icon" />
 
         <script type="text/javascript" src="/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
         <script type="text/javascript" src="/js/site.js" th:src="@{/js/site.js}"></script>
@@ -42,7 +43,16 @@
     </head>
     <body>
 
-        <!-- TODO insert Google tracking code here -->
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=sitekey"
+                th:src="${pageConfig.googleSiteTracking.scriptSource}"></script>
+        <script th:inline="javascript">
+            var siteKey = /*[[${pageConfig.googleSiteTracking.siteKey}]]*/ 'site-key';
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', siteKey);
+        </script>
 
         <th:block th:with="flash=${@formLoginFlashMessageHelper.getMessageKey(#request, flash)}">
             <div id="flash" th:if="${flash != null}">
@@ -65,7 +75,7 @@
                     </li>
                 </th:block>
                 <li style="float: right;" sec:authorize="isAuthenticated()">
-                    <form th:action="@{__${@environment.getProperty('page-config.logout-endpoint')}__}" th:method="post" action="#" id="logoutForm">
+                    <form th:action="@{__${pageConfig.logoutEndpoint}__}" th:method="post" action="#" id="logoutForm">
                         <a href="javascript:void(0)" onclick="$('#logoutForm').submit()" th:text="#{menu.logout}">placeholder:signout</a>
                     </form>
                 </li>
@@ -74,7 +84,18 @@
         </div>
 
         <!-- content section -->
-        <div id="content">
+        <div id="content" th:with="navigation = ${navigation == null ? {} : navigation}">
+            <div id="statusBar">
+                <div style="padding: 15px 20px;">
+                    <span th:text="#{common.navigation.title}">placeholder:navigation_title</span>
+                    <a th:href="@{/}" th:text="#{common.navigation.home}">placeholder:navigation_home</a>
+                    <th:block th:each="navigationItem : ${navigation}">
+                        &gt;
+                        <a href="#" th:href="@{__${navigationItem.link}__}"
+                           th:text="${navigationItem.translatable} ? #{__${navigationItem.title}__} : ${navigationItem.title}">placeholder:navigation_item</a>
+                    </th:block>
+                </div>
+            </div>
             <th:block layout:fragment="content"/>
         </div>
 
@@ -82,12 +103,16 @@
         <div id="footer">
             <div id="footerWrapper">
                 <div class="footerColumn">
-                    <p class="footerColumnTitle" th:text="${@environment.getProperty('page-config.sitename')}">placeholder:sitename</p>
+                    <p class="footerColumnTitle" th:text="${pageConfig.siteName}">placeholder:sitename</p>
                     <ul class="footerColumnData">
-                        <li th:text="${@environment.getProperty('page-config.copyright')}">placeholder:copyright</li>
+                        <li th:text="${pageConfig.copyright}">placeholder:copyright</li>
                         <li>&nbsp;</li>
                         <li>Powered by <a href="https://spring.io/">Spring Framework</a></li>
-                        <li>Managed by <a href="https://github.com/petersmith-hun/leaflet-backend">Leaflet</a></li>
+                        <li style="display: table-row;">
+                            <span style="display: table-cell; vertical-align: middle;">Managed by </span>
+                            <img src="/images/leaflet.png" style="max-width: 32px; display: table-cell; padding-top: 3px;" th:src="@{/images/leaflet.png}" alt="leaflet" />
+                            <a style="display: table-cell; vertical-align: middle;" href="https://github.com/petersmith-hun/leaflet-backend">Leaflet</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="footerColumn">
@@ -111,8 +136,7 @@
                     <ul class="footerColumnData">
                         <li>
                             <span>email: </span>
-                            <a href="#" th:href="'mailto:' + ${@environment.getProperty('page-config.contact-mail')}"
-                               th:text="${@environment.getProperty('page-config.contact-mail')}">placeholder:contact_mail</a>
+                            <a href="#" th:href="'mailto:' + ${pageConfig.contactMail}" th:text="${pageConfig.contactMail}">placeholder:contact_mail</a>
                         </li>
                     </ul>
                 </div>

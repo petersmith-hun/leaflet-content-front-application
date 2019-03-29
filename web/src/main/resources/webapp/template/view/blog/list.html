@@ -10,15 +10,15 @@
             <div th:each="entry : ${entries}">
                 <div class="entryBox">
                     <h1><span th:text="${entry.title}">placeholder:title</span></h1>
-                    <div class="entryInfoBar">
-                        <span class="small" th:text="${entry.author.name}">placeholder:author</span>
-                        <span class="small" th:text="${entry.creationDate}">placeholder:date</span>
-                    </div>
-                    <div class="entryPrologue">
+                    <div class="entryPrologue" style="margin-top: 20px;">
                         <div style="padding: 0px 20px;" th:text="${entry.prologue}">placeholder:prologue</div>
-                        <a href="#" th:href="@{/article/__${entry.link}__}">
-                            <div class="readMoreBtn" th:text="#{common.btn_show_article}">placeholder:show_article</div>
-                        </a>
+                        <div class="entryInfoBar">
+                            <span class="author" th:text="${entry.author.name}">placeholder:author</span>
+                            <span class="published" th:text="${entry.creationDate}">placeholder:date</span>
+                            <a href="#" th:href="@{/article/__${entry.link}__}">
+                                <div class="readMoreBtn" th:text="#{common.btn_show_article}">placeholder:show_article</div>
+                            </a>
+                        </div>
                         <div class="clear">&nbsp;</div>
                     </div>
                 </div>

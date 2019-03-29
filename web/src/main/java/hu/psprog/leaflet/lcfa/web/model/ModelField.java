@@ -20,6 +20,7 @@ public enum ModelField {
     CURRENT_PAGE_NUMBER("currentPageNumber"),
     FLASH("flash"),
     LINK_TEMPLATE("linkTemplate"),
+    NAVIGATION("navigation"),
     PAGINATION("pagination"),
     STATIC("static"),
     VALIDATED_MODEL("validatedModel");
