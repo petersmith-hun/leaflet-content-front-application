@@ -3,9 +3,11 @@ package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 import hu.psprog.leaflet.api.rest.request.comment.CommentCreateRequestModel;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.CommentBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
 import hu.psprog.leaflet.lcfa.core.domain.request.ArticleCommentRequest;
+import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.impl.utility.CommentCreateRequestFactory;
@@ -43,6 +45,8 @@ public class ArticleCommentRequestContentRequestAdapter implements ContentReques
         try {
             commentBridgeService.createComment(commentCreateRequestModel, contentRequestParameter.getRequestPayload().getRecaptchaToken());
             successful = true;
+        } catch (UnauthorizedAccessException e) {
+            throw new UserSessionInvalidationRequiredException(e);
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to create comment [{}]", contentRequestParameter, e);
         }

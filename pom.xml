@@ -35,7 +35,7 @@
         <leaflet.bridge.version>3.2.2</leaflet.bridge.version>
         <leaflet.tlp-appender.version>1.1.0</leaflet.tlp-appender.version>
         <leaflet.translation-adapter.version>2.1.0</leaflet.translation-adapter.version>
-        <leaflet.jwt-auth-support.version>1.0.0</leaflet.jwt-auth-support.version>
+        <leaflet.jwt-auth-support.version>1.0.1</leaflet.jwt-auth-support.version>
 
         <!-- Spring versions -->
         <spring.boot.version>2.1.1.RELEASE</spring.boot.version>

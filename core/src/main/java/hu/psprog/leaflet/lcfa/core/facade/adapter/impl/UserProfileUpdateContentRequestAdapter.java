@@ -4,8 +4,10 @@ import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
 import hu.psprog.leaflet.api.rest.response.user.ExtendedUserDataModel;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.UserBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
+import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
@@ -38,6 +40,8 @@ public class UserProfileUpdateContentRequestAdapter implements ContentRequestAda
         ExtendedUserDataModel userDataModel = null;
         try {
             userDataModel = userBridgeService.updateProfile(contentRequestParameter.getCurrentUserID(), contentRequestParameter.getRequestPayload());
+        } catch (UnauthorizedAccessException e) {
+            throw new UserSessionInvalidationRequiredException(e);
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to update user profile", e);
         }

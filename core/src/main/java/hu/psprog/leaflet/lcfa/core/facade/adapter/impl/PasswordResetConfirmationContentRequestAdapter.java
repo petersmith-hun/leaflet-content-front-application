@@ -2,9 +2,11 @@ package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.UserBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.request.PasswordResetConfirmationRequestModel;
 import hu.psprog.leaflet.lcfa.core.domain.result.PasswordResetResult;
+import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
@@ -38,6 +40,8 @@ public class PasswordResetConfirmationContentRequestAdapter implements ContentRe
         try {
             userBridgeService.confirmPasswordReset(contentRequestParameter, contentRequestParameter.getRecaptchaToken());
             result = PasswordResetResult.CONFIRMATION_PROCESSED;
+        } catch (UnauthorizedAccessException e) {
+            throw new UserSessionInvalidationRequiredException(e);
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Password reset confirmation could not be processed", e);
         }

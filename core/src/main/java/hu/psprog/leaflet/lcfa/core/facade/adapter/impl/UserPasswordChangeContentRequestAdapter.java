@@ -3,8 +3,10 @@ package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.UserBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
+import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
@@ -38,6 +40,8 @@ public class UserPasswordChangeContentRequestAdapter implements ContentRequestAd
         try {
             userBridgeService.updatePassword(contentRequestParameter.getCurrentUserID(), contentRequestParameter.getRequestPayload());
             successful = true;
+        } catch (UnauthorizedAccessException e) {
+            throw new UserSessionInvalidationRequiredException(e);
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to update user password", e);
         }
