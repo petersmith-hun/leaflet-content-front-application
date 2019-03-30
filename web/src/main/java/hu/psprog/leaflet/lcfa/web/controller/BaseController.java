@@ -3,6 +3,7 @@ package hu.psprog.leaflet.lcfa.web.controller;
 import hu.psprog.leaflet.jwt.auth.support.domain.AuthenticationUserDetailsModel;
 import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
 import hu.psprog.leaflet.lcfa.core.exception.ContentNotFoundException;
+import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class BaseController {
 
     private static final String HEADER_USER_AGENT = "User-Agent";
 
+    private static final String ERROR_401 = "error/401";
     private static final String ERROR_404 = "error/404";
     private static final String ERROR_500 = "error/500";
 
@@ -82,6 +84,14 @@ public class BaseController {
         return userID;
     }
 
+    @ExceptionHandler(UserSessionInvalidationRequiredException.class)
+    public ModelAndView handleUserSessionInvalidationRequiredException(HttpServletRequest request, UserSessionInvalidationRequiredException exception) {
+
+        LOGGER.error("User session invalidation required - setting response status to 401 to trigger expiration filter", exception);
+
+        return getErrorView(HttpStatus.UNAUTHORIZED);
+    }
+
     /**
      * HTTP 404 handler. Triggered when a {@link ContentNotFoundException} is thrown.
      *
@@ -124,8 +134,19 @@ public class BaseController {
     }
 
     private String getViewName(HttpStatus status) {
-        return status == HttpStatus.NOT_FOUND
-                ? ERROR_404
-                : ERROR_500;
+
+        String viewName;
+        switch (status) {
+            case UNAUTHORIZED:
+                viewName = ERROR_401;
+                break;
+            case NOT_FOUND:
+                viewName = ERROR_404;
+                break;
+            default:
+                viewName = ERROR_500;
+        }
+
+        return viewName;
     }
 }

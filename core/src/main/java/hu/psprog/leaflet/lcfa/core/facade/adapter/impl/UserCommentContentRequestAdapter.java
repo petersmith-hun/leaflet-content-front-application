@@ -5,9 +5,11 @@ import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
+import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.CommentBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
+import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
@@ -41,6 +43,8 @@ public class UserCommentContentRequestAdapter implements ContentRequestAdapter<W
         try {
             commentListDataModel = commentBridgeService.getPageOfCommentsForUser(contentRequestParameter.getFilterValue(), contentRequestParameter.getPage(),
                     contentRequestParameter.getLimit(), mapOrdering(contentRequestParameter), mapOrderDirection(contentRequestParameter));
+        } catch (UnauthorizedAccessException e) {
+            throw new UserSessionInvalidationRequiredException(e);
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to retrieve comments for user [{}]", contentRequestParameter.getFilterValue(), e);
         }
