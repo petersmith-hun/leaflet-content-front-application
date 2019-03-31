@@ -51,7 +51,7 @@ public class ContactController extends BaseController {
      * @return populated {@link ModelAndView} object
      */
     @GetMapping
-    public ModelAndView getContactForm(@ModelAttribute ContactRequestModel contactRequestModel) {
+    public ModelAndView renderContactForm(@ModelAttribute ContactRequestModel contactRequestModel) {
         ContactPageContent contactPageContent = contactPageFacade.getContactPageContent();
         return modelAndViewFactory.createForView(VIEW_CONTACT_FORM)
                 .withAttribute(ModelField.STATIC, contactPageContent.getContactInfo().getPage())
@@ -77,7 +77,7 @@ public class ContactController extends BaseController {
 
         ModelAndView modelAndView;
         if (bindingResult.hasErrors()) {
-            modelAndView = getContactForm(contactRequestModel);
+            modelAndView = renderContactForm(contactRequestModel);
         } else {
             contactPageFacade.processContactRequest(contactRequestModel);
             modelAndView = modelAndViewFactory.createRedirectionTo(PATH_CONTACT);

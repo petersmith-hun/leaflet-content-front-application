@@ -57,7 +57,7 @@ public class ContentFilteringController extends BaseController {
      * @return populated {@link ModelAndView}
      */
     @GetMapping({PATH_HOME, PATH_HOME_PAGED})
-    public ModelAndView getHomePage(@PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
+    public ModelAndView renderHomePage(@PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
 
         int pageNumber = optionalPageNumber.orElse(DEFAULT_PAGE_NUMBER);
         HomePageContent homePageContent = blogContentFacade.getHomePageContent(pageNumber);
@@ -73,9 +73,9 @@ public class ContentFilteringController extends BaseController {
      * @return populated {@link ModelAndView}
      */
     @GetMapping({PATH_FILTER_BY_CATEGORY, PATH_FILTER_BY_CATEGORY_PAGED})
-    public ModelAndView getArticleListByCategory(@PathVariable("categoryID") long categoryID,
-                                                 @PathVariable("categoryAlias") String categoryAlias,
-                                                 @PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
+    public ModelAndView renderArticleListByCategory(@PathVariable("categoryID") long categoryID,
+                                                    @PathVariable("categoryAlias") String categoryAlias,
+                                                    @PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
 
         int pageNumber = extractPageNumber(optionalPageNumber);
         HomePageContent homePageContent = blogContentFacade.getArticlesByCategory(categoryID, pageNumber);
@@ -93,9 +93,9 @@ public class ContentFilteringController extends BaseController {
      * @return populated {@link ModelAndView}
      */
     @GetMapping({PATH_FILTER_BY_TAG, PATH_FILTER_BY_TAG_PAGED})
-    public ModelAndView getArticleListByTag(@PathVariable("tagID") long tagID,
-                                            @PathVariable("tagAlias") String tagAlias,
-                                            @PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
+    public ModelAndView renderArticleListByTag(@PathVariable("tagID") long tagID,
+                                               @PathVariable("tagAlias") String tagAlias,
+                                               @PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
 
         int pageNumber = extractPageNumber(optionalPageNumber);
         HomePageContent homePageContent = blogContentFacade.getArticlesByTag(tagID, pageNumber);
@@ -113,8 +113,8 @@ public class ContentFilteringController extends BaseController {
      * @return populated {@link ModelAndView}
      */
     @GetMapping({PATH_FILTER_BY_CONTENT, PATH_FILTER_BY_CONTENT_PAGED})
-    public ModelAndView getArticleListByContent(@RequestParam(value = "content") String contentExpression,
-                                                @PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
+    public ModelAndView renderArticleListByContent(@RequestParam(value = "content") String contentExpression,
+                                                   @PathVariable(required = false, value = "page") Optional<Integer> optionalPageNumber) {
 
         int pageNumber = extractPageNumber(optionalPageNumber);
         HomePageContent homePageContent = blogContentFacade.getArticlesByContent(contentExpression, pageNumber);
