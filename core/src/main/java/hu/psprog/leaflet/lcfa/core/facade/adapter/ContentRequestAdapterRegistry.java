@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 @Component
 public class ContentRequestAdapterRegistry implements InitializingBean {
 
+    private static final String NO_REQUEST_ADAPTER_IS_ASSIGNED_TO_TYPE = "No request adapter is assigned to type [%s]";
+    private static final String DEFICIENT_CONTENT_REQUEST_ADAPTER_MAPPING = "Deficient content request adapter mapping - stopping context build";
+
     private Map<ContentRequestAdapterIdentifier, ContentRequestAdapter<?, ?>> contentRequestAdapterMap;
 
     @Autowired
@@ -45,12 +48,12 @@ public class ContentRequestAdapterRegistry implements InitializingBean {
     public <T, P> ContentRequestAdapter<T, P> getContentRequestAdapter(ContentRequestAdapterIdentifier identifier) {
         return Optional.ofNullable(contentRequestAdapterMap.get(identifier))
                 .map(contentRequestAdapter -> (ContentRequestAdapter<T, P>) contentRequestAdapter)
-                .orElseThrow(() -> new IllegalArgumentException("No request adapter is assigned to type " + identifier));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(NO_REQUEST_ADAPTER_IS_ASSIGNED_TO_TYPE, identifier)));
     }
 
     private void assertMappings() {
         if (contentRequestAdapterMap.keySet().size() != ContentRequestAdapterIdentifier.values().length) {
-            throw new IllegalStateException("Deficient content request adapter mapping - stopping context build");
+            throw new IllegalStateException(DEFICIENT_CONTENT_REQUEST_ADAPTER_MAPPING);
         }
     }
 }

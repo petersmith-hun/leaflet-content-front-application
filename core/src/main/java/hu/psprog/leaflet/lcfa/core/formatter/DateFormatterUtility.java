@@ -49,7 +49,8 @@ public class DateFormatterUtility {
 
     private String doFormat(ZonedDateTime dateTime, DateFormatType dateFormatType) {
         return Optional.ofNullable(dateTime)
-                .map(zonedDateTime -> zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).format(dateFormatterMap.get(dateFormatType)))
+                .map(zonedDateTime -> zonedDateTime.withZoneSameInstant(ZoneId.systemDefault())
+                        .format(dateFormatterMap.get(dateFormatType)))
                 .orElse(StringUtils.EMPTY);
     }
 }

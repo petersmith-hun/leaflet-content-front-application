@@ -1,10 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 
-import hu.psprog.leaflet.api.rest.response.category.CategoryListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.BaseBodyDataModel;
-import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
-import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
-import hu.psprog.leaflet.api.rest.response.tag.TagListDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
@@ -26,7 +22,7 @@ import java.util.concurrent.Callable;
  * @author Peter Smith
  */
 @Component
-public class HomePageContentRequestAdapter extends AbstractFilteringSupportParallelContentRequestAdapter<HomePageRawResponseWrapper, PaginatedContentRequest> {
+public class HomePageContentRequestAdapter extends AbstractFilteredEntryPageContentRequestAdapter<PaginatedContentRequest> {
 
     private EntryBridgeService entryBridgeService;
 
@@ -38,15 +34,6 @@ public class HomePageContentRequestAdapter extends AbstractFilteringSupportParal
     @Override
     void addContentCalls(Map<CallType, Callable<BaseBodyDataModel>> callableMap, PaginatedContentRequest contentRequestParameter) {
         callableMap.put(CallType.ENTRY, getPublicEntries(contentRequestParameter));
-    }
-
-    @Override
-    HomePageRawResponseWrapper combinator(Map<CallType, BaseBodyDataModel> result) {
-        return HomePageRawResponseWrapper.builder()
-                .categoryListDataModel((CategoryListDataModel) result.get(CallType.CATEGORY))
-                .wrappedEntryListDataModel((WrapperBodyDataModel<EntryListDataModel>) result.get(CallType.ENTRY))
-                .wrappedTagListDataModel((WrapperBodyDataModel<TagListDataModel>) result.get(CallType.TAG))
-                .build();
     }
 
     @Override

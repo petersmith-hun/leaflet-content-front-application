@@ -123,7 +123,7 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
                 .filterValue(userID)
                 .page(page)
                 .limit(defaultPaginationAttributes.getLimit())
-                .orderBy(OrderBy.Comment.valueOf(defaultPaginationAttributes.getOrderBy().name()))
+                .orderBy(defaultPaginationAttributes.getOrderBy())
                 .orderDirection(defaultPaginationAttributes.getOrderDirection())
                 .build();
     }

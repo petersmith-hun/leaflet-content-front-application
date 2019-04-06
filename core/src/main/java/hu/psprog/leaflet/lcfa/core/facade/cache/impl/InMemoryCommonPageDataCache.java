@@ -37,7 +37,7 @@ public class InMemoryCommonPageDataCache implements CommonPageDataCache {
     public Optional<CommonPageData> getCached() {
 
         CommonPageData commonPageData = null;
-        if (!updatedNeeded()) {
+        if (!updateNeeded()) {
             commonPageData = cachedCommonPageData;
         }
 
@@ -50,7 +50,7 @@ public class InMemoryCommonPageDataCache implements CommonPageDataCache {
         lastUpdate = ZonedDateTime.now();
     }
 
-    private boolean updatedNeeded() {
+    private boolean updateNeeded() {
         return Objects.isNull(cachedCommonPageData)
                 || Objects.isNull(lastUpdate)
                 || isOutdated();
