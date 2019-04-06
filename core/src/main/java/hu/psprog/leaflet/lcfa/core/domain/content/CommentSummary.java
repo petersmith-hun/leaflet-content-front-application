@@ -1,6 +1,5 @@
 package hu.psprog.leaflet.lcfa.core.domain.content;
 
-import hu.psprog.leaflet.lcfa.core.converter.CommentArticleData;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -10,8 +10,4 @@ public class UserRequestProcessingException extends RuntimeException {
     public UserRequestProcessingException(String message) {
         super(message);
     }
-
-    public UserRequestProcessingException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

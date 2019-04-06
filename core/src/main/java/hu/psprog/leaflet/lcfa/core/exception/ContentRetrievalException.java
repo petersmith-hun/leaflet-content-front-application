@@ -10,8 +10,4 @@ public class ContentRetrievalException extends RuntimeException {
     public ContentRetrievalException(String message) {
         super(message);
     }
-
-    public ContentRetrievalException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

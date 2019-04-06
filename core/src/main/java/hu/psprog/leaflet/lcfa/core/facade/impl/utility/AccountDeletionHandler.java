@@ -105,9 +105,10 @@ public class AccountDeletionHandler {
     private void forceLogout() {
         try {
             authenticationService.revokeToken();
-            SecurityContextHolder.clearContext();
         } catch (DefaultNonSuccessfulResponseException | CommunicationFailureException e) {
             LOGGER.error("Failed to sign-out user", e);
+        } finally {
+            SecurityContextHolder.clearContext();
         }
     }
 }

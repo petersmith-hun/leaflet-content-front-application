@@ -1,4 +1,4 @@
-package hu.psprog.leaflet.lcfa.core.converter;
+package hu.psprog.leaflet.lcfa.core.domain.content;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

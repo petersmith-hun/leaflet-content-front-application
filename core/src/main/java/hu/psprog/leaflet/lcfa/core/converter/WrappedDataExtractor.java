@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -95,13 +96,18 @@ public class WrappedDataExtractor {
 
     private List<MenuItem> extractMenu(List<FrontEndRouteDataModel> menuItemList) {
         return Optional.ofNullable(menuItemList)
-                .map(menuItems -> menuItems.stream().map(frontEndRouteDataModel -> MenuItem.builder()
-                        .name(frontEndRouteDataModel.getName())
-                        .routeId(frontEndRouteDataModel.getRouteId())
-                        .url(frontEndRouteDataModel.getUrl())
-                        .authRequirement(FrontEndRouteAuthRequirement.valueOf(frontEndRouteDataModel.getAuthRequirement()))
-                        .build())
+                .map(menuItems -> menuItems.stream()
+                        .map(mapMenuItem())
                         .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
+    }
+
+    private Function<FrontEndRouteDataModel, MenuItem> mapMenuItem() {
+        return frontEndRouteDataModel -> MenuItem.builder()
+                .name(frontEndRouteDataModel.getName())
+                .routeId(frontEndRouteDataModel.getRouteId())
+                .url(frontEndRouteDataModel.getUrl())
+                .authRequirement(FrontEndRouteAuthRequirement.valueOf(frontEndRouteDataModel.getAuthRequirement()))
+                .build();
     }
 }

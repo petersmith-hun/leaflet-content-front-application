@@ -13,6 +13,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
 
 import static hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier.STATIC_PAGE;
 
@@ -25,6 +26,7 @@ import static hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterId
 public class StaticPageContentFacadeImpl implements StaticPageContentFacade {
 
     private static final String FAILED_TO_RETRIEVE_STATIC_PAGE = "Failed to retrieve static page for link [%s]";
+    private static final String MAPPING_NOT_FOUND = "Mapping not found for static page type of [%s]";
 
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private ConversionService conversionService;
@@ -40,7 +42,12 @@ public class StaticPageContentFacadeImpl implements StaticPageContentFacade {
 
     @Override
     public StaticPageContent getStaticPage(StaticPageType staticPageType) {
+
         String staticPageLink = staticPageMapping.get(staticPageType);
+        if (Objects.isNull(staticPageLink)) {
+            throw new ContentNotFoundException(String.format(MAPPING_NOT_FOUND, staticPageType));
+        }
+
         return contentRequestAdapterRegistry.<WrapperBodyDataModel<DocumentDataModel>, String>getContentRequestAdapter(STATIC_PAGE)
                 .getContent(staticPageLink)
                 .map(staticPage -> conversionService.convert(staticPage, StaticPageContent.class))

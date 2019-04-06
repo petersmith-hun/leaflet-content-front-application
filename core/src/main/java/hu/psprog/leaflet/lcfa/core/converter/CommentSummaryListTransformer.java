@@ -6,6 +6,7 @@ import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentDataModel;
 import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
+import hu.psprog.leaflet.lcfa.core.domain.content.CommentArticleData;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
 import hu.psprog.leaflet.lcfa.core.formatter.DateFormatterUtility;
 import org.springframework.beans.factory.annotation.Autowired;
