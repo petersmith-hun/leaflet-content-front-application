@@ -40,8 +40,6 @@
                 });
             });
         </script>
-    </head>
-    <body>
 
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=sitekey"
@@ -53,6 +51,8 @@
             gtag('js', new Date());
             gtag('config', siteKey);
         </script>
+    </head>
+    <body>
 
         <th:block th:with="flash=${@formLoginFlashMessageHelper.getMessageKey(#request, flash)}">
             <div id="flash" th:if="${flash != null}">
