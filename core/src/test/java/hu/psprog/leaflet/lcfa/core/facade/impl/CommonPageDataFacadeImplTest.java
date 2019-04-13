@@ -3,6 +3,7 @@ package hu.psprog.leaflet.lcfa.core.facade.impl;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
+import hu.psprog.leaflet.api.rest.response.sitemap.Sitemap;
 import hu.psprog.leaflet.lcfa.core.config.CommonPageDataCacheConfigModel;
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.converter.CommonPageDataConverter;
@@ -30,6 +31,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -61,6 +63,10 @@ public class CommonPageDataFacadeImplTest {
     private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
             .withBody(EntryListDataModel.getBuilder().withItem(EntryDataModel.getBuilder().withId(3L).build()).build())
             .build();
+    private static final Sitemap SITEMAP = Sitemap.getBuilder()
+            .withLocation("/location/test")
+            .build();
+    private static final Sitemap EMPTY_SITEMAP = Sitemap.getBuilder().build();
 
     static {
         COMMON_PAGE_DATA_CACHE_CONFIG_MODEL.setLatestEntriesCount(LATEST_ENTRIES_COUNT);
@@ -78,6 +84,9 @@ public class CommonPageDataFacadeImplTest {
 
     @Mock
     private ContentRequestAdapter<WrapperBodyDataModel<EntryListDataModel>, PaginatedContentRequest> commonPageDataContentRequestAdapter;
+
+    @Mock
+    private ContentRequestAdapter<Sitemap, Void> sitemapContentRequestAdapter;
 
     private CommonPageDataFacadeImpl commonPageDataFacade;
 
@@ -136,5 +145,37 @@ public class CommonPageDataFacadeImplTest {
 
         // then
         // exception expected
+    }
+
+    @Test
+    public void shouldGetSitemapReturnWithSuccess() {
+
+        // given
+        given(contentRequestAdapterRegistry.<Sitemap, Void>getContentRequestAdapter(ContentRequestAdapterIdentifier.SITEMAP))
+                .willReturn(sitemapContentRequestAdapter);
+        given(sitemapContentRequestAdapter.getContent(nullable(Void.class))).willReturn(Optional.of(SITEMAP));
+
+        // when
+        Sitemap result = commonPageDataFacade.getSitemap();
+
+        // then
+        assertThat(result, notNullValue());
+        assertThat(result, equalTo(SITEMAP));
+    }
+
+    @Test
+    public void shouldGetSitemapReturnEmptySitemapForMissingData() {
+
+        // given
+        given(contentRequestAdapterRegistry.<Sitemap, Void>getContentRequestAdapter(ContentRequestAdapterIdentifier.SITEMAP))
+                .willReturn(sitemapContentRequestAdapter);
+        given(sitemapContentRequestAdapter.getContent(nullable(Void.class))).willReturn(Optional.empty());
+
+        // when
+        Sitemap result = commonPageDataFacade.getSitemap();
+
+        // then
+        assertThat(result, notNullValue());
+        assertThat(result, equalTo(EMPTY_SITEMAP));
     }
 }

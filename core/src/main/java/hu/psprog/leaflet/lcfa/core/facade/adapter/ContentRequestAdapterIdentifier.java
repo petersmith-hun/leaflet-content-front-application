@@ -24,6 +24,7 @@ public enum ContentRequestAdapterIdentifier {
     PROFILE_PASSWORD_CHANGE,
     PROFILE_UPDATE,
     SIGN_UP,
+    SITEMAP,
     STATIC_PAGE,
     TAG_FILTER
 }
