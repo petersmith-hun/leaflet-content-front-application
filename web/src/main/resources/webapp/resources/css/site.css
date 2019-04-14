@@ -584,7 +584,9 @@ pre.prettyprint {
 }
 
 .entryPrologue img {
-	width: 100%;
+	max-width: 95%;
+	display: block;
+	margin: auto;
 }
 
 .entryPrologue p a {
