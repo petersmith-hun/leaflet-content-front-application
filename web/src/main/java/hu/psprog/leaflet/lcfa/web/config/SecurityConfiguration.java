@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
+import java.util.Optional;
+
 /**
  * Spring Security configuration.
  *
@@ -36,18 +38,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenRevokeLogoutHandler tokenRevokeLogoutHandler;
     private final SessionExtensionFilter sessionExtensionFilter;
-    private final HystrixContextFilter hystrixContextFilter;
     private final WebAppResources webAppResources;
     private final String logoutEndpoint;
+    private final Optional<HystrixContextFilter> optionalHystrixContextFilter;
 
     @Autowired
     public SecurityConfiguration(TokenRevokeLogoutHandler tokenRevokeLogoutHandler, SessionExtensionFilter sessionExtensionFilter,
-                                 HystrixContextFilter hystrixContextFilter, WebAppResources webAppResources, PageConfigModel pageConfigModel) {
+                                 WebAppResources webAppResources, PageConfigModel pageConfigModel,
+                                 @Autowired(required = false) Optional<HystrixContextFilter> optionalHystrixContextFilter) {
         this.tokenRevokeLogoutHandler = tokenRevokeLogoutHandler;
         this.sessionExtensionFilter = sessionExtensionFilter;
-        this.hystrixContextFilter = hystrixContextFilter;
         this.webAppResources = webAppResources;
         this.logoutEndpoint = pageConfigModel.getLogoutEndpoint();
+        this.optionalHystrixContextFilter = optionalHystrixContextFilter;
     }
 
     @Override
@@ -60,8 +63,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        optionalHystrixContextFilter
+                .ifPresent(hystrixContextFilter -> http.addFilterBefore(hystrixContextFilter, LogoutFilter.class));
+
         http
-            .addFilterBefore(hystrixContextFilter, LogoutFilter.class)
             .addFilterAfter(sessionExtensionFilter, UsernamePasswordAuthenticationFilter.class)
 
             .authorizeRequests()
