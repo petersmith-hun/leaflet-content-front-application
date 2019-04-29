@@ -1,5 +1,8 @@
 package hu.psprog.leaflet.lcfa.web.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
 import hu.psprog.leaflet.lcfa.web.interceptor.CommonPageDataInterceptor;
 import hu.psprog.leaflet.lcfa.web.interceptor.ModelAndViewDebuggerInterceptor;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -49,6 +54,15 @@ public class WebMVCConfiguration implements WebMvcConfigurer {
                 .forEach(resource -> registry
                         .addResourceHandler(resource.getHandler())
                         .addResourceLocations(resource.getLocation()));
+    }
+
+    @Bean
+    public MappingJackson2XmlHttpMessageConverter mappingJackson2XmlHttpMessageConverter(Jackson2ObjectMapperBuilder builder) {
+
+        ObjectMapper objectMapper = builder.createXmlMapper(true).build();
+        ((XmlMapper) objectMapper).enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
+
+        return new MappingJackson2XmlHttpMessageConverter(objectMapper);
     }
 
     @Bean
