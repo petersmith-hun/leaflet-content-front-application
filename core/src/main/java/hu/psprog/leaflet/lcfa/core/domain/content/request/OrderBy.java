@@ -13,7 +13,8 @@ public class OrderBy {
     public enum Entry {
         ID,
         TITLE,
-        CREATED
+        CREATED,
+        PUBLISHED
     }
 
     /**

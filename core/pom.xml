@@ -5,7 +5,7 @@
     <parent>
         <artifactId>leaflet-content-front-application</artifactId>
         <groupId>hu.psprog.leaflet</groupId>
-        <version>1.0.2-dev</version>
+        <version>1.0.3-dev</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
