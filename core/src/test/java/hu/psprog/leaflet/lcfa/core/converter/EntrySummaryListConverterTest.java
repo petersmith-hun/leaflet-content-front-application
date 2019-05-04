@@ -30,11 +30,13 @@ public class EntrySummaryListConverterTest {
 
     private static final String USERNAME = "username";
     private static final ZonedDateTime CREATED = ZonedDateTime.now();
+    private static final ZonedDateTime PUBLISHED = ZonedDateTime.now().plusDays(1);
     private static final String FORMATTED_CREATED_DATE = "formatted-created-date";
+    private static final String FORMATTED_PUBLISHED_DATE = "formatted-published-date";
     private static final String LINK = "link";
     private static final String TITLE = "title";
     private static final String PROLOGUE = "prologue";
-    private static final EntryDataModel ENTRY_DATA_MODEL = EntryDataModel.getBuilder()
+    private static final EntryDataModel ENTRY_DATA_MODEL_WITHOUT_PUBLISHED_DATE = EntryDataModel.getBuilder()
             .withLink(LINK)
             .withTitle(TITLE)
             .withUser(UserDataModel.getBuilder()
@@ -43,11 +45,28 @@ public class EntrySummaryListConverterTest {
             .withCreated(CREATED)
             .withPrologue(PROLOGUE)
             .build();
-    private static final EntrySummary ENTRY_SUMMARY = EntrySummary.builder()
+    private static final EntrySummary ENTRY_SUMMARY_WITHOUT_PUBLISHED_DATE = EntrySummary.builder()
             .link(LINK)
             .title(TITLE)
             .author(new AuthorSummary(USERNAME))
             .creationDate(FORMATTED_CREATED_DATE)
+            .prologue(PROLOGUE)
+            .build();
+    private static final EntryDataModel ENTRY_DATA_MODEL_WITH_PUBLISHED_DATE = EntryDataModel.getBuilder()
+            .withLink(LINK)
+            .withTitle(TITLE)
+            .withUser(UserDataModel.getBuilder()
+                    .withUsername(USERNAME)
+                    .build())
+            .withCreated(CREATED)
+            .withPublished(PUBLISHED)
+            .withPrologue(PROLOGUE)
+            .build();
+    private static final EntrySummary ENTRY_SUMMARY_WITH_PUBLISHED_DATE = EntrySummary.builder()
+            .link(LINK)
+            .title(TITLE)
+            .author(new AuthorSummary(USERNAME))
+            .creationDate(FORMATTED_PUBLISHED_DATE)
             .prologue(PROLOGUE)
             .build();
 
@@ -58,12 +77,12 @@ public class EntrySummaryListConverterTest {
     private EntrySummaryListConverter converter;
 
     @Test
-    public void shouldConvert() {
+    public void shouldConvertWithoutPublishedDate() {
 
         // given
         given(dateFormatterUtility.formatGeneral(CREATED)).willReturn(FORMATTED_CREATED_DATE);
         EntryListDataModel entryListDataModel = EntryListDataModel.getBuilder()
-                .withItem(ENTRY_DATA_MODEL)
+                .withItem(ENTRY_DATA_MODEL_WITHOUT_PUBLISHED_DATE)
                 .build();
 
         // when
@@ -71,6 +90,23 @@ public class EntrySummaryListConverterTest {
 
         // then
         assertThat(result, notNullValue());
-        assertThat(result, hasItem(ENTRY_SUMMARY));
+        assertThat(result, hasItem(ENTRY_SUMMARY_WITHOUT_PUBLISHED_DATE));
+    }
+
+    @Test
+    public void shouldConvertWithPublishedDate() {
+
+        // given
+        given(dateFormatterUtility.formatGeneral(PUBLISHED)).willReturn(FORMATTED_PUBLISHED_DATE);
+        EntryListDataModel entryListDataModel = EntryListDataModel.getBuilder()
+                .withItem(ENTRY_DATA_MODEL_WITH_PUBLISHED_DATE)
+                .build();
+
+        // when
+        List<EntrySummary> result = converter.convert(entryListDataModel);
+
+        // then
+        assertThat(result, notNullValue());
+        assertThat(result, hasItem(ENTRY_SUMMARY_WITH_PUBLISHED_DATE));
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
+import java.util.Optional;
+
 /**
  * Converts {@link ExtendedEntryDataModel} wrapped as {@link WrapperBodyDataModel} to {@link Article}.
  *
@@ -38,7 +41,7 @@ public class ArticleConverter implements Converter<WrapperBodyDataModel<Extended
                 .id(source.getBody().getId())
                 .author(createAuthorSummary(source.getBody()))
                 .content(source.getBody().getRawContent())
-                .creationDate(dateFormatterUtility.formatGeneral(source.getBody().getCreated()))
+                .creationDate(dateFormatterUtility.formatGeneral(extractCreationDate(source.getBody())))
                 .link(source.getBody().getLink())
                 .title(source.getBody().getTitle())
                 .tags(tagSummaryListConverter.convert(source.getBody().getTags()))
@@ -49,5 +52,10 @@ public class ArticleConverter implements Converter<WrapperBodyDataModel<Extended
 
     private AuthorSummary createAuthorSummary(EntryDataModel entryDataModel) {
         return new AuthorSummary(entryDataModel.getUser().getUsername());
+    }
+
+    private ZonedDateTime extractCreationDate(EntryDataModel entryDataModel) {
+        return Optional.ofNullable(entryDataModel.getPublished())
+                .orElse(entryDataModel.getCreated());
     }
 }

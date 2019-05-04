@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -39,12 +41,17 @@ public class EntrySummaryListConverter implements Converter<EntryListDataModel, 
                 .link(entryDataModel.getLink())
                 .title(entryDataModel.getTitle())
                 .author(createAuthorSummary(entryDataModel))
-                .creationDate(dateFormatterUtility.formatGeneral(entryDataModel.getCreated()))
+                .creationDate(dateFormatterUtility.formatGeneral(extractCreationDate(entryDataModel)))
                 .prologue(entryDataModel.getPrologue())
                 .build();
     }
 
     private AuthorSummary createAuthorSummary(EntryDataModel entryDataModel) {
         return new AuthorSummary(entryDataModel.getUser().getUsername());
+    }
+
+    private ZonedDateTime extractCreationDate(EntryDataModel entryDataModel) {
+        return Optional.ofNullable(entryDataModel.getPublished())
+                .orElse(entryDataModel.getCreated());
     }
 }
