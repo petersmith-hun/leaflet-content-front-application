@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class PageConfigModel {
 
     private String siteName;
-    private String contactMail;
+    private SocialConfigModel social;
     private String copyright;
     private String resourceServerUrl;
     private String recaptchaSiteKey;

@@ -17,6 +17,7 @@
         <link rel="stylesheet" type="text/css" href="/css/site.css" th:href="@{/css/site.css}" />
         <link rel="stylesheet" type="text/css" href="/css/mobile.css" th:href="@{/css/mobile.css}" />
         <link rel="shortcut icon" th:href="@{/images/leaflet.png}" type="image/x-icon" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous" />
 
         <script type="text/javascript" src="/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
         <script type="text/javascript" src="/js/site.js" th:src="@{/js/site.js}"></script>
@@ -135,8 +136,12 @@
                     <p class="footerColumnTitle" th:text="#{common.contact}">placeholder:contact</p>
                     <ul class="footerColumnData">
                         <li>
-                            <span>email: </span>
-                            <a href="#" th:href="'mailto:' + ${pageConfig.contactMail}" th:text="${pageConfig.contactMail}">placeholder:contact_mail</a>
+                            <i class="fas fa-envelope"></i>
+                            <a href="#" th:href="'mailto:' + ${pageConfig.social.mail}" th:text="${pageConfig.social.mail}">placeholder:contact_mail</a>
+                        </li>
+                        <li>
+                            <i class="fab fa-twitter"></i>
+                            <a href="#" th:href="@{//twitter.com/__${pageConfig.social.twitter}__}" th:text="'@' + ${pageConfig.social.twitter}">placeholder:contact_twitter</a>
                         </li>
                     </ul>
                 </div>
@@ -146,5 +151,9 @@
                 <div id="toTopBar">&nbsp;</div>
             </a>
         </div>
+
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/hu_HU/sdk.js#xfbml=1&version=v3.3"></script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </body>
 </html>
