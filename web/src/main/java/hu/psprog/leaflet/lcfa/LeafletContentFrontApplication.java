@@ -6,8 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.ClassPathResource;
 
 /**
  * Spring Boot entry point.
@@ -25,14 +23,5 @@ public class LeafletContentFrontApplication {
     @Profile("production")
     public EmbeddedWebServerAJPCustomization ajpContainerCustomizer(@Value("${tomcat.ajp.port}") int ajpPort) {
         return new EmbeddedWebServerAJPCustomization(ajpPort);
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer applicationConfigPropertySource() {
-
-        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-        configurer.setLocation(new ClassPathResource("version.properties"));
-
-        return configurer;
     }
 }
