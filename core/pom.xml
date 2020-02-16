@@ -5,7 +5,7 @@
     <parent>
         <artifactId>leaflet-content-front-application</artifactId>
         <groupId>hu.psprog.leaflet</groupId>
-        <version>1.1.0-dev</version>
+        <version>1.1.1-dev</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,6 +31,10 @@
         <dependency>
             <groupId>hu.psprog.leaflet</groupId>
             <artifactId>backend-rest-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>hu.psprog.leaflet</groupId>
+            <artifactId>rcp-hystrix-support</artifactId>
         </dependency>
         <dependency>
             <groupId>hu.psprog.leaflet</groupId>
