@@ -1,0 +1,182 @@
+version: 2.1
+
+orbs:
+  jira: circleci/jira@1.1.2
+
+# Common parameters for CircleCI build config
+parameters:
+  app_name:
+    type: string
+    default: "lcfa"
+  release_tag_pattern:
+    type: string
+    default: 's/v[0-9]+\.[0-9]+\.[0-9]+\.([0-9]+)-release/\1/'
+  auto_deploy:
+    type: boolean
+    default: true
+  auto_start:
+    type: boolean
+    default: true
+
+# Reusable commands
+commands:
+
+  # Command definition for publishing GitHub releases/tags
+  github_release:
+    parameters:
+      release-type:
+        type: enum
+        default: "rc"
+        enum: ["rc", "release"]
+    steps:
+      - attach_workspace:
+          at: /tmp/ws_store
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            [[ "<< parameters.release-type >>" = "release" ]] && VERSION_QUALIFIER="-release" || VERSION_QUALIFIER=""
+            VERSION=v$(cat /tmp/ws_store/version)$VERSION_QUALIFIER
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} /tmp/ws_store/leaflet-content-front-exec.jar
+
+jobs:
+
+  # Leaflet Content Front Application - Build and test application
+  build:
+    docker:
+      - image: cimg/openjdk:11.0.6
+    steps:
+      - checkout
+      - run:
+          command: |
+            case $CIRCLE_BRANCH in
+              master) echo 'export BUILD_NUMBER="rc.<< pipeline.number >>"' >> $BASH_ENV ;;
+              deploy) echo 'export BUILD_NUMBER=$((`git fetch --tags && git tag --sort=-taggerdate | grep release | head -n 1 | sed -E "<< pipeline.parameters.release_tag_pattern >>"` + 1))' >> $BASH_ENV ;;
+              *) echo 'export BUILD_NUMBER="snapshot"' >> $BASH_ENV ;;
+            esac
+            source $BASH_ENV
+            echo "Determined BUILD_NUMBER=$BUILD_NUMBER"
+          name: Set build number
+      - run:
+          command: mvn build-helper:parse-version versions:set -DnewVersion="\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.incrementalVersion}.${BUILD_NUMBER}"
+          name: Set project version
+      - run:
+          command: echo 'export PROJECT_VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout --non-recursive`' >> $BASH_ENV
+          name: Extract project version
+      - run:
+          command: mvn clean install -s .circleci/settings.xml
+          name: Build
+      - run:
+          command: |
+            mkdir -p /tmp/ws_store
+            cp ./web/target/leaflet-content-front-exec.jar /tmp/ws_store/leaflet-content-front-exec.jar
+            echo $PROJECT_VERSION >> /tmp/ws_store/version
+          name: Prepare workspace shared storage
+      - persist_to_workspace:
+          root: /tmp/ws_store
+          paths:
+            - leaflet-content-front-exec.jar
+            - version
+      - store_artifacts:
+          path: web/target/leaflet-content-front-exec.jar
+      - store_test_results:
+          path: web/target/surefire-reports
+      - store_test_results:
+          path: core/target/surefire-reports
+
+  # Leaflet Content Front Application - Deploy to production
+  deploy:
+    docker:
+      - image: cimg/openjdk:11.0.6
+    steps:
+      - attach_workspace:
+          at: /tmp/ws_store
+      - run:
+          command: echo 'export PROJECT_VERSION="$(cat /tmp/ws_store/version)"' >> $BASH_ENV
+          name: Set project version
+      - run:
+          command: |
+            domino_response=$(curl \
+                 --silent --write-out "%{http_code}" --output /dev/null \
+                 --header "Authorization: Bearer ${LEAFLET_CI_DOMINO_AUTH_TOKEN}" \
+                 --form 'executable=@/tmp/ws_store/leaflet-content-front-exec.jar' \
+                 "${LEAFLET_CI_DOMINO_HOST}/upload/<< pipeline.parameters.app_name >>/${PROJECT_VERSION}?autodeploy=<< pipeline.parameters.auto_deploy >>&autostart=<< pipeline.parameters.auto_start >>")
+
+            case $domino_response in
+              201 | 202) exit 0 ;;
+              *) echo "Domino returned with status_code=$domino_response" && exit 1 ;;
+            esac
+
+          name: Send executable to Domino
+
+  # Leaflet Content Front Application - Publish tag (and release) on GitHub for RC versions
+  publish-github-rc:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - github_release:
+          release-type: rc
+
+  # Leaflet Content Front Application - Publish tag (and release) on GitHub for RELEASE versions
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - github_release:
+          release-type: release
+
+workflows:
+
+  leaflet-lcfa-rc:
+    jobs:
+
+      - build:
+         context: leaflet_ci
+         filters:
+          branches:
+            only:
+               - master
+         post-steps:
+           - jira/notify:
+               environment_type: development
+               job_type: build
+
+      - publish-github-rc:
+          context: leaflet_ci
+          requires:
+            - build
+
+  leaflet-lcfa-release:
+    jobs:
+
+      - build:
+          context: leaflet_ci
+          filters:
+            branches:
+              only:
+                - deploy
+          post-steps:
+            - jira/notify:
+                environment_type: development
+                job_type: build
+
+      - deploy-approval:
+          context: leaflet_ci
+          type: approval
+          requires:
+            - build
+
+      - deploy:
+          context: leaflet_ci
+          requires:
+            - deploy-approval
+          post-steps:
+            - jira/notify:
+                environment_type: production
+                job_type: deployment
+
+      - publish-github-release:
+          context: leaflet_ci
+          requires:
+            - deploy
+
+  version: 2
