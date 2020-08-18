@@ -11,12 +11,18 @@ parameters:
   release_tag_pattern:
     type: string
     default: 's/v[0-9]+\.[0-9]+\.[0-9]+\.([0-9]+)-release/\1/'
-  auto_deploy:
-    type: boolean
-    default: true
-  auto_start:
-    type: boolean
-    default: true
+  executable_file:
+    type: string
+    default: "leaflet-lcfa-exec.jar"
+  executable_source_dir:
+    type: string
+    default: "web/target/"
+  workspace_dir:
+    type: string
+    default: "/tmp/ws_store"
+  version_file:
+    type: string
+    default: "version"
 
 # Reusable commands
 commands:
@@ -30,13 +36,13 @@ commands:
         enum: ["rc", "release"]
     steps:
       - attach_workspace:
-          at: /tmp/ws_store
+          at: << pipeline.parameters.workspace_dir >>
       - run:
           name: "Publish Release on GitHub"
           command: |
             [[ "<< parameters.release-type >>" = "release" ]] && VERSION_QUALIFIER="-release" || VERSION_QUALIFIER=""
-            VERSION=v$(cat /tmp/ws_store/version)$VERSION_QUALIFIER
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} /tmp/ws_store/leaflet-content-front-exec.jar
+            VERSION=v$(cat << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>)$VERSION_QUALIFIER
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.executable_file >>
 
 jobs:
 
@@ -50,7 +56,7 @@ jobs:
           command: |
             case $CIRCLE_BRANCH in
               master) echo 'export BUILD_NUMBER="rc.<< pipeline.number >>"' >> $BASH_ENV ;;
-              deploy) echo 'export BUILD_NUMBER=$((`git fetch --tags && git tag --sort=-taggerdate | grep release | head -n 1 | sed -E "<< pipeline.parameters.release_tag_pattern >>"` + 1))' >> $BASH_ENV ;;
+              deploy) echo 'export BUILD_NUMBER=$((`git fetch --tags && git tag --sort=-taggerdate | grep release | sed -E "<< pipeline.parameters.release_tag_pattern >>" | sort -nr | head -n 1` + 1))' >> $BASH_ENV ;;
               *) echo 'export BUILD_NUMBER="snapshot"' >> $BASH_ENV ;;
             esac
             source $BASH_ENV
@@ -62,22 +68,23 @@ jobs:
       - run:
           command: echo 'export PROJECT_VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout --non-recursive`' >> $BASH_ENV
           name: Extract project version
+      - setup_remote_docker
       - run:
-          command: mvn clean install -s .circleci/settings.xml
+          command: mvn clean deploy -s .circleci/settings.xml
           name: Build
       - run:
           command: |
-            mkdir -p /tmp/ws_store
-            cp ./web/target/leaflet-content-front-exec.jar /tmp/ws_store/leaflet-content-front-exec.jar
-            echo $PROJECT_VERSION >> /tmp/ws_store/version
+            mkdir -p << pipeline.parameters.workspace_dir >>
+            cp ./<< pipeline.parameters.executable_source_dir >><< pipeline.parameters.executable_file >> << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.executable_file >>
+            echo $PROJECT_VERSION >> << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>
           name: Prepare workspace shared storage
       - persist_to_workspace:
-          root: /tmp/ws_store
+          root: << pipeline.parameters.workspace_dir >>
           paths:
-            - leaflet-content-front-exec.jar
-            - version
+            - << pipeline.parameters.executable_file >>
+            - << pipeline.parameters.version_file >>
       - store_artifacts:
-          path: web/target/leaflet-content-front-exec.jar
+          path: << pipeline.parameters.executable_source_dir >><< pipeline.parameters.executable_file >>
       - store_test_results:
           path: web/target/surefire-reports
       - store_test_results:
@@ -89,24 +96,35 @@ jobs:
       - image: cimg/openjdk:11.0.6
     steps:
       - attach_workspace:
-          at: /tmp/ws_store
+          at: << pipeline.parameters.workspace_dir >>
       - run:
-          command: echo 'export PROJECT_VERSION="$(cat /tmp/ws_store/version)"' >> $BASH_ENV
+          command: echo 'export PROJECT_VERSION="$(cat << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>)"' >> $BASH_ENV
           name: Set project version
       - run:
           command: |
-            domino_response=$(curl \
+            domino_deploy_response=$(curl \
                  --silent --write-out "%{http_code}" --output /dev/null \
+                 --request PUT \
                  --header "Authorization: Bearer ${LEAFLET_CI_DOMINO_AUTH_TOKEN}" \
-                 --form 'executable=@/tmp/ws_store/leaflet-content-front-exec.jar' \
-                 "${LEAFLET_CI_DOMINO_HOST}/upload/<< pipeline.parameters.app_name >>/${PROJECT_VERSION}?autodeploy=<< pipeline.parameters.auto_deploy >>&autostart=<< pipeline.parameters.auto_start >>")
+                 "${LEAFLET_CI_DOMINO_HOST}/lifecycle/<< pipeline.parameters.app_name >>/deploy/${PROJECT_VERSION}")
 
-            case $domino_response in
-              201 | 202) exit 0 ;;
-              *) echo "Domino returned with status_code=$domino_response" && exit 1 ;;
+            case $domino_deploy_response in
+              201 | 202) echo "Domino deployment request was successful, deployment may continue" ;;
+              *) echo "Domino deployment request returned with status_code=$domino_deploy_response" && exit 1 ;;
             esac
 
-          name: Send executable to Domino
+            domino_start_response=$(curl \
+                 --silent --write-out "%{http_code}" --output /dev/null \
+                 --request PUT \
+                 --header "Authorization: Bearer ${LEAFLET_CI_DOMINO_AUTH_TOKEN}" \
+                 "${LEAFLET_CI_DOMINO_HOST}/lifecycle/<< pipeline.parameters.app_name >>/start")
+
+            case $domino_start_response in
+              201 | 202) exit 0 ;;
+              *) echo "Domino application start request returned with status_code=$domino_start_response" && exit 1 ;;
+            esac
+
+          name: Instruct Domino to start deployment and spin up the application
 
   # Leaflet Content Front Application - Publish tag (and release) on GitHub for RC versions
   publish-github-rc:
