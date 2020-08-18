@@ -52,6 +52,14 @@
         <lombok.version>1.18.12</lombok.version>
         <commonmark.version>0.12.1</commonmark.version>
         <hibernate-validator.version>6.1.2.Final</hibernate-validator.version>
+        <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
+        <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
+
+        <!-- Docker build configuration -->
+        <!--suppress UnresolvedMavenProperty -->
+        <docker.repository>${LEAFLET_DOCKER_REGISTRY_HOST}</docker.repository>
+        <docker.image-name>lcfa</docker.image-name>
+        <docker.skip>true</docker.skip>
 
         <!-- Spring Boot overrides -->
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
@@ -312,6 +320,14 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <argLine>${argLine.surefire}</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>

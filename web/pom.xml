@@ -91,7 +91,7 @@
     </dependencies>
 
     <build>
-        <finalName>leaflet-content-front</finalName>
+        <finalName>leaflet-lcfa</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -117,6 +117,40 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${dockerfile-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>tag-with-project-version</id>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <tag>${project.version}</tag>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tag-with-latest</id>
+                        <goals>
+                            <goal>tag</goal>
+                            <goal>push</goal>
+                        </goals>
+                        <configuration>
+                            <tag>latest</tag>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>${docker.repository}/apps/${docker.image-name}</repository>
+                    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+                    <dockerfile>../Dockerfile</dockerfile>
+                    <contextDirectory>../</contextDirectory>
+                    <skip>${docker.skip}</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

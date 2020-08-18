@@ -7,6 +7,11 @@
             <username>${LEAFLET_INTERNAL_REPO_USERNAME}</username>
             <password>${LEAFLET_INTERNAL_REPO_PASSWORD}</password>
         </server>
+        <server>
+            <id>${LEAFLET_DOCKER_REGISTRY_HOST}</id>
+            <username>${LEAFLET_DOCKER_REGISTRY_USERNAME}</username>
+            <password>${LEAFLET_DOCKER_REGISTRY_PASSWORD}</password>
+        </server>
     </servers>
 
     <profiles>
@@ -38,6 +43,9 @@
                     <url>${LEAFLET_INTERNAL_REPO_HOST}</url>
                 </repository>
             </repositories>
+            <properties>
+                <docker.skip>false</docker.skip>
+            </properties>
         </profile>
     </profiles>
 </settings>
