@@ -5,6 +5,7 @@ import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.api.rest.response.sitemap.Sitemap;
 import hu.psprog.leaflet.lcfa.core.config.CommonPageDataCacheConfigModel;
+import hu.psprog.leaflet.lcfa.core.config.DefaultPaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.converter.CommonPageDataConverter;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
@@ -47,7 +48,7 @@ public class CommonPageDataFacadeImplTest {
 
     private static final int LATEST_ENTRIES_COUNT = 5;
     private static final int PAGE_NUMBER = 1;
-    private static final OrderBy.Entry ORDER_BY = OrderBy.Entry.CREATED;
+    private static final OrderBy.Entry ORDER_BY = OrderBy.Entry.PUBLISHED;
     private static final OrderDirection ORDER_DIRECTION = OrderDirection.DESC;
     private static final PageConfigModel PAGE_CONFIG_MODEL = new PageConfigModel();
     private static final CommonPageDataCacheConfigModel COMMON_PAGE_DATA_CACHE_CONFIG_MODEL = new CommonPageDataCacheConfigModel();
@@ -83,6 +84,9 @@ public class CommonPageDataFacadeImplTest {
     private CommonPageDataConverter commonPageDataConverter;
 
     @Mock
+    private DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
+
+    @Mock
     private ContentRequestAdapter<WrapperBodyDataModel<EntryListDataModel>, PaginatedContentRequest> commonPageDataContentRequestAdapter;
 
     @Mock
@@ -93,7 +97,12 @@ public class CommonPageDataFacadeImplTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        commonPageDataFacade = new CommonPageDataFacadeImpl(contentRequestAdapterRegistry, commonPageDataCache, commonPageDataConverter, PAGE_CONFIG_MODEL);
+
+        given(defaultPaginationAttributes.getOrderBy()).willReturn(ORDER_BY);
+        given(defaultPaginationAttributes.getOrderDirection()).willReturn(ORDER_DIRECTION);
+
+        commonPageDataFacade = new CommonPageDataFacadeImpl(contentRequestAdapterRegistry, commonPageDataCache,
+                commonPageDataConverter, defaultPaginationAttributes, PAGE_CONFIG_MODEL);
     }
 
     @Test

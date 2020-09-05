@@ -3,11 +3,11 @@ package hu.psprog.leaflet.lcfa.core.facade.impl;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.api.rest.response.sitemap.Sitemap;
+import hu.psprog.leaflet.lcfa.core.config.DefaultPaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.converter.CommonPageDataConverter;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
-import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderDirection;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
 import hu.psprog.leaflet.lcfa.core.exception.ContentRetrievalException;
 import hu.psprog.leaflet.lcfa.core.facade.CommonPageDataFacade;
@@ -34,22 +34,23 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonPageDataFacadeImpl.class);
 
     private static final int PAGE_NUMBER = 1;
-    private static final OrderBy.Entry ORDER_BY = OrderBy.Entry.CREATED;
-    private static final OrderDirection ORDER_DIRECTION = OrderDirection.DESC;
     private static final Sitemap EMPTY_SITEMAP = Sitemap.getBuilder().build();
 
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
     private CommonPageDataCache commonPageDataCache;
     private CommonPageDataConverter commonPageDataConverter;
+    private DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
 
     private final PaginatedContentRequest latestEntries;
 
     @Autowired
     public CommonPageDataFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, CommonPageDataCache commonPageDataCache,
-                                    CommonPageDataConverter commonPageDataConverter, PageConfigModel pageConfigModel) {
+                                    CommonPageDataConverter commonPageDataConverter, DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes,
+                                    PageConfigModel pageConfigModel) {
         this.contentRequestAdapterRegistry = contentRequestAdapterRegistry;
         this.commonPageDataCache = commonPageDataCache;
         this.commonPageDataConverter = commonPageDataConverter;
+        this.defaultPaginationAttributes = defaultPaginationAttributes;
         this.latestEntries = initLatestEntriesRequest(pageConfigModel.getCommonPageDataCache().getLatestEntriesCount());
     }
 
@@ -70,8 +71,8 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
         return PaginatedContentRequest.builder()
                 .page(PAGE_NUMBER)
                 .limit(numberOfLatestEntries)
-                .entryOrderBy(ORDER_BY)
-                .entryOrderDirection(ORDER_DIRECTION)
+                .entryOrderBy(defaultPaginationAttributes.getOrderBy())
+                .entryOrderDirection(defaultPaginationAttributes.getOrderDirection())
                 .build();
     }
 
