@@ -49,7 +49,7 @@ jobs:
   # Leaflet Content Front Application - Build and test application
   build:
     docker:
-      - image: cimg/openjdk:11.0.6
+      - image: cimg/openjdk:11.0.8
     steps:
       - checkout
       - run:
@@ -68,7 +68,8 @@ jobs:
       - run:
           command: echo 'export PROJECT_VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout --non-recursive`' >> $BASH_ENV
           name: Extract project version
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 19.03.12
       - run:
           command: mvn clean deploy -s .circleci/settings.xml
           name: Build
@@ -93,7 +94,7 @@ jobs:
   # Leaflet Content Front Application - Deploy to production
   deploy:
     docker:
-      - image: cimg/openjdk:11.0.6
+      - image: cimg/openjdk:11.0.8
     steps:
       - attach_workspace:
           at: << pipeline.parameters.workspace_dir >>
