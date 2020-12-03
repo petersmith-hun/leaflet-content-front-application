@@ -14,7 +14,7 @@
         <meta property="og:description" th:content="${seo.metaDescription}" />
         <meta property="og:url" th:content="${#request.getRequestURL()}" />
         <meta property="og:site_name" th:content="${seo.pageTitle}" />
-        <meta property="og:type" th:content="${article} ? 'article' : 'website'">
+        <meta property="og:type" th:content="${article} ? 'article' : 'website'" />
 
         <link rel="stylesheet" type="text/css" href="/css/site.css" th:href="@{/css/site.css}" />
         <link rel="stylesheet" type="text/css" href="/css/mobile.css" th:href="@{/css/mobile.css}" />
