@@ -10,9 +10,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
         <meta property="og:image" th:content="@{__${pageConfig.ogImage}__}" />
-        <meta property="og:title" th:content="${seo.pageTitle}" />
+        <meta property="og:title" th:content="${seo.metaTitle}" />
         <meta property="og:description" th:content="${seo.metaDescription}" />
         <meta property="og:url" th:content="${#request.getRequestURL()}" />
+        <meta property="og:site_name" th:content="${seo.pageTitle}" />
+        <meta property="og:type" th:content="${article} ? 'article' : 'website'" />
 
         <link rel="stylesheet" type="text/css" href="/css/site.css" th:href="@{/css/site.css}" />
         <link rel="stylesheet" type="text/css" href="/css/mobile.css" th:href="@{/css/mobile.css}" />
