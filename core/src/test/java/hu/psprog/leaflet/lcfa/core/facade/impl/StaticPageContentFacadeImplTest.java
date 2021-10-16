@@ -10,12 +10,12 @@ import hu.psprog.leaflet.lcfa.core.exception.ContentNotFoundException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
 import java.util.Map;
@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class StaticPageContentFacadeImplTest {
 
     private static final PageConfigModel PAGE_CONFIG_MODEL = new PageConfigModel();
@@ -62,9 +62,8 @@ public class StaticPageContentFacadeImplTest {
 
     private StaticPageContentFacadeImpl staticPageContentFacade;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         staticPageContentFacade = new StaticPageContentFacadeImpl(contentRequestAdapterRegistry, conversionService, PAGE_CONFIG_MODEL);
     }
 
@@ -84,17 +83,17 @@ public class StaticPageContentFacadeImplTest {
         assertThat(result, notNullValue());
     }
 
-    @Test(expected = ContentNotFoundException.class)
+    @Test
     public void shouldGetStaticPageThrowContentNotFoundExceptionForMissingMapping() {
 
         // when
-        staticPageContentFacade.getStaticPage(StaticPageType.CONTACT);
+        Assertions.assertThrows(ContentNotFoundException.class, () -> staticPageContentFacade.getStaticPage(StaticPageType.CONTACT));
 
         // then
         // exception expected
     }
 
-    @Test(expected = ContentNotFoundException.class)
+    @Test
     public void shouldGetStaticPageThrowContentNotFoundExceptionForMissingData() {
 
         // given
@@ -103,7 +102,7 @@ public class StaticPageContentFacadeImplTest {
         given(staticPageContentRequestAdapter.getContent(INTRODUCTION_PAGE_LINK)).willReturn(Optional.empty());
 
         // when
-        staticPageContentFacade.getStaticPage(StaticPageType.INTRODUCTION);
+        Assertions.assertThrows(ContentNotFoundException.class, () -> staticPageContentFacade.getStaticPage(StaticPageType.INTRODUCTION));
 
         // then
         // exception expected

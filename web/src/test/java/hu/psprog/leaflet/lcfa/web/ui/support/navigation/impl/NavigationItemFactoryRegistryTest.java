@@ -3,11 +3,12 @@ package hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl;
 import hu.psprog.leaflet.lcfa.core.domain.content.Article;
 import hu.psprog.leaflet.lcfa.core.domain.content.CategorySummary;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.NavigationItemFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class NavigationItemFactoryRegistryTest {
 
     @Mock
@@ -33,7 +34,7 @@ public class NavigationItemFactoryRegistryTest {
 
     private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
-    @Before
+    @BeforeEach
     public void setup() {
         given(articleNavigationItemFactory.forModelClass()).willReturn(Article.class);
         given(categorySummaryNavigationItemFactory.forModelClass()).willReturn(CategorySummary.class);
@@ -53,11 +54,11 @@ public class NavigationItemFactoryRegistryTest {
         verify(articleNavigationItemFactory).forModelClass();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldGetFactoryThrowExceptionForUnknownModelClass() {
 
         // when
-        navigationItemFactoryRegistry.getFactory(String.class);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> navigationItemFactoryRegistry.getFactory(String.class));
 
         // then
         // exception expected

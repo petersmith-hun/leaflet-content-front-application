@@ -7,9 +7,8 @@ import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -58,24 +57,23 @@ public abstract class AbstractControllerTest {
     @Mock
     RedirectAttributes redirectAttributes;
 
-    @Mock
+    @Mock(lenient = true)
     Response response;
 
     @Mock
     BindingResult bindingResult;
 
-    @Mock
+    @Mock(lenient = true)
     private ModelAndViewFactory modelAndViewFactory;
 
-    @Mock
+    @Mock(lenient = true)
     private ModelAndViewFactory.ModelAndViewWrapper modelAndViewWrapper;
 
     @Mock
     private ModelAndView modelAndView;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         given(modelAndViewFactory.createForView(anyString())).willReturn(modelAndViewWrapper);
         given(modelAndViewFactory.createRedirectionTo(anyString())).willReturn(modelAndView);
         given(modelAndViewWrapper.withAttribute(anyString(), nullable(Object.class))).willReturn(modelAndViewWrapper);

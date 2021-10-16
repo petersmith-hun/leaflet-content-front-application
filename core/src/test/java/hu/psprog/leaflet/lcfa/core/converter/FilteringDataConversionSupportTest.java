@@ -6,11 +6,11 @@ import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.CategorySummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.converter.Converter;
 
 import java.util.Collections;
@@ -22,14 +22,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link FilteringDataConversionSupport}.
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class FilteringDataConversionSupportTest {
 
     private static final CategoryListDataModel CATEGORY_LIST_DATA_MODEL = CategoryListDataModel.getBuilder().build();
@@ -75,7 +75,7 @@ public class FilteringDataConversionSupportTest {
         // then
         assertThat(result, notNullValue());
         assertThat(result, hasSize(0));
-        verifyZeroInteractions(categorySummaryListConverter);
+        verifyNoInteractions(categorySummaryListConverter);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class FilteringDataConversionSupportTest {
         // then
         assertThat(result, notNullValue());
         assertThat(result, hasSize(0));
-        verifyZeroInteractions(commentSummaryListTransformer);
+        verifyNoInteractions(commentSummaryListTransformer);
     }
 
     @Test

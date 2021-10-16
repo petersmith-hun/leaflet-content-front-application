@@ -20,11 +20,12 @@ import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
 import hu.psprog.leaflet.lcfa.core.facade.impl.utility.AccountDeletionHandler;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
 import java.util.Collections;
@@ -41,7 +42,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AccountManagementFacadeImplTest {
 
     private static final long USER_ID = 1L;
@@ -136,17 +137,17 @@ public class AccountManagementFacadeImplTest {
         assertThat(result, equalTo(ACCOUNT_BASE_INFO));
     }
 
-    @Test(expected = UserRequestProcessingException.class)
+    @Test
     public void shouldGetAccountBaseInfoThrowUserRequestProcessingExceptionForNullUserID() {
 
         // when
-        accountManagementFacade.getAccountBaseInfo(null);
+        Assertions.assertThrows(UserRequestProcessingException.class, () -> accountManagementFacade.getAccountBaseInfo(null));
 
         // then
         // exception expected
     }
 
-    @Test(expected = UserRequestProcessingException.class)
+    @Test
     public void shouldGetAccountBaseInfoThrowUserRequestProcessingExceptionForMissingData() {
 
         // given
@@ -155,7 +156,7 @@ public class AccountManagementFacadeImplTest {
         given(profileBaseInfoContentRequestAdapter.getContent(USER_ID)).willReturn(Optional.empty());
 
         // when
-        accountManagementFacade.getAccountBaseInfo(USER_ID);
+        Assertions.assertThrows(UserRequestProcessingException.class, () -> accountManagementFacade.getAccountBaseInfo(USER_ID));
 
         // then
         // exception expected
@@ -215,11 +216,12 @@ public class AccountManagementFacadeImplTest {
         assertThat(result, is(false));
     }
 
-    @Test(expected = UserRequestProcessingException.class)
+    @Test
     public void shouldUpdateAccountBaseInfoThrowUserRequestProcessingExceptionForNullUserID() {
 
         // when
-        accountManagementFacade.updateAccountBaseInfo(null, UPDATE_PROFILE_REQUEST_MODEL);
+        Assertions.assertThrows(UserRequestProcessingException.class,
+                () -> accountManagementFacade.updateAccountBaseInfo(null, UPDATE_PROFILE_REQUEST_MODEL));
 
         // then
         // exception expected
@@ -255,11 +257,12 @@ public class AccountManagementFacadeImplTest {
         assertThat(result, is(true));
     }
 
-    @Test(expected = UserRequestProcessingException.class)
+    @Test
     public void shouldUpdatePasswordThrowUserRequestProcessingExceptionForNullUserID() {
 
         // when
-        accountManagementFacade.updatePassword(null, PASSWORD_CHANGE_REQUEST_MODEL);
+        Assertions.assertThrows(UserRequestProcessingException.class,
+                () -> accountManagementFacade.updatePassword(null, PASSWORD_CHANGE_REQUEST_MODEL));
 
         // then
         // exception expected
@@ -300,11 +303,12 @@ public class AccountManagementFacadeImplTest {
         assertThat(result, equalTo(USER_COMMENTS_PAGE_CONTENT));
     }
 
-    @Test(expected = UserRequestProcessingException.class)
+    @Test
     public void shouldGetCommentForUserThrowUserRequestProcessingExceptionForNullUserID() {
 
         // when
-        accountManagementFacade.getCommentsForUser(null, PAGE_NUMBER);
+        Assertions.assertThrows(UserRequestProcessingException.class,
+                () -> accountManagementFacade.getCommentsForUser(null, PAGE_NUMBER));
 
         // then
         // exception expected

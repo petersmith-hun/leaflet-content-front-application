@@ -6,11 +6,12 @@ import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.UserBridgeService;
 import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -18,7 +19,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
  * 
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class UserDataContentRequestAdapterTest {
 
     private static final Long USER_ID = 1L;
@@ -54,14 +54,14 @@ public class UserDataContentRequestAdapterTest {
         assertThat(result.get(), equalTo(EXTENDED_USER_DATA_MODEL));
     }
 
-    @Test(expected = UserSessionInvalidationRequiredException.class)
+    @Test
     public void shouldGetContentReturnThrowUserSessionInvalidationRequiredException() throws CommunicationFailureException {
 
         // given
         doThrow(UnauthorizedAccessException.class).when(userBridgeService).getUserByID(USER_ID);
 
         // when
-        adapter.getContent(USER_ID);
+        Assertions.assertThrows(UserSessionInvalidationRequiredException.class, () ->adapter.getContent(USER_ID));
 
         // then
         // exception expected

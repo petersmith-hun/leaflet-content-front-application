@@ -5,11 +5,12 @@ import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.CommentBridgeService;
 import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class UserCommentDeletionContentRequestAdapterTest {
 
     private static final Long COMMENT_ID = 1L;
@@ -48,14 +49,14 @@ public class UserCommentDeletionContentRequestAdapterTest {
         verify(commentBridgeService).deleteCommentLogically(COMMENT_ID);
     }
 
-    @Test(expected = UserSessionInvalidationRequiredException.class)
+    @Test
     public void shouldGetContentReturnThrowUserSessionInvalidationRequiredException() throws CommunicationFailureException {
 
         // given
         doThrow(UnauthorizedAccessException.class).when(commentBridgeService).deleteCommentLogically(COMMENT_ID);
 
         // when
-        adapter.getContent(COMMENT_ID);
+        Assertions.assertThrows(UserSessionInvalidationRequiredException.class, () ->adapter.getContent(COMMENT_ID));
 
         // then
         // exception expected

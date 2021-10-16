@@ -4,10 +4,10 @@ import hu.psprog.leaflet.lcfa.core.config.CommonPageDataCacheConfigModel;
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class InMemoryCommonPageDataCacheTest {
 
     private static final CommonPageData COMMON_PAGE_DATA = CommonPageData.builder()
@@ -37,7 +37,7 @@ public class InMemoryCommonPageDataCacheTest {
 
     private InMemoryCommonPageDataCache inMemoryCommonPageDataCache;
 
-    @Before
+    @BeforeEach
     public void setup() {
         CommonPageDataCacheConfigModel commonPageDataCacheConfigModel = new CommonPageDataCacheConfigModel();
         commonPageDataCacheConfigModel.setCacheTimeout(CACHE_TIMEOUT);

@@ -1,12 +1,12 @@
 package hu.psprog.leaflet.lcfa.core.facade.adapter;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ContentRequestAdapterRegistryTest {
 
     @Mock
@@ -38,9 +38,8 @@ public class ContentRequestAdapterRegistryTest {
 
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         given(mockedArticleContentRequestAdapter.getIdentifier()).willReturn(ContentRequestAdapterIdentifier.ARTICLE);
         given(mockedStaticPageContentRequestAdapter.getIdentifier()).willReturn(ContentRequestAdapterIdentifier.STATIC_PAGE);
         given(mockedContactRequestContentRequestAdapter.getIdentifier()).willReturn(ContentRequestAdapterIdentifier.CONTACT_REQUEST);
@@ -59,11 +58,12 @@ public class ContentRequestAdapterRegistryTest {
         assertThat(result, equalTo(mockedStaticPageContentRequestAdapter));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldGetContentRequestAdapterThrowIllegalArgumentExceptionForNonExistingMapping() {
 
         // when
-        contentRequestAdapterRegistry.getContentRequestAdapter(ContentRequestAdapterIdentifier.CONTENT_FILTER);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> contentRequestAdapterRegistry.getContentRequestAdapter(ContentRequestAdapterIdentifier.CONTENT_FILTER));
 
         // then
         // exception expected
@@ -82,11 +82,11 @@ public class ContentRequestAdapterRegistryTest {
         // do nothing
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void shouldAssertMappingsThrowIllegalStateExceptionForDeficientMapping() throws Exception {
+    @Test
+    public void shouldAssertMappingsThrowIllegalStateExceptionForDeficientMapping() {
 
         // when
-        contentRequestAdapterRegistry.afterPropertiesSet();
+        Assertions.assertThrows(IllegalStateException.class, () -> contentRequestAdapterRegistry.afterPropertiesSet());
 
         // then
         // exception expected

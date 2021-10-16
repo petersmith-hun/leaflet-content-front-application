@@ -9,11 +9,12 @@ import hu.psprog.leaflet.lcfa.core.domain.request.ArticleCommentRequest;
 import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.impl.utility.CommentCreateRequestFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ArticleCommentRequestContentRequestAdapterTest {
 
     private static final long USER_ID = 1L;
@@ -66,7 +67,7 @@ public class ArticleCommentRequestContentRequestAdapterTest {
         verify(commentBridgeService).createComment(COMMENT_CREATE_REQUEST_MODEL, RECAPTCHA_TOKEN);
     }
 
-    @Test(expected = UserSessionInvalidationRequiredException.class)
+    @Test
     public void shouldGetContentReturnThrowUserSessionInvalidationRequiredExceptionIfResponseIs401() throws CommunicationFailureException {
 
         // given
@@ -74,7 +75,8 @@ public class ArticleCommentRequestContentRequestAdapterTest {
         doThrow(UnauthorizedAccessException.class).when(commentBridgeService).createComment(COMMENT_CREATE_REQUEST_MODEL, RECAPTCHA_TOKEN);
 
         // when
-        adapter.getContent(new AccountRequestWrapper<>(USER_ID, ARTICLE_COMMENT_REQUEST));
+        Assertions.assertThrows(UserSessionInvalidationRequiredException.class,
+                () -> adapter.getContent(new AccountRequestWrapper<>(USER_ID, ARTICLE_COMMENT_REQUEST)));
 
         // then
         // exception expected

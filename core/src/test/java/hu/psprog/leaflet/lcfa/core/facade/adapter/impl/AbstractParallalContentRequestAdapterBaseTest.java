@@ -7,7 +7,7 @@ import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.service.CategoryBridgeService;
 import hu.psprog.leaflet.bridge.service.TagBridgeService;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -15,7 +15,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 
@@ -39,7 +39,7 @@ abstract class AbstractParallalContentRequestAdapterBaseTest {
 
     private AsyncTaskExecutor contentAdapterExecutor = new SimpleAsyncTaskExecutor();
 
-    @Before
+    @BeforeEach
     public void setup() throws CommunicationFailureException {
         setMock("categoryBridgeService", categoryBridgeService);
         setMock("tagBridgeService", tagBridgeService);

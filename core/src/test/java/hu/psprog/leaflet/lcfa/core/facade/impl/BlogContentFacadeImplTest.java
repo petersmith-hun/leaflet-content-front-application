@@ -14,11 +14,12 @@ import hu.psprog.leaflet.lcfa.core.exception.ContentRetrievalException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
 import java.util.Optional;
@@ -33,7 +34,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BlogContentFacadeImplTest {
 
     private static final HomePageRawResponseWrapper HOME_PAGE_RAW_RESPONSE_WRAPPER = HomePageRawResponseWrapper.builder().build();
@@ -94,7 +95,7 @@ public class BlogContentFacadeImplTest {
         assertThat(result, equalTo(HOME_PAGE_CONTENT));
     }
 
-    @Test(expected = ContentRetrievalException.class)
+    @Test
     public void shouldGetHomePageContentThrowContentRetrievalExceptionForMissingData() {
 
         // given
@@ -104,7 +105,7 @@ public class BlogContentFacadeImplTest {
         given(homePageContentRequestAdapter.getContent(HOME_PAGE_PAGINATED_CONTENT_REQUEST)).willReturn(Optional.empty());
 
         // when
-        blogContentFacade.getHomePageContent(PAGE_NUMBER);
+        Assertions.assertThrows(ContentRetrievalException.class, () -> blogContentFacade.getHomePageContent(PAGE_NUMBER));
 
         // then
         // exception expected
@@ -126,7 +127,7 @@ public class BlogContentFacadeImplTest {
         assertThat(result, equalTo(ARTICLE_CONTENT));
     }
 
-    @Test(expected = ContentNotFoundException.class)
+    @Test
     public void shouldGetArticleThrowContentNotFondExceptionForMissingData() {
 
         // given
@@ -135,7 +136,7 @@ public class BlogContentFacadeImplTest {
         given(articleContentRequestAdapter.getContent(ARTICLE_LINK)).willReturn(Optional.empty());
 
         // when
-        blogContentFacade.getArticle(ARTICLE_LINK);
+        Assertions.assertThrows(ContentNotFoundException.class, () -> blogContentFacade.getArticle(ARTICLE_LINK));
 
         // then
         // exception expected
@@ -159,7 +160,7 @@ public class BlogContentFacadeImplTest {
         assertThat(result, equalTo(HOME_PAGE_CONTENT));
     }
 
-    @Test(expected = ContentRetrievalException.class)
+    @Test
     public void shouldGetArticlesByCategoryThrowContentRetrievalExceptionForMissingData() {
 
         // given
@@ -169,7 +170,7 @@ public class BlogContentFacadeImplTest {
         given(longValueFilteredPageContentRequestAdapter.getContent(CATEGORY_FILTERED_CONTENT_REQUEST)).willReturn(Optional.empty());
 
         // when
-        blogContentFacade.getArticlesByCategory(CATEGORY_ID, PAGE_NUMBER);
+        Assertions.assertThrows(ContentRetrievalException.class, () -> blogContentFacade.getArticlesByCategory(CATEGORY_ID, PAGE_NUMBER));
 
         // then
         // exception expected
@@ -193,7 +194,7 @@ public class BlogContentFacadeImplTest {
         assertThat(result, equalTo(HOME_PAGE_CONTENT));
     }
 
-    @Test(expected = ContentRetrievalException.class)
+    @Test
     public void shouldGetArticlesByTagThrowContentRetrievalExceptionForMissingData() {
 
         // given
@@ -203,7 +204,7 @@ public class BlogContentFacadeImplTest {
         given(longValueFilteredPageContentRequestAdapter.getContent(TAG_FILTERED_CONTENT_REQUEST)).willReturn(Optional.empty());
 
         // when
-        blogContentFacade.getArticlesByTag(TAG_ID, PAGE_NUMBER);
+        Assertions.assertThrows(ContentRetrievalException.class, () -> blogContentFacade.getArticlesByTag(TAG_ID, PAGE_NUMBER));
 
         // then
         // exception expected
@@ -227,7 +228,7 @@ public class BlogContentFacadeImplTest {
         assertThat(result, equalTo(HOME_PAGE_CONTENT));
     }
 
-    @Test(expected = ContentRetrievalException.class)
+    @Test
     public void shouldGetArticlesByContentExpressionThrowContentRetrievalExceptionForMissingData() {
 
         // given
@@ -237,7 +238,7 @@ public class BlogContentFacadeImplTest {
         given(stringValueFilteredPageContentRequestAdapter.getContent(EXPRESSION_FILTERED_CONTENT_REQUEST)).willReturn(Optional.empty());
 
         // when
-        blogContentFacade.getArticlesByContent(SEARCH_EXPRESSION, PAGE_NUMBER);
+        Assertions.assertThrows(ContentRetrievalException.class, () -> blogContentFacade.getArticlesByContent(SEARCH_EXPRESSION, PAGE_NUMBER));
 
         // then
         // exception expected

@@ -2,10 +2,10 @@ package hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl;
 
 import hu.psprog.leaflet.lcfa.core.domain.content.TagSummary;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TagSummaryNavigationItemFactoryTest {
 
     private static final String TAG_NAME = "Tag name";

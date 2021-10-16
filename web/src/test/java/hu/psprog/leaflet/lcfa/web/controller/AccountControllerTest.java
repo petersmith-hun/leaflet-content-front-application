@@ -13,20 +13,21 @@ import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.AccountNavigationBarSupport;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static hu.psprog.leaflet.lcfa.web.controller.BaseController.PATH_HOME;
 import static hu.psprog.leaflet.lcfa.web.controller.BaseController.PATH_PROFILE;
@@ -35,15 +36,18 @@ import static hu.psprog.leaflet.lcfa.web.controller.BaseController.PATH_PROFILE_
 import static hu.psprog.leaflet.lcfa.web.controller.BaseController.PATH_PROFILE_MY_COMMENTS;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 /**
  * Unit tests for {@link AccountController}.
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@Extensions({
+        @ExtendWith(MockitoExtension.class),
+        @ExtendWith(SpringExtension.class)
+})
 @WithMockedJWTUser
 public class AccountControllerTest extends AbstractControllerTest {
 
@@ -73,12 +77,6 @@ public class AccountControllerTest extends AbstractControllerTest {
         PASSWORD_CHANGE_REQUEST_MODEL.setCurrentPassword("current-password");
         ACCOUNT_DELETION_REQUEST.setPassword("password");
     }
-
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     @Mock
     private AccountManagementFacade accountManagementFacade;
@@ -210,11 +208,11 @@ public class AccountControllerTest extends AbstractControllerTest {
         // then
         verifyViewCreated(VIEW_PASSWORD_CHANGE);
         verifyFieldSet(ModelField.NAVIGATION, NAVIGATION_ITEM_LIST);
-        verifyZeroInteractions(accountManagementFacade);
+        verifyNoInteractions(accountManagementFacade);
     }
 
-    @Test
-    @Parameters(source = PageParameterProvider.class)
+    @ParameterizedTest
+    @MethodSource("pageParameterDataProvider")
     public void shouldRenderComments(Integer receivedPageNumber, int expectedPageNumber) {
 
         // given
@@ -307,13 +305,12 @@ public class AccountControllerTest extends AbstractControllerTest {
         return VIEW_GROUP_ACCOUNT;
     }
 
-    public static class PageParameterProvider {
+    private static Stream<Arguments> pageParameterDataProvider() {
 
-        public static Object[] provide() {
-            return new Object[] {
-                    new Object[] {null, 1},
-                    new Object[] {1, 1},
-                    new Object[] {5, 5}};
-        }
+        return Stream.of(
+                Arguments.of(null, 1),
+                Arguments.of(1, 1),
+                Arguments.of(5, 5)
+        );
     }
 }

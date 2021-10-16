@@ -10,16 +10,17 @@ import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
 import hu.psprog.leaflet.lcfa.core.mock.WithMockedJWTUser;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
@@ -33,14 +34,17 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link AccountDeletionHandler}.
  *
  * @author Peter Smith
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@Extensions({
+        @ExtendWith(MockitoExtension.class),
+        @ExtendWith(SpringExtension.class)
+})
 public class AccountDeletionHandlerTest {
 
     private static final long USER_ID = 1L;
@@ -75,11 +79,6 @@ public class AccountDeletionHandlerTest {
     @InjectMocks
     private AccountDeletionHandler accountDeletionHandler;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     @WithMockedJWTUser
     public void shouldDeleteAccountReturnWithSuccess() throws CommunicationFailureException {
@@ -102,12 +101,12 @@ public class AccountDeletionHandlerTest {
         verify(authenticationService, times(2)).revokeToken();
     }
 
-    @Test(expected = UserRequestProcessingException.class)
+    @Test
     @WithMockedJWTUser
     public void shouldDeleteAccountThrowUserRequestProcessingExceptionForMissingUserID() {
 
         // when
-        accountDeletionHandler.deleteAccount(null, ACCOUNT_DELETION_REQUEST);
+        Assertions.assertThrows(UserRequestProcessingException.class, () -> accountDeletionHandler.deleteAccount(null, ACCOUNT_DELETION_REQUEST));
 
         // then
         // exception expected
@@ -128,7 +127,7 @@ public class AccountDeletionHandlerTest {
         // then
         assertThat(result, is(false));
         assertThat(SecurityContextHolder.getContext().getAuthentication(), notNullValue());
-        verifyZeroInteractions(authenticationService, accountDeletionContentRequestAdapter);
+        verifyNoInteractions(authenticationService, accountDeletionContentRequestAdapter);
     }
 
     @Test
@@ -139,7 +138,6 @@ public class AccountDeletionHandlerTest {
         given(contentRequestAdapterRegistry.<ExtendedUserDataModel, Long>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_BASE_INFO))
                 .willReturn(userDataContentRequestAdapter);
         given(userDataContentRequestAdapter.getContent(USER_ID)).willReturn(Optional.of(EXTENDED_USER_DATA_MODEL));
-        given(authenticationService.claimToken(RECLAIM_AUTHENTICATION)).willReturn(reAuthenticationResultAuthentication);
         doThrow(UnauthorizedAccessException.class).when(authenticationService).claimToken(RECLAIM_AUTHENTICATION);
 
         // when

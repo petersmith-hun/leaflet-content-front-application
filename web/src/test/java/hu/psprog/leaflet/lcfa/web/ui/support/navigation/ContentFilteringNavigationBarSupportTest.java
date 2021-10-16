@@ -5,11 +5,11 @@ import hu.psprog.leaflet.lcfa.core.domain.content.HomePageContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.TagSummary;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 
@@ -18,14 +18,14 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link ContentFilteringNavigationBarSupport}.
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ContentFilteringNavigationBarSupportTest {
 
     private static final long CATEGORY_ID = 1L;
@@ -73,7 +73,7 @@ public class ContentFilteringNavigationBarSupportTest {
 
         // then
         assertThat(result, nullValue());
-        verifyZeroInteractions(navigationItemFactoryRegistry, categorySummaryNavigationItemFactory);
+        verifyNoInteractions(navigationItemFactoryRegistry, categorySummaryNavigationItemFactory);
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ContentFilteringNavigationBarSupportTest {
 
         // then
         assertThat(result, nullValue());
-        verifyZeroInteractions(navigationItemFactoryRegistry, tagSummaryNavigationItemFactory);
+        verifyNoInteractions(navigationItemFactoryRegistry, tagSummaryNavigationItemFactory);
     }
 
     @Test

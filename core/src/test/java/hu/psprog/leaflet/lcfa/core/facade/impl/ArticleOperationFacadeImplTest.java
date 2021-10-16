@@ -5,28 +5,29 @@ import hu.psprog.leaflet.lcfa.core.domain.request.ArticleCommentRequest;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link ArticleOperationFacadeImpl}.
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ArticleOperationFacadeImplTest {
 
     private static final long USER_ID = 1L;
@@ -61,13 +62,8 @@ public class ArticleOperationFacadeImplTest {
     @InjectMocks
     private ArticleOperationFacadeImpl articleOperationFacade;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    @Parameters(source = CommentRequestDataProvider.class, method = "successfulCases")
+    @ParameterizedTest
+    @MethodSource("successfulCommentRequestDataProvider")
     public void shouldProcessCommentRequestWithSuccess(Long userID, ArticleCommentRequest articleCommentRequest) {
 
         // given
@@ -82,8 +78,8 @@ public class ArticleOperationFacadeImplTest {
         assertThat(result, is(true));
     }
 
-    @Test
-    @Parameters(source = CommentRequestDataProvider.class, method = "invalidCases")
+    @ParameterizedTest
+    @MethodSource("invalidCommentRequestDataProvider")
     public void shouldProcessCommentRequestWithFailureForInvalidRequests(ArticleCommentRequest articleCommentRequest) {
 
         // when
@@ -91,7 +87,7 @@ public class ArticleOperationFacadeImplTest {
 
         // then
         assertThat(result, is(false));
-        verifyZeroInteractions(contentRequestAdapterRegistry, commentPostContentRequestAdapter);
+        verifyNoInteractions(contentRequestAdapterRegistry, commentPostContentRequestAdapter);
     }
 
     @Test
@@ -109,23 +105,20 @@ public class ArticleOperationFacadeImplTest {
         assertThat(result, is(false));
     }
 
-    public static class CommentRequestDataProvider {
+    private static Stream<Arguments> successfulCommentRequestDataProvider() {
 
-        public static Object[] successfulCases() {
+        return Stream.of(
+                Arguments.of(null, ANONYMOUS_ARTICLE_COMMENT_REQUEST),
+                Arguments.of(USER_ID, AUTHENTICATED_ARTICLE_COMMENT_REQUEST)
+        );
+    }
 
-            return new Object[] {
-                    new Object[] {null, ANONYMOUS_ARTICLE_COMMENT_REQUEST},
-                    new Object[] {USER_ID, AUTHENTICATED_ARTICLE_COMMENT_REQUEST}
-            };
-        }
+    private static Stream<Arguments> invalidCommentRequestDataProvider() {
 
-        public static Object[] invalidCases() {
-
-            return new Object[] {
-                    new Object[] {AUTHENTICATED_ARTICLE_COMMENT_REQUEST}, // without passing the user ID
-                    new Object[] {ANONYMOUS_ARTICLE_COMMENT_REQUEST_WITH_MISSING_EMAIL},
-                    new Object[] {ANONYMOUS_ARTICLE_COMMENT_REQUEST_WITH_MISSING_NAME}
-            };
-        }
+        return Stream.of(
+                Arguments.of(AUTHENTICATED_ARTICLE_COMMENT_REQUEST), // without passing the user ID
+                Arguments.of(ANONYMOUS_ARTICLE_COMMENT_REQUEST_WITH_MISSING_EMAIL),
+                Arguments.of(ANONYMOUS_ARTICLE_COMMENT_REQUEST_WITH_MISSING_NAME)
+        );
     }
 }

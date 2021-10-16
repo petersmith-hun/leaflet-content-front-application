@@ -3,8 +3,8 @@ package hu.psprog.leaflet.lcfa.core.formatter;
 import hu.psprog.leaflet.lcfa.core.config.DateFormatType;
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -30,7 +30,7 @@ public class DateFormatterUtilityTest {
 
     private DateFormatterUtility dateFormatterUtility;
 
-    @Before
+    @BeforeEach
     public void setup() {
         PageConfigModel pageConfigModel = new PageConfigModel();
         pageConfigModel.setDateFormat(DATE_FORMAT_TYPE_MAP);

@@ -1,10 +1,13 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,18 +17,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class LinkAliasGeneratorTest {
 
+    @InjectMocks
     private LinkAliasGenerator linkAliasGenerator;
 
-    @Before
-    public void setup() {
-        linkAliasGenerator = new LinkAliasGenerator();
-    }
-
-    @Test
-    @Parameters(source = AliasProvider.class)
+    @ParameterizedTest
+    @MethodSource("aliasDataProvider")
     public void shouldGenerateAlias(String input, String expectedResult) {
 
         // when
@@ -35,17 +34,14 @@ public class LinkAliasGeneratorTest {
         assertThat(result, equalTo(expectedResult));
     }
 
-    public static class AliasProvider {
+    private static Stream<Arguments> aliasDataProvider() {
 
-        public static Object[] provide() {
-
-            return new Object[] {
-                    new Object[] {null, null},
-                    new Object[] {"simple", "simple"},
-                    new Object[] {" unnecessary spaces   ", "unnecessary-spaces"},
-                    new Object[] {"VaRiAbLe Case", "variable-case"},
-                    new Object[] {"Árvíztűrő Tükörfúrógép", "arvizturo-tukorfurogep"}
-            };
-        }
+        return Stream.of(
+                Arguments.of(null, null),
+                Arguments.of("simple", "simple"),
+                Arguments.of(" unnecessary spaces   ", "unnecessary-spaces"),
+                Arguments.of("VaRiAbLe Case", "variable-case"),
+                Arguments.of("Árvíztűrő Tükörfúrógép", "arvizturo-tukorfurogep")
+        );
     }
 }
