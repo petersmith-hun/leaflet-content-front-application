@@ -3,19 +3,18 @@ package hu.psprog.leaflet.lcfa.web.thymeleaf.support.security;
 import hu.psprog.leaflet.lcfa.core.domain.common.FrontEndRouteAuthRequirement;
 import hu.psprog.leaflet.lcfa.core.domain.common.MenuItem;
 import hu.psprog.leaflet.lcfa.web.auth.mock.WithMockedJWTUser;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,30 +24,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@Extensions({
+        @ExtendWith(MockitoExtension.class),
+        @ExtendWith(SpringExtension.class)
+})
 public class FrontEndRouteAuthRequirementEvaluatorTest {
 
     private static final MenuItem MENU_ITEM_SHOW_ALWAYS = MenuItem.builder().authRequirement(FrontEndRouteAuthRequirement.SHOW_ALWAYS).build();
     private static final MenuItem MENU_ITEM_AUTHENTICATED = MenuItem.builder().authRequirement(FrontEndRouteAuthRequirement.AUTHENTICATED).build();
     private static final MenuItem MENU_ITEM_ANONYMOUS = MenuItem.builder().authRequirement(FrontEndRouteAuthRequirement.ANONYMOUS).build();
 
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
-
     @InjectMocks
     private FrontEndRouteAuthRequirementEvaluator frontEndRouteAuthRequirementEvaluator;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
+    @ParameterizedTest
     @WithMockedJWTUser
-    @Parameters(source = MenuItemProvider.class, method = "authenticated")
+    @MethodSource("authenticatedMenuDataProvider")
     public void shouldCanDisplayEvaluateMenuItemForAuthenticatedCases(MenuItem menuItem, boolean shouldDisplay) {
 
         // when
@@ -58,9 +49,9 @@ public class FrontEndRouteAuthRequirementEvaluatorTest {
         assertThat(result, is(shouldDisplay));
     }
 
-    @Test
+    @ParameterizedTest
     @WithMockUser
-    @Parameters(source = MenuItemProvider.class, method = "nonJWT")
+    @MethodSource("nonJWTMenuDataProvider")
     public void shouldCanDisplayEvaluateMenuItemForNonJWTAuthenticatedCases(MenuItem menuItem, boolean shouldDisplay) {
 
         // when
@@ -70,9 +61,9 @@ public class FrontEndRouteAuthRequirementEvaluatorTest {
         assertThat(result, is(shouldDisplay));
     }
 
-    @Test
+    @ParameterizedTest
     @WithAnonymousUser
-    @Parameters(source = MenuItemProvider.class, method = "anonymous")
+    @MethodSource("anonymousMenuDataProvider")
     public void shouldCanDisplayEvaluateMenuItemForAnonymousCases(MenuItem menuItem, boolean shouldDisplay) {
 
         // when
@@ -82,33 +73,30 @@ public class FrontEndRouteAuthRequirementEvaluatorTest {
         assertThat(result, is(shouldDisplay));
     }
 
-    public static class MenuItemProvider {
+    private static Stream<Arguments> authenticatedMenuDataProvider() {
 
-        public static Object[] authenticated() {
+        return Stream.of(
+                Arguments.of(MENU_ITEM_SHOW_ALWAYS, true),
+                Arguments.of(MENU_ITEM_AUTHENTICATED, true),
+                Arguments.of(MENU_ITEM_ANONYMOUS, false)
+        );
+    }
 
-            return new Object[] {
-                    new Object[] {MENU_ITEM_SHOW_ALWAYS, true},
-                    new Object[] {MENU_ITEM_AUTHENTICATED, true},
-                    new Object[] {MENU_ITEM_ANONYMOUS, false},
-            };
-        }
+    private static Stream<Arguments> anonymousMenuDataProvider() {
 
-        public static Object[] anonymous() {
+        return Stream.of(
+                Arguments.of(MENU_ITEM_SHOW_ALWAYS, true),
+                Arguments.of(MENU_ITEM_AUTHENTICATED, false),
+                Arguments.of(MENU_ITEM_ANONYMOUS, true)
+        );
+    }
 
-            return new Object[] {
-                    new Object[] {MENU_ITEM_SHOW_ALWAYS, true},
-                    new Object[] {MENU_ITEM_AUTHENTICATED, false},
-                    new Object[] {MENU_ITEM_ANONYMOUS, true},
-            };
-        }
+    private static Stream<Arguments> nonJWTMenuDataProvider() {
 
-        public static Object[] nonJWT() {
-
-            return new Object[] {
-                    new Object[] {MENU_ITEM_SHOW_ALWAYS, true},
-                    new Object[] {MENU_ITEM_AUTHENTICATED, false},
-                    new Object[] {MENU_ITEM_ANONYMOUS, false},
-            };
-        }
+        return Stream.of(
+                Arguments.of(MENU_ITEM_SHOW_ALWAYS, true),
+                Arguments.of(MENU_ITEM_AUTHENTICATED, false),
+                Arguments.of(MENU_ITEM_ANONYMOUS, false)
+        );
     }
 }

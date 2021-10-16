@@ -15,11 +15,11 @@ import hu.psprog.leaflet.lcfa.core.domain.content.CategorySummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.TagSummary;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ArticleContentConverterTest {
 
     private static final ArticlePageRawResponseWrapper SOURCE_OBJECT = ArticlePageRawResponseWrapper.builder()

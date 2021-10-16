@@ -1,13 +1,14 @@
 package hu.psprog.leaflet.lcfa.core.utility;
 
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,7 +19,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ResourcePathResolverTest {
 
     private static final String RESOURCE_SERVER_URL = "file:///resource-svc";
@@ -29,17 +30,17 @@ public class ResourcePathResolverTest {
     @Mock
     private PageConfigModel pageConfigModel;
 
+    @InjectMocks
     private ResourcePathResolver resourcePathResolver;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
         given(pageConfigModel.getResourceServerUrl()).willReturn(RESOURCE_SERVER_URL);
         resourcePathResolver = new ResourcePathResolver(pageConfigModel);
     }
 
-    @Test
-    @Parameters({"/res-01", "res-01"})
+    @ParameterizedTest
+    @ValueSource(strings = {"/res-01", "res-01"})
     public void shouldResolve(String resourceID) {
 
         // when

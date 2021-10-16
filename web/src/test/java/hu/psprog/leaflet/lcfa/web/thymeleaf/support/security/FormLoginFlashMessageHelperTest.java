@@ -1,30 +1,31 @@
 package hu.psprog.leaflet.lcfa.web.thymeleaf.support.security;
 
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link FormLoginFlashMessageHelper}.
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class FormLoginFlashMessageHelperTest {
 
     @Mock
@@ -33,13 +34,8 @@ public class FormLoginFlashMessageHelperTest {
     @InjectMocks
     private FormLoginFlashMessageHelper formLoginFlashMessageHelper;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    @Parameters(source = AuthResultKeyProvider.class)
+    @ParameterizedTest
+    @MethodSource("authResultKeyDataProvider")
     public void shouldGetMessageKey(String authResult, FlashMessageKey expectedFlashMessageKey) {
 
         // given
@@ -77,17 +73,15 @@ public class FormLoginFlashMessageHelperTest {
 
         // then
         assertThat(result, equalTo(currentFlashMessageKey));
-        verifyZeroInteractions(request);
+        verifyNoInteractions(request);
     }
 
-    public static class AuthResultKeyProvider {
+    private static Stream<Arguments> authResultKeyDataProvider() {
 
-        public static Object[] provide() {
-            return new Object[] {
-                    new Object[] {"success", FlashMessageKey.SUCCESSFUL_SIGN_IN},
-                    new Object[] {"failure", FlashMessageKey.FAILED_SIGN_IN},
-                    new Object[] {"signout", FlashMessageKey.SUCCESSFUL_SIGN_OUT}
-            };
-        }
+        return Stream.of(
+                Arguments.of("success", FlashMessageKey.SUCCESSFUL_SIGN_IN),
+                Arguments.of("failure", FlashMessageKey.FAILED_SIGN_IN),
+                Arguments.of("signout", FlashMessageKey.SUCCESSFUL_SIGN_OUT)
+        );
     }
 }

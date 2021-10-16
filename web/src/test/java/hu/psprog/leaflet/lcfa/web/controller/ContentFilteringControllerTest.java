@@ -9,16 +9,18 @@ import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.ContentFilteringNavigationBarSupport;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.mockito.BDDMockito.given;
 
@@ -27,7 +29,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(JUnitParamsRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ContentFilteringControllerTest extends AbstractControllerTest {
 
     private static final EntrySummary ENTRY_SUMMARY = EntrySummary.builder().prologue("prologue").build();
@@ -69,8 +71,8 @@ public class ContentFilteringControllerTest extends AbstractControllerTest {
     @InjectMocks
     private ContentFilteringController contentFilteringController;
 
-    @Test
-    @Parameters(source = PageParameterProvider.class)
+    @ParameterizedTest
+    @MethodSource("pageParameterDataProvider")
     public void shouldRenderHomePage(Integer receivedPageNumber, int expectedPageNumber) {
 
         // given
@@ -83,8 +85,8 @@ public class ContentFilteringControllerTest extends AbstractControllerTest {
         verifyEntryList(expectedPageNumber, PAGINATION_LINK_HOME_TEMPLATE, null);
     }
 
-    @Test
-    @Parameters(source = PageParameterProvider.class)
+    @ParameterizedTest
+    @MethodSource("pageParameterDataProvider")
     public void shouldArticleListByCategory(Integer receivedPageNumber, int expectedPageNumber) {
 
         // given
@@ -98,8 +100,8 @@ public class ContentFilteringControllerTest extends AbstractControllerTest {
         verifyEntryList(expectedPageNumber, PAGINATION_LINK_CATEGORY_TEMPLATE, Collections.singletonList(CATEGORY_NAVIGATION));
     }
 
-    @Test
-    @Parameters(source = PageParameterProvider.class)
+    @ParameterizedTest
+    @MethodSource("pageParameterDataProvider")
     public void shouldArticleListByTag(Integer receivedPageNumber, int expectedPageNumber) {
 
         // given
@@ -113,8 +115,8 @@ public class ContentFilteringControllerTest extends AbstractControllerTest {
         verifyEntryList(expectedPageNumber, PAGINATION_LINK_TAG_TEMPLATE, Collections.singletonList(TAG_NAVIGATION));
     }
 
-    @Test
-    @Parameters(source = PageParameterProvider.class)
+    @ParameterizedTest
+    @MethodSource("pageParameterDataProvider")
     public void shouldArticleListByContent(Integer receivedPageNumber, int expectedPageNumber) {
 
         // given
@@ -128,14 +130,13 @@ public class ContentFilteringControllerTest extends AbstractControllerTest {
         verifyEntryList(expectedPageNumber, PAGINATION_LINK_CONTENT_TEMPLATE, Collections.singletonList(CONTENT_NAVIGATION));
     }
 
-    public static class PageParameterProvider {
+    private static Stream<Arguments> pageParameterDataProvider() {
 
-        public static Object[] provide() {
-            return new Object[] {
-                    new Object[] {null, 1},
-                    new Object[] {1, 1},
-                    new Object[] {5, 5}};
-        }
+        return Stream.of(
+                Arguments.of(null, 1),
+                Arguments.of(1, 1),
+                Arguments.of(5, 5)
+        );
     }
 
     @Override

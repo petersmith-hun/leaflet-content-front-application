@@ -11,11 +11,13 @@ import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.NavigationItemFactory;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.mockito.BDDMockito.given;
 
@@ -24,7 +26,10 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@Extensions({
+        @ExtendWith(MockitoExtension.class),
+        @ExtendWith(SpringExtension.class)
+})
 public class ContactControllerTest extends AbstractControllerTest {
 
     private static final SEOAttributes SEO_ATTRIBUTES = SEOAttributes.builder().pageTitle("contact-page-seo-title").build();

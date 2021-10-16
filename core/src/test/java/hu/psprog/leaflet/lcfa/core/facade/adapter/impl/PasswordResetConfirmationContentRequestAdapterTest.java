@@ -7,11 +7,12 @@ import hu.psprog.leaflet.lcfa.core.domain.request.PasswordResetConfirmationReque
 import hu.psprog.leaflet.lcfa.core.domain.result.PasswordResetResult;
 import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PasswordResetConfirmationContentRequestAdapterTest {
 
     private static final PasswordResetConfirmationRequestModel PASSWORD_RESET_CONFIRMATION_REQUEST_MODEL = new PasswordResetConfirmationRequestModel();
@@ -70,14 +71,14 @@ public class PasswordResetConfirmationContentRequestAdapterTest {
         verify(userBridgeService).confirmPasswordReset(PASSWORD_RESET_CONFIRMATION_REQUEST_MODEL, RECAPTCHA_TOKEN);
     }
 
-    @Test(expected = UserSessionInvalidationRequiredException.class)
+    @Test
     public void shouldGetContentReturnThrowUserSessionInvalidationRequiredException() throws CommunicationFailureException {
 
         // given
         doThrow(UnauthorizedAccessException.class).when(userBridgeService).confirmPasswordReset(PASSWORD_RESET_CONFIRMATION_REQUEST_MODEL, RECAPTCHA_TOKEN);
 
         // when
-        adapter.getContent(PASSWORD_RESET_CONFIRMATION_REQUEST_MODEL);
+        Assertions.assertThrows(UserSessionInvalidationRequiredException.class, () ->adapter.getContent(PASSWORD_RESET_CONFIRMATION_REQUEST_MODEL));
 
         // then
         // exception expected

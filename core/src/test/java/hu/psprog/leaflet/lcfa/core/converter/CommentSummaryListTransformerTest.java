@@ -10,11 +10,11 @@ import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentArticleData;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
 import hu.psprog.leaflet.lcfa.core.formatter.DateFormatterUtility;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CommentSummaryListTransformerTest {
 
     private static final long COMMENT_ID_5 = 5L;

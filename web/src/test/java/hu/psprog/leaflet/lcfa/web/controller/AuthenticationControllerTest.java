@@ -12,12 +12,14 @@ import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.AccountNavigationBarSupport;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,14 +30,17 @@ import static hu.psprog.leaflet.lcfa.web.controller.BaseController.PATH_SIGN_IN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link AuthenticationController}.
  *
  * @author Peter Smith
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@Extensions({
+        @ExtendWith(MockitoExtension.class),
+        @ExtendWith(SpringExtension.class)
+})
 public class AuthenticationControllerTest extends AbstractControllerTest {
 
     private static final List<NavigationItem> NAVIGATION_ITEM_LIST = Collections.singletonList(NavigationItem.build("link", "title"));
@@ -150,7 +155,7 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         verifyViewCreated(VIEW_SIGN_UP);
         verifyFieldSet(ModelField.VALIDATED_MODEL, SIGN_UP_REQUEST_MODEL);
         verifyFieldSet(ModelField.NAVIGATION, NAVIGATION_ITEM_LIST);
-        verifyZeroInteractions(authenticationFacade);
+        verifyNoInteractions(authenticationFacade);
     }
 
     @Test

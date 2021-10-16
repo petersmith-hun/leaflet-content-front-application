@@ -18,12 +18,12 @@ import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
 import hu.psprog.leaflet.lcfa.core.facade.cache.CommonPageDataCache;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -36,14 +36,14 @@ import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Unit tests for {@link CommonPageDataFacadeImpl}.
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CommonPageDataFacadeImplTest {
 
     private static final int LATEST_ENTRIES_COUNT = 5;
@@ -94,10 +94,8 @@ public class CommonPageDataFacadeImplTest {
 
     private CommonPageDataFacadeImpl commonPageDataFacade;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-
         given(defaultPaginationAttributes.getOrderBy()).willReturn(ORDER_BY);
         given(defaultPaginationAttributes.getOrderDirection()).willReturn(ORDER_DIRECTION);
 
@@ -118,7 +116,7 @@ public class CommonPageDataFacadeImplTest {
         assertThat(result, notNullValue());
         assertThat(result, equalTo(COMMON_PAGE_DATA));
         verify(commonPageDataCache, never()).update(any(CommonPageData.class));
-        verifyZeroInteractions(contentRequestAdapterRegistry, commonPageDataContentRequestAdapter, commonPageDataConverter);
+        verifyNoInteractions(contentRequestAdapterRegistry, commonPageDataContentRequestAdapter, commonPageDataConverter);
     }
 
     @Test
@@ -140,7 +138,7 @@ public class CommonPageDataFacadeImplTest {
         verify(commonPageDataCache).update(COMMON_PAGE_DATA);
     }
 
-    @Test(expected = ContentRetrievalException.class)
+    @Test
     public void shouldGetCommonPageDataThrowContentRetrievalExceptionForMissingData() {
 
         // given
@@ -150,7 +148,7 @@ public class CommonPageDataFacadeImplTest {
         given(commonPageDataContentRequestAdapter.getContent(PAGINATED_CONTENT_REQUEST)).willReturn(Optional.empty());
 
         // when
-        commonPageDataFacade.getCommonPageData();
+        Assertions.assertThrows(ContentRetrievalException.class, () -> commonPageDataFacade.getCommonPageData());
 
         // then
         // exception expected

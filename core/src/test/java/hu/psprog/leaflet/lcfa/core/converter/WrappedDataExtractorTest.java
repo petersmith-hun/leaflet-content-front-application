@@ -9,10 +9,10 @@ import hu.psprog.leaflet.lcfa.core.domain.common.FrontEndRouteAuthRequirement;
 import hu.psprog.leaflet.lcfa.core.domain.common.MenuItem;
 import hu.psprog.leaflet.lcfa.core.domain.common.PaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author Peter Smith
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class WrappedDataExtractorTest {
 
     private static final boolean HAS_NEXT = true;
