@@ -1,7 +1,7 @@
 package hu.psprog.leaflet.lcfa.web.thymeleaf.support.markdown;
 
 import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
-import nz.net.ultraq.thymeleaf.LayoutDialect;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.thymeleaf.processor.IProcessor;
@@ -15,9 +15,9 @@ import java.util.Set;
  */
 public class ExtendedLayoutDialect extends LayoutDialect {
 
-    private Parser parser;
-    private HtmlRenderer htmlRenderer;
-    private ResourcePathResolver resourcePathResolver;
+    private final Parser parser;
+    private final HtmlRenderer htmlRenderer;
+    private final ResourcePathResolver resourcePathResolver;
 
     public ExtendedLayoutDialect(Parser parser, HtmlRenderer htmlRenderer, ResourcePathResolver resourcePathResolver) {
         this.parser = parser;

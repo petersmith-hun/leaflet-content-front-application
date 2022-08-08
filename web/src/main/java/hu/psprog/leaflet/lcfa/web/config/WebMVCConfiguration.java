@@ -7,7 +7,7 @@ import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
 import hu.psprog.leaflet.lcfa.web.interceptor.CommonPageDataInterceptor;
 import hu.psprog.leaflet.lcfa.web.interceptor.ModelAndViewDebuggerInterceptor;
 import hu.psprog.leaflet.lcfa.web.thymeleaf.support.markdown.ExtendedLayoutDialect;
-import nz.net.ultraq.thymeleaf.LayoutDialect;
+import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ import java.util.Optional;
 @Configuration
 public class WebMVCConfiguration implements WebMvcConfigurer {
 
-    private WebAppResources webAppResources;
-    private CommonPageDataInterceptor commonPageDataInterceptor;
+    private final WebAppResources webAppResources;
+    private final CommonPageDataInterceptor commonPageDataInterceptor;
 
     @Autowired
     private Optional<ModelAndViewDebuggerInterceptor> modelAndViewDebuggerInterceptor;

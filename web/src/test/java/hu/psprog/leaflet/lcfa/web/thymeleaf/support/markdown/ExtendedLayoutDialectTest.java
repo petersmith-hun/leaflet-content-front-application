@@ -45,7 +45,7 @@ public class ExtendedLayoutDialectTest {
 
         // then
         assertThat(result, notNullValue());
-        assertThat(result.size(), equalTo(18));
+        assertThat(result.size(), equalTo(16));
         assertThat(result.stream().anyMatch(iProcessor -> iProcessor instanceof MarkdownAttributeTagProcessor), is(true));
     }
 }
