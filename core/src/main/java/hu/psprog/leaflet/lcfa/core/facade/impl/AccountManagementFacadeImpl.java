@@ -10,7 +10,6 @@ import hu.psprog.leaflet.lcfa.core.domain.account.AccountBaseInfo;
 import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
-import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
 import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
 import hu.psprog.leaflet.lcfa.core.exception.UserRequestProcessingException;
 import hu.psprog.leaflet.lcfa.core.facade.AccountManagementFacade;
@@ -34,10 +33,10 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
 
     private static final String BASE_ACCOUNT_INFO_RETRIEVAL_FAILED = "Failed to retrieve base account info for user [%d]";
 
-    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
-    private AccountDeletionHandler accountDeletionHandler;
-    private ConversionService conversionService;
-    private DefaultPaginationAttributes<OrderBy.Comment> defaultPaginationAttributes;
+    private final ContentRequestAdapterRegistry contentRequestAdapterRegistry;
+    private final AccountDeletionHandler accountDeletionHandler;
+    private final ConversionService conversionService;
+    private final DefaultPaginationAttributes<OrderBy.Comment> defaultPaginationAttributes;
 
     @Autowired
     public AccountManagementFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, AccountDeletionHandler accountDeletionHandler,
@@ -91,8 +90,8 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
     }
 
     @Override
-    public boolean deleteAccount(Long userID, AccountDeletionRequest accountDeletionRequest) {
-        return accountDeletionHandler.deleteAccount(userID, accountDeletionRequest);
+    public boolean deleteAccount(Long userID) {
+        return accountDeletionHandler.deleteAccount(userID);
     }
 
     @Override

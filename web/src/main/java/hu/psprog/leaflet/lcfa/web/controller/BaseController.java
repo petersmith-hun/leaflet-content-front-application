@@ -1,7 +1,5 @@
 package hu.psprog.leaflet.lcfa.web.controller;
 
-import hu.psprog.leaflet.jwt.auth.support.domain.AuthenticationUserDetailsModel;
-import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
 import hu.psprog.leaflet.lcfa.core.exception.ContentNotFoundException;
 import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
@@ -11,11 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Base controller providing common methods.
@@ -27,6 +28,7 @@ public class BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
 
     private static final String HEADER_USER_AGENT = "User-Agent";
+    private static final String SUBJECT_JWT_ATTRIBUTE = "sub";
 
     private static final String ERROR_401 = "error/401";
     private static final String ERROR_404 = "error/404";
@@ -44,8 +46,6 @@ public class BaseController {
     public static final String PATH_CONTACT = "/contact";
     public static final String PATH_SIGN_IN = "/signin";
     public static final String PATH_SIGN_UP = "/signup";
-    public static final String PATH_PASSWORD_RESET_CONFIRMATION = "/password-reset/{token:.+}";
-    public static final String PATH_PASSWORD_RESET_REQUEST = "/password-reset";
     public static final String PATH_COMMENT = "/article/{link}/comment";
     public static final String PATH_ARTICLE_BY_LINK = "/article/{link}";
     public static final String PATH_CHANGE_PASSWORD = "/change-password";
@@ -77,15 +77,25 @@ public class BaseController {
 
         Long userID = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JWTTokenAuthentication) {
-            userID = ((AuthenticationUserDetailsModel) authentication.getDetails()).getId();
+        if (authentication instanceof OAuth2AuthenticationToken) {
+            OAuth2User principal = ((OAuth2AuthenticationToken) authentication).getPrincipal();
+            userID = Optional.ofNullable(principal.getAttribute(SUBJECT_JWT_ATTRIBUTE))
+                    .filter(subject -> subject instanceof String)
+                    .map(subject -> Long.valueOf((String) subject))
+                    .orElse(0L);
         }
 
         return userID;
     }
 
+    /**
+     * HTTP 401 handler. Triggered when the backend responds with 401.
+     *
+     * @param exception exception object to be logged
+     * @return populated {@link ModelAndView} object
+     */
     @ExceptionHandler(UserSessionInvalidationRequiredException.class)
-    public ModelAndView handleUserSessionInvalidationRequiredException(HttpServletRequest request, UserSessionInvalidationRequiredException exception) {
+    public ModelAndView handleUserSessionInvalidationRequiredException(UserSessionInvalidationRequiredException exception) {
 
         LOGGER.error("User session invalidation required - setting response status to 401 to trigger expiration filter", exception);
 

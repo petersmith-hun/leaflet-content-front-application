@@ -1,11 +1,11 @@
 package hu.psprog.leaflet.lcfa.web.thymeleaf.support.security;
 
-import hu.psprog.leaflet.jwt.auth.support.domain.JWTTokenAuthentication;
 import hu.psprog.leaflet.lcfa.core.domain.common.FrontEndRouteAuthRequirement;
 import hu.psprog.leaflet.lcfa.core.domain.common.MenuItem;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +20,7 @@ public class FrontEndRouteAuthRequirementEvaluator {
      * Decides whether the given {@link MenuItem} object can be displayed on the UI.
      * A front-end route can be shown in either of the cases below:
      *  - menu item does not specify any special authentication requirement (item will be always displayed)
-     *  - menu item requires authenticated state and security context contains {@link JWTTokenAuthentication} in authenticated status
+     *  - menu item requires authenticated state and security context contains {@link OAuth2AuthenticationToken} in authenticated status
      *  - menu item requires anonymous state and security context contains {@link AnonymousAuthenticationToken}
      * Any different combinations than the ones above will cause the item to remain hidden.
      *
@@ -39,7 +39,7 @@ public class FrontEndRouteAuthRequirementEvaluator {
 
     private boolean isAuthenticated(MenuItem menuItem) {
         return menuItem.getAuthRequirement() == FrontEndRouteAuthRequirement.AUTHENTICATED
-                && getAuthentication() instanceof JWTTokenAuthentication
+                && getAuthentication() instanceof OAuth2AuthenticationToken
                 && getAuthentication().isAuthenticated();
     }
 

@@ -61,7 +61,7 @@
             <div id="flash" th:if="${flash != null}">
                 <div class="message">
                     <th:block th:text="${flash == T(hu.psprog.leaflet.lcfa.web.model.FlashMessageKey).SUCCESSFUL_SIGN_IN.getMessageKey()}
-                                        ? #{__${flash}__(${#authentication.details.name})}
+                                        ? #{__${flash}__(${#authentication.getName()})}
                                         : #{__${flash}__}" />
                     <span class="hide_msg" th:text="#{common.flash.close}">placeholder:flash_close</span>
                 </div>

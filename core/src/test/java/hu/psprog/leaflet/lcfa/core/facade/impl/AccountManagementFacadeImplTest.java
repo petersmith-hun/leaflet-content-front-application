@@ -337,10 +337,10 @@ public class AccountManagementFacadeImplTest {
     public void shouldDeleteAccountReturnWithSuccess() {
 
         // given
-        given(accountDeletionHandler.deleteAccount(USER_ID, ACCOUNT_DELETION_REQUEST)).willReturn(true);
+        given(accountDeletionHandler.deleteAccount(USER_ID)).willReturn(true);
 
         // when
-        boolean result = accountManagementFacade.deleteAccount(USER_ID, ACCOUNT_DELETION_REQUEST);
+        boolean result = accountManagementFacade.deleteAccount(USER_ID);
 
         // then
         assertThat(result, is(true));
@@ -350,10 +350,10 @@ public class AccountManagementFacadeImplTest {
     public void shouldDeleteAccountReturnWithFailure() {
 
         // given
-        given(accountDeletionHandler.deleteAccount(USER_ID, ACCOUNT_DELETION_REQUEST)).willReturn(false);
+        given(accountDeletionHandler.deleteAccount(USER_ID)).willReturn(false);
 
         // when
-        boolean result = accountManagementFacade.deleteAccount(USER_ID, ACCOUNT_DELETION_REQUEST);
+        boolean result = accountManagementFacade.deleteAccount(USER_ID);
 
         // then
         assertThat(result, is(false));

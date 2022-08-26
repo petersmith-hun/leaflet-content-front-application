@@ -3,7 +3,6 @@ package hu.psprog.leaflet.lcfa.web.controller;
 import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
 import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
-import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
 import hu.psprog.leaflet.lcfa.core.facade.AccountManagementFacade;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
@@ -40,9 +39,9 @@ public class AccountController extends BaseController {
     private static final int DEFAULT_PAGE_NUMBER = 1;
     private static final String COMMENT_PAGINATION_LINK_TEMPLATE = "/profile/my-comments/{page}";
 
-    private ModelAndViewFactory modelAndViewFactory;
-    private AccountManagementFacade accountManagementFacade;
-    private AccountNavigationBarSupport accountNavigationBarSupport;
+    private final ModelAndViewFactory modelAndViewFactory;
+    private final AccountManagementFacade accountManagementFacade;
+    private final AccountNavigationBarSupport accountNavigationBarSupport;
 
     @Autowired
     public AccountController(ModelAndViewFactory modelAndViewFactory, AccountManagementFacade accountManagementFacade,
@@ -189,16 +188,15 @@ public class AccountController extends BaseController {
      * POST /profile/delete-account
      * Processes an account deletion request.
      *
-     * @param accountDeletionRequest {@link AccountDeletionRequest} object containing form data
      * @param redirectAttributes redirection attributes
      * @return populated {@link ModelAndView} object
      */
     @PostMapping(PATH_DELETE_ACCOUNT)
-    public ModelAndView processAccountDeletionRequest(@ModelAttribute AccountDeletionRequest accountDeletionRequest, RedirectAttributes redirectAttributes) {
+    public ModelAndView processAccountDeletionRequest(RedirectAttributes redirectAttributes) {
 
         ModelAndView modelAndView;
         FlashMessageKey flashMessageKey;
-        if (accountManagementFacade.deleteAccount(currentUserID(), accountDeletionRequest)) {
+        if (accountManagementFacade.deleteAccount(currentUserID())) {
             modelAndView = modelAndViewFactory.createRedirectionTo(PATH_HOME);
             flashMessageKey = FlashMessageKey.SUCCESSFUL_ACCOUNT_DELETION;
         } else {

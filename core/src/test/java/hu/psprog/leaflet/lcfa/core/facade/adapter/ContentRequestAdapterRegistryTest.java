@@ -97,7 +97,7 @@ public class ContentRequestAdapterRegistryTest {
         Set<ContentRequestAdapterIdentifier> contentRequestAdapterIdentifierSetMock = Mockito.mock(Set.class);
 
         given(contentRequestAdapterMapMock.keySet()).willReturn(contentRequestAdapterIdentifierSetMock);
-        given(contentRequestAdapterIdentifierSetMock.size()).willReturn(19);
+        given(contentRequestAdapterIdentifierSetMock.size()).willReturn(16);
 
         Field contentRequestAdapterMapField = ReflectionUtils.findField(ContentRequestAdapterRegistry.class, "contentRequestAdapterMap");
         contentRequestAdapterMapField.setAccessible(true);
