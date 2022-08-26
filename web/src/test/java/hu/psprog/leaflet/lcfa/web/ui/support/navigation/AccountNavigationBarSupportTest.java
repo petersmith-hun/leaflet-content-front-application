@@ -81,42 +81,6 @@ public class AccountNavigationBarSupportTest {
         assertAccountDeletionNavigationItem(result);
     }
 
-    @Test
-    public void shouldReturnSignInNavigationBar() {
-
-        // when
-        List<NavigationItem> result = accountNavigationBarSupport.signIn();
-
-        // then
-        assertThat(result, notNullValue());
-        assertThat(result.size(), equalTo(1));
-        assertSignInNavigationItem(result);
-    }
-
-    @Test
-    public void shouldReturnSignUpNavigationBar() {
-
-        // when
-        List<NavigationItem> result = accountNavigationBarSupport.signUp();
-
-        // then
-        assertThat(result, notNullValue());
-        assertThat(result.size(), equalTo(1));
-        assertSignUpNavigationItem(result);
-    }
-
-    @Test
-    public void shouldReturnPasswordResetNavigationBar() {
-
-        // when
-        List<NavigationItem> result = accountNavigationBarSupport.passwordReset();
-
-        // then
-        assertThat(result, notNullValue());
-        assertThat(result.size(), equalTo(1));
-        assertPasswordResetNavigationItem(result);
-    }
-
     private void assertProfileNavigationItem(List<NavigationItem> result) {
         assertThat(result.get(0).getTitle(), equalTo("section.profile.navigation.baseinfo"));
         assertThat(result.get(0).getLink(), equalTo(PATH_PROFILE));

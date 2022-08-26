@@ -4,7 +4,6 @@ import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
 import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
 import hu.psprog.leaflet.lcfa.core.domain.account.AccountBaseInfo;
 import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
-import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
 
 /**
  * Facade interface for account management operations.
@@ -52,10 +51,9 @@ public interface AccountManagementFacade {
      * Deletes the given (currently authenticated) user.
      *
      * @param userID ID of the authenticated user
-     * @param accountDeletionRequest {@link AccountDeletionRequest} object containing confirmation information
      * @return operation result as boolean - {@code true} on success, {@code false} otherwise
      */
-    boolean deleteAccount(Long userID, AccountDeletionRequest accountDeletionRequest);
+    boolean deleteAccount(Long userID);
 
     /**
      * Performs logical deletion of the comment identified by given ID.

@@ -13,13 +13,13 @@ import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.AccountNavigationBarSupport;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extensions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -84,8 +84,13 @@ public class AccountControllerTest extends AbstractControllerTest {
     @Mock
     private AccountNavigationBarSupport accountNavigationBarSupport;
 
-    @InjectMocks
     private AccountController accountController;
+
+    @BeforeEach
+    public void setup() {
+        super.setup();
+        accountController = new AccountController(modelAndViewFactory, accountManagementFacade, accountNavigationBarSupport);
+    }
 
     @Test
     public void shouldRenderProfileForm() {
@@ -276,10 +281,10 @@ public class AccountControllerTest extends AbstractControllerTest {
     public void shouldProcessAccountDeletionRequestWithSuccess() {
 
         // given
-        given(accountManagementFacade.deleteAccount(USER_ID, ACCOUNT_DELETION_REQUEST)).willReturn(true);
+        given(accountManagementFacade.deleteAccount(USER_ID)).willReturn(true);
 
         // when
-        accountController.processAccountDeletionRequest(ACCOUNT_DELETION_REQUEST, redirectAttributes);
+        accountController.processAccountDeletionRequest(redirectAttributes);
 
         // then
         verifyRedirectionCreated(PATH_HOME);
@@ -290,10 +295,10 @@ public class AccountControllerTest extends AbstractControllerTest {
     public void shouldProcessAccountDeletionRequestWithFailure() {
 
         // given
-        given(accountManagementFacade.deleteAccount(USER_ID, ACCOUNT_DELETION_REQUEST)).willReturn(false);
+        given(accountManagementFacade.deleteAccount(USER_ID)).willReturn(false);
 
         // when
-        accountController.processAccountDeletionRequest(ACCOUNT_DELETION_REQUEST, redirectAttributes);
+        accountController.processAccountDeletionRequest(redirectAttributes);
 
         // then
         verifyRedirectionCreated(PATH_PROFILE_DELETE_ACCOUNT);

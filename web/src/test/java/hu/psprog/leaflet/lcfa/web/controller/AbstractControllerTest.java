@@ -42,9 +42,6 @@ public abstract class AbstractControllerTest {
                     .build()))
             .build();
     private static final Map<String, String> VALIDATION_RESULTS_MAP = new HashMap<>();
-    private static final String SUBMITTED_FORM_VALUES = ModelField.VALIDATED_MODEL.getFieldName();
-    private static final String VALIDATION_FAILED_MESSAGE = "Validation failed - please see violations";
-    private static final String VALIDATION_RESULTS_ATTRIBUTE = "validationResults";
     private static final String FLASH_MESSAGE = ModelField.FLASH.getFieldName();
 
     static {
@@ -64,7 +61,7 @@ public abstract class AbstractControllerTest {
     BindingResult bindingResult;
 
     @Mock(lenient = true)
-    private ModelAndViewFactory modelAndViewFactory;
+    ModelAndViewFactory modelAndViewFactory;
 
     @Mock(lenient = true)
     private ModelAndViewFactory.ModelAndViewWrapper modelAndViewWrapper;

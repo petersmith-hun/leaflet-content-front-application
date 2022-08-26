@@ -53,7 +53,7 @@
 
             <p sec:authorize="isAuthenticated()">
                 <label th:text="#{form.comment.label.send_as}">placeholder:send_as</label>
-                <strong th:text="${#authentication.details.name}">placeholder:username</strong>
+                <strong th:text="${#authentication.getName()}">placeholder:username</strong>
             </p>
 
             <div class="input textarea">

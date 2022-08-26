@@ -41,7 +41,7 @@ public class BaseControllerTest {
     public void shouldHandleUserSessionInvalidationRequiredException() {
 
         // when
-        ModelAndView result = baseController.handleUserSessionInvalidationRequiredException(request, new UserSessionInvalidationRequiredException(new RuntimeException()));
+        ModelAndView result = baseController.handleUserSessionInvalidationRequiredException(new UserSessionInvalidationRequiredException(new RuntimeException()));
 
         // then
         assertThat(result, notNullValue());
