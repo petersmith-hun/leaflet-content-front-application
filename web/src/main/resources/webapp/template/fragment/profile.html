@@ -4,13 +4,16 @@
 <body>
 
 <!-- profile navigation bar -->
-<th:block th:fragment="profile-navigation">
+<th:block th:fragment="profile-navigation" th:with="local_user = ${#authorization.expr('hasAuthority(''SCOPE_write:users:own'')')}">
     <p>&nbsp;</p>
+    <p th:if="${!local_user}" style="margin: 10px 0; font-weight: bold; color: #ff0000; padding: 0 10px;" th:text="#{section.profile.unavailable_features_warning}">
+        placeholder:unavailable_features_warn
+    </p>
     <div class="intro" style="padding-bottom: 20px;">
         <a class="commentBtn" style="margin: 5px;" th:href="@{/profile}" th:text="#{section.profile.navigation.baseinfo}">placeholder:baseinfo</a>
-        <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/change-password}" th:text="#{section.profile.navigation.pwchange}">placeholder:pwchange</a>
+        <a class="commentBtn" style="margin: 5px;" th:if="${local_user}" th:href="@{/profile/change-password}" th:text="#{section.profile.navigation.pwchange}">placeholder:pwchange</a>
         <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/my-comments}" th:text="#{section.profile.navigation.comments}">placeholder:mycomments</a>
-        <a class="commentBtn" style="margin: 5px;" th:href="@{/profile/delete-account}" th:text="#{section.profile.navigation.delete}">placeholder:deleteaccount</a>
+        <a class="commentBtn" style="margin: 5px;" th:if="${local_user}" th:href="@{/profile/delete-account}" th:text="#{section.profile.navigation.delete}">placeholder:deleteaccount</a>
         <form th:action="@{__${pageConfig.logoutEndpoint}__}" th:method="post" action="#" id="logoutFormOnProfile" style="display: inline-block; margin: 5px;">
             <a class="commentBtn" href="javascript:void(0)" onclick="$('#logoutFormOnProfile').submit()" type="submit" th:text="#{menu.logout}">placeholder:signout</a>
         </form>
