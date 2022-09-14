@@ -6,7 +6,7 @@
 
     <artifactId>leaflet-content-front-application</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.0-dev</version>
+    <version>2.1.0-dev</version>
 
     <modules>
         <module>web</module>
