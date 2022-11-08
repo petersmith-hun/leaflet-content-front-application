@@ -23,5 +23,6 @@ public enum ContentRequestAdapterIdentifier {
     PROFILE_UPDATE,
     SITEMAP,
     STATIC_PAGE,
-    TAG_FILTER
+    TAG_FILTER,
+    SYSTEM_STARTUP_NOTIFICATION
 }

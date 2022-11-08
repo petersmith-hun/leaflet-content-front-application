@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   jira: circleci/jira@1.1.2
+  jq: circleci/jq@2.2.0
 
 # Common parameters for CircleCI build config
 parameters:
@@ -101,14 +102,33 @@ jobs:
       - run:
           command: echo 'export PROJECT_VERSION="$(cat << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>)"' >> $BASH_ENV
           name: Set project version
+      - jq/install
       - run:
           command: |
             set +e
 
+            oauth_token_response=${LEAFLET_CI_DOMINO_AUTH_TOKEN}
+            if ! [[ $oauth_token_response ]]
+            then
+                oauth_token_response=$(curl \
+                    --silent \
+                    --request POST "${LEAFLET_CI_DOMINO_OAUTH_TOKEN_ENDPOINT}" \
+                    --header "Authorization: Basic ${LEAFLET_CI_DOMINO_OAUTH_CLIENT_AUTH}" \
+                    --form "client_id=${LEAFLET_CI_DOMINO_OAUTH_CLIENT_ID}" \
+                    --form "scope=${LEAFLET_CI_DOMINO_OAUTH_SCOPE}" \
+                    --form "audience=${LEAFLET_CI_DOMINO_OAUTH_AUDIENCE}" \
+                    --form "grant_type=${LEAFLET_CI_DOMINO_OAUTH_GRANT_TYPE}" | jq -r '.access_token')
+            
+                if [[ $oauth_token_response == "null" ]]
+                then
+                  echo "Authorization failed" && exit 1
+                fi
+            fi
+
             domino_deploy_response=$(curl \
                  --silent --write-out "%{http_code}" --output /dev/null \
                  --request PUT \
-                 --header "Authorization: Bearer ${LEAFLET_CI_DOMINO_AUTH_TOKEN}" \
+                 --header "Authorization: Bearer $oauth_token_response" \
                  "${LEAFLET_CI_DOMINO_HOST}/lifecycle/<< pipeline.parameters.app_name >>/deploy/${PROJECT_VERSION}")
 
             case $domino_deploy_response in
@@ -119,7 +139,7 @@ jobs:
             domino_start_response=$(curl \
                  --silent --write-out "%{http_code}" --output /dev/null \
                  --request PUT \
-                 --header "Authorization: Bearer ${LEAFLET_CI_DOMINO_AUTH_TOKEN}" \
+                 --header "Authorization: Bearer $oauth_token_response" \
                  "${LEAFLET_CI_DOMINO_HOST}/lifecycle/<< pipeline.parameters.app_name >>/start")
 
             case $domino_start_response in
