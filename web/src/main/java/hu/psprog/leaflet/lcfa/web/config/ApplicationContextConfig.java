@@ -22,7 +22,11 @@ public class ApplicationContextConfig {
 
     @Bean
     public AsyncTaskExecutor contentAdapterAsyncTaskExecutor() {
-        return new SimpleAsyncTaskExecutor();
+
+        SimpleAsyncTaskExecutor simpleAsyncTaskExecutor = new SimpleAsyncTaskExecutor();
+        simpleAsyncTaskExecutor.setTaskDecorator(new RequestContextAwareTaskDecorator());
+
+        return simpleAsyncTaskExecutor;
     }
 
     @Bean
