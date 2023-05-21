@@ -23,8 +23,8 @@ import java.util.Optional;
 @Component
 public class FilteringDataConversionSupport {
 
-    private CommentSummaryListTransformer commentSummaryListTransformer;
-    private CategorySummaryListConverter categorySummaryListConverter;
+    private final CommentSummaryListTransformer commentSummaryListTransformer;
+    private final CategorySummaryListConverter categorySummaryListConverter;
 
     @Autowired
     public FilteringDataConversionSupport(CommentSummaryListTransformer commentSummaryListTransformer, CategorySummaryListConverter categorySummaryListConverter) {
@@ -40,9 +40,10 @@ public class FilteringDataConversionSupport {
      * @return mapped {@link List} of {@link CategorySummary} objects or empty list
      */
     public List<CategorySummary> mapCategories(CategoryListDataModel categoryListDataModel) {
+
         return Optional.ofNullable(categoryListDataModel)
                 .map(categorySummaryListConverter::convert)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 
     /**
@@ -54,11 +55,12 @@ public class FilteringDataConversionSupport {
      * @return mapped {@link List} of {@link CommentSummary} objects or empty list
      */
     public List<CommentSummary> mapComments(WrapperBodyDataModel<CommentListDataModel> wrappedCommentListDataModel, ExtendedEntryDataModel entryDataModel) {
+
         return Optional.ofNullable(wrappedCommentListDataModel)
-                .map(WrapperBodyDataModel::getBody)
-                .map(CommentListDataModel::getComments)
+                .map(WrapperBodyDataModel::body)
+                .map(CommentListDataModel::comments)
                 .map(commentList -> commentSummaryListTransformer.convert(commentList, entryDataModel))
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 
     /**
@@ -71,9 +73,10 @@ public class FilteringDataConversionSupport {
      * @return mapped {@link List} of {@code T} objects or empty list
      */
     public <S extends BaseBodyDataModel, T> List<T> mapOptionalWrapped(WrapperBodyDataModel<S> wrappedBodyDataModel, Converter<S, List<T>> converter) {
+
         return Optional.ofNullable(wrappedBodyDataModel)
-                .map(WrapperBodyDataModel::getBody)
+                .map(WrapperBodyDataModel::body)
                 .map(converter::convert)
-                .orElse(Collections.emptyList());
+                .orElseGet(Collections::emptyList);
     }
 }

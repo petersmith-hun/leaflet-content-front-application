@@ -7,9 +7,12 @@ import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.api.rest.response.tag.TagListDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
+import hu.psprog.leaflet.bridge.service.CategoryBridgeService;
+import hu.psprog.leaflet.bridge.service.TagBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.util.Map;
 
@@ -20,6 +23,12 @@ import java.util.Map;
  * @author Peter Smith
  */
 abstract class AbstractFilteredEntryPageContentRequestAdapter<P> extends AbstractFilteringSupportParallelContentRequestAdapter<HomePageRawResponseWrapper, P> {
+
+    public AbstractFilteredEntryPageContentRequestAdapter(AsyncTaskExecutor contentAdapterExecutor,
+                                                          CategoryBridgeService categoryBridgeService,
+                                                          TagBridgeService tagBridgeService) {
+        super(contentAdapterExecutor, categoryBridgeService, tagBridgeService);
+    }
 
     @Override
     HomePageRawResponseWrapper combinator(Map<CallType, BaseBodyDataModel> result) {

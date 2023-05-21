@@ -229,8 +229,8 @@ public class AccountControllerTest extends AbstractControllerTest {
 
         // then
         verifyViewCreated(VIEW_COMMENTS);
-        verifyFieldSet(ModelField.COMMENTS, USER_COMMENTS_PAGE_CONTENT.getComments());
-        verifyFieldSet(ModelField.PAGINATION, USER_COMMENTS_PAGE_CONTENT.getPaginationAttributes());
+        verifyFieldSet(ModelField.COMMENTS, USER_COMMENTS_PAGE_CONTENT.comments());
+        verifyFieldSet(ModelField.PAGINATION, USER_COMMENTS_PAGE_CONTENT.paginationAttributes());
         verifyFieldSet(ModelField.LINK_TEMPLATE, "/profile/my-comments/{page}");
         verifyFieldSet(ModelField.NAVIGATION, NAVIGATION_ITEM_LIST);
     }

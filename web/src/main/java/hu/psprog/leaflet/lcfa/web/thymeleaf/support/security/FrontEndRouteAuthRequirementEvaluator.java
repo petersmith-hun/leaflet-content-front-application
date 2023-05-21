@@ -19,7 +19,7 @@ public class FrontEndRouteAuthRequirementEvaluator {
     /**
      * Decides whether the given {@link MenuItem} object can be displayed on the UI.
      * A front-end route can be shown in either of the cases below:
-     *  - menu item does not specify any special authentication requirement (item will be always displayed)
+     *  - menu item does not specify any special authentication requirement (item will always be displayed)
      *  - menu item requires authenticated state and security context contains {@link OAuth2AuthenticationToken} in authenticated status
      *  - menu item requires anonymous state and security context contains {@link AnonymousAuthenticationToken}
      * Any different combinations than the ones above will cause the item to remain hidden.
@@ -34,17 +34,17 @@ public class FrontEndRouteAuthRequirementEvaluator {
     }
 
     private boolean isAuthenticationIndependent(MenuItem menuItem) {
-        return menuItem.getAuthRequirement() == FrontEndRouteAuthRequirement.SHOW_ALWAYS;
+        return menuItem.authRequirement() == FrontEndRouteAuthRequirement.SHOW_ALWAYS;
     }
 
     private boolean isAuthenticated(MenuItem menuItem) {
-        return menuItem.getAuthRequirement() == FrontEndRouteAuthRequirement.AUTHENTICATED
+        return menuItem.authRequirement() == FrontEndRouteAuthRequirement.AUTHENTICATED
                 && getAuthentication() instanceof OAuth2AuthenticationToken
                 && getAuthentication().isAuthenticated();
     }
 
     private boolean isAnonymous(MenuItem menuItem) {
-        return menuItem.getAuthRequirement() == FrontEndRouteAuthRequirement.ANONYMOUS
+        return menuItem.authRequirement() == FrontEndRouteAuthRequirement.ANONYMOUS
                 && getAuthentication() instanceof AnonymousAuthenticationToken;
     }
 

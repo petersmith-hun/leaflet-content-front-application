@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class EntrySummaryListConverter implements Converter<EntryListDataModel, List<EntrySummary>> {
 
-    private DateFormatterUtility dateFormatterUtility;
+    private final DateFormatterUtility dateFormatterUtility;
 
     @Autowired
     public EntrySummaryListConverter(DateFormatterUtility dateFormatterUtility) {
@@ -31,27 +31,27 @@ public class EntrySummaryListConverter implements Converter<EntryListDataModel, 
 
     @Override
     public List<EntrySummary> convert(EntryListDataModel source) {
-        return source.getEntries().stream()
+        return source.entries().stream()
                 .map(this::createEntrySummary)
                 .collect(Collectors.toList());
     }
 
     private EntrySummary createEntrySummary(EntryDataModel entryDataModel) {
         return EntrySummary.builder()
-                .link(entryDataModel.getLink())
-                .title(entryDataModel.getTitle())
+                .link(entryDataModel.link())
+                .title(entryDataModel.title())
                 .author(createAuthorSummary(entryDataModel))
                 .creationDate(dateFormatterUtility.formatGeneral(extractCreationDate(entryDataModel)))
-                .prologue(entryDataModel.getPrologue())
+                .prologue(entryDataModel.prologue())
                 .build();
     }
 
     private AuthorSummary createAuthorSummary(EntryDataModel entryDataModel) {
-        return new AuthorSummary(entryDataModel.getUser().getUsername());
+        return new AuthorSummary(entryDataModel.user().username());
     }
 
     private ZonedDateTime extractCreationDate(EntryDataModel entryDataModel) {
-        return Optional.ofNullable(entryDataModel.getPublished())
-                .orElse(entryDataModel.getCreated());
+        return Optional.ofNullable(entryDataModel.published())
+                .orElse(entryDataModel.created());
     }
 }

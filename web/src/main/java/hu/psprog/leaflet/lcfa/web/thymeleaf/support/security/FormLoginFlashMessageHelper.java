@@ -3,7 +3,7 @@ package hu.psprog.leaflet.lcfa.web.thymeleaf.support.security;
 import hu.psprog.leaflet.lcfa.web.model.FlashMessageKey;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

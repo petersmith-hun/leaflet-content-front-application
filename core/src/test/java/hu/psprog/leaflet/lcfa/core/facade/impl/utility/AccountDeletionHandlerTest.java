@@ -37,7 +37,7 @@ public class AccountDeletionHandlerTest {
 
     private static final long USER_ID = 1L;
     private static final String EMAIL = "email";
-    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getExtendedBuilder()
+    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getBuilder()
             .withId(USER_ID)
             .withEmail(EMAIL)
             .build();

@@ -27,7 +27,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class UserCommentsPageContentConverterTest {
 
-    private static final WrapperBodyDataModel<ExtendedCommentListDataModel> WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<ExtendedCommentListDataModel> WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.<ExtendedCommentListDataModel>getBuilder()
             .withBody(ExtendedCommentListDataModel.getBuilder().build())
             .build();
     private static final List<CommentSummary> COMMENT_SUMMARY_LIST = Collections.singletonList(CommentSummary.builder().id(2L).build());
@@ -50,7 +50,7 @@ public class UserCommentsPageContentConverterTest {
     public void shouldConvert() {
 
         // given
-        given(commentSummaryListTransformer.convert(WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL.getBody())).willReturn(COMMENT_SUMMARY_LIST);
+        given(commentSummaryListTransformer.convert(WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL.body())).willReturn(COMMENT_SUMMARY_LIST);
         given(wrappedDataExtractor.extractPaginationAttributes(WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL)).willReturn(PAGINATION_ATTRIBUTES);
 
         // when

@@ -18,7 +18,7 @@ public class ResourcePathResolver {
     private static final String RESOURCE_PATTERN = RESOURCE_SERVER_URL_PART + "/" + RESOURCE_ID_PART;
     private static final String PREFIX_SLASH = "/";
 
-    private String resourceServerUrl;
+    private final String resourceServerUrl;
 
     public ResourcePathResolver(PageConfigModel pageConfigModel) {
         this.resourceServerUrl = pageConfigModel.getResourceServerUrl();

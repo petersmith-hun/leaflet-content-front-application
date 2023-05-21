@@ -28,9 +28,9 @@ public class StaticPageContentFacadeImpl implements StaticPageContentFacade {
     private static final String FAILED_TO_RETRIEVE_STATIC_PAGE = "Failed to retrieve static page for link [%s]";
     private static final String MAPPING_NOT_FOUND = "Mapping not found for static page type of [%s]";
 
-    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
-    private ConversionService conversionService;
-    private Map<StaticPageType, String> staticPageMapping;
+    private final ContentRequestAdapterRegistry contentRequestAdapterRegistry;
+    private final ConversionService conversionService;
+    private final Map<StaticPageType, String> staticPageMapping;
 
     @Autowired
     public StaticPageContentFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry,

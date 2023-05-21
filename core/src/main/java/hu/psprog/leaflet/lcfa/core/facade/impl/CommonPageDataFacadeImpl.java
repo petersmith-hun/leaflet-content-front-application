@@ -36,10 +36,10 @@ public class CommonPageDataFacadeImpl implements CommonPageDataFacade {
     private static final int PAGE_NUMBER = 1;
     private static final Sitemap EMPTY_SITEMAP = Sitemap.getBuilder().build();
 
-    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
-    private CommonPageDataCache commonPageDataCache;
-    private CommonPageDataConverter commonPageDataConverter;
-    private DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
+    private final ContentRequestAdapterRegistry contentRequestAdapterRegistry;
+    private final CommonPageDataCache commonPageDataCache;
+    private final CommonPageDataConverter commonPageDataConverter;
+    private final DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
 
     private final PaginatedContentRequest latestEntries;
 

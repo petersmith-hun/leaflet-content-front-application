@@ -2,9 +2,6 @@ package hu.psprog.leaflet.lcfa.core.domain.content;
 
 import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -13,15 +10,11 @@ import java.util.List;
  *
  * @author Peter Smith
  */
-@Getter
-@EqualsAndHashCode
-@ToString
 @Builder
-public class ArticleContent {
-
-    private Article article;
-    private List<CategorySummary> categories;
-    private List<TagSummary> tags;
-    private SEOAttributes seo;
-    private List<CommentSummary> comments;
-}
+public record ArticleContent(
+        Article article,
+        List<CategorySummary> categories,
+        List<TagSummary> tags,
+        SEOAttributes seo,
+        List<CommentSummary> comments
+) { }

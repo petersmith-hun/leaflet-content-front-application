@@ -25,9 +25,9 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class CategorySummaryListConverterTest {
 
-    private static final CategoryDataModel CATEGORY_DATA_MODEL = CategoryDataModel.getBuilder().withID(1L).build();
+    private static final CategoryDataModel CATEGORY_DATA_MODEL = CategoryDataModel.getBuilder().withId(1L).build();
     private static final CategorySummary CATEGORY_SUMMARY = CategorySummary.builder().id(1L).build();
-    private static final CategoryListDataModel SOURCE_OBJECT = CategoryListDataModel.getBuilder().withItem(CATEGORY_DATA_MODEL).build();
+    private static final CategoryListDataModel SOURCE_OBJECT = CategoryListDataModel.getBuilder().withCategories(List.of(CATEGORY_DATA_MODEL)).build();
     private static final List<CategorySummary> EXPECTED_CONVERTED_OBJECT = Collections.singletonList(CATEGORY_SUMMARY);
 
     @Mock

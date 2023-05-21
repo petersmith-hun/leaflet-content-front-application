@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class CategorySummaryListConverter implements Converter<CategoryListDataModel, List<CategorySummary>> {
 
-    private CategorySummaryConverter categorySummaryConverter;
+    private final CategorySummaryConverter categorySummaryConverter;
 
     @Autowired
     public CategorySummaryListConverter(CategorySummaryConverter categorySummaryConverter) {
@@ -26,7 +26,7 @@ public class CategorySummaryListConverter implements Converter<CategoryListDataM
 
     @Override
     public List<CategorySummary> convert(CategoryListDataModel source) {
-        return source.getCategories().stream()
+        return source.categories().stream()
                 .map(categorySummaryConverter::convert)
                 .collect(Collectors.toList());
     }

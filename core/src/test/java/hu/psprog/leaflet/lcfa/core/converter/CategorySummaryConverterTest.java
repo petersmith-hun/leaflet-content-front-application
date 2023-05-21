@@ -24,7 +24,7 @@ public class CategorySummaryConverterTest {
     private static final long ID = 1L;
     private static final String TITLE = "title";
     private static final CategoryDataModel SOURCE_OBJECT = CategoryDataModel.getBuilder()
-            .withID(ID)
+            .withId(ID)
             .withTitle(TITLE)
             .build();
     private static final String ALIAS = "alias";

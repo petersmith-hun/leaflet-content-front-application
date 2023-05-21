@@ -5,22 +5,15 @@ import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.api.rest.response.tag.TagListDataModel;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 /**
  * Wrapper domain class for holding raw responses used by home page rendering.
  *
  * @author Peter Smith
  */
-@Getter
-@EqualsAndHashCode
-@ToString
 @Builder
-public class HomePageRawResponseWrapper {
-
-    private CategoryListDataModel categoryListDataModel;
-    private WrapperBodyDataModel<EntryListDataModel> wrappedEntryListDataModel;
-    private WrapperBodyDataModel<TagListDataModel> wrappedTagListDataModel;
-}
+public record HomePageRawResponseWrapper(
+        CategoryListDataModel categoryListDataModel,
+        WrapperBodyDataModel<EntryListDataModel> wrappedEntryListDataModel,
+        WrapperBodyDataModel<TagListDataModel> wrappedTagListDataModel
+) { }

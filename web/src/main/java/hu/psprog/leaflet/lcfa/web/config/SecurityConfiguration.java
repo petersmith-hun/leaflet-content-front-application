@@ -1,7 +1,6 @@
 package hu.psprog.leaflet.lcfa.web.config;
 
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
-import hu.psprog.leaflet.rcp.hystrix.support.filter.HystrixContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-
-import java.util.Optional;
 
 /**
  * Spring Security configuration.
@@ -31,14 +27,11 @@ public class SecurityConfiguration {
 
     private final WebAppResources webAppResources;
     private final String logoutEndpoint;
-    private final Optional<HystrixContextFilter> optionalHystrixContextFilter;
 
     @Autowired
-    public SecurityConfiguration(WebAppResources webAppResources, PageConfigModel pageConfigModel,
-                                 @Autowired(required = false) Optional<HystrixContextFilter> optionalHystrixContextFilter) {
+    public SecurityConfiguration(WebAppResources webAppResources, PageConfigModel pageConfigModel) {
         this.webAppResources = webAppResources;
         this.logoutEndpoint = pageConfigModel.getLogoutEndpoint();
-        this.optionalHystrixContextFilter = optionalHystrixContextFilter;
     }
 
     @Bean
@@ -46,32 +39,27 @@ public class SecurityConfiguration {
 
         return web -> webAppResources.getResources().stream()
                 .map(WebAppResources.WebAppResource::getHandler)
-                .forEach(web.ignoring()::antMatchers);
+                .forEach(web.ignoring()::requestMatchers);
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        optionalHystrixContextFilter
-                .ifPresent(hystrixContextFilter -> http.addFilterBefore(hystrixContextFilter, LogoutFilter.class));
+        return http
+                .authorizeHttpRequests(registry -> registry
+                        .requestMatchers(PATH_PROFILE)
+                            .hasAuthority(PROFILE_READ_AUTHORITY)
+                        .anyRequest()
+                            .permitAll())
 
-        http
-            .authorizeRequests()
-                .antMatchers(PATH_PROFILE)
-                    .hasAuthority(PROFILE_READ_AUTHORITY)
-                .anyRequest()
-                    .permitAll()
-                .and()
+                .logout(logout -> logout
+                        .logoutUrl(logoutEndpoint)
+                        .logoutSuccessUrl(PATH_LOGOUT_REDIRECT))
 
-            .logout()
-                .logoutUrl(logoutEndpoint)
-                .logoutSuccessUrl(PATH_LOGOUT_REDIRECT)
-                .and()
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .defaultSuccessUrl(DEFAULT_SUCCESS_URL)
+                        .failureUrl(PATH_LOGIN_FAILURE))
 
-            .oauth2Login()
-                .defaultSuccessUrl(DEFAULT_SUCCESS_URL)
-                .failureUrl(PATH_LOGIN_FAILURE);
-
-        return http.build();
+                .build();
     }
 }

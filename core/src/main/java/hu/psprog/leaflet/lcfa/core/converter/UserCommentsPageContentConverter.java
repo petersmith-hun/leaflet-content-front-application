@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserCommentsPageContentConverter implements Converter<WrapperBodyDataModel<ExtendedCommentListDataModel>, UserCommentsPageContent> {
 
-    private CommentSummaryListTransformer commentSummaryListTransformer;
-    private WrappedDataExtractor wrappedDataExtractor;
+    private final CommentSummaryListTransformer commentSummaryListTransformer;
+    private final WrappedDataExtractor wrappedDataExtractor;
 
     @Autowired
     public UserCommentsPageContentConverter(CommentSummaryListTransformer commentSummaryListTransformer, WrappedDataExtractor wrappedDataExtractor) {
@@ -28,7 +28,7 @@ public class UserCommentsPageContentConverter implements Converter<WrapperBodyDa
     @Override
     public UserCommentsPageContent convert(WrapperBodyDataModel<ExtendedCommentListDataModel> source) {
         return UserCommentsPageContent.builder()
-                .comments(commentSummaryListTransformer.convert(source.getBody()))
+                .comments(commentSummaryListTransformer.convert(source.body()))
                 .paginationAttributes(wrappedDataExtractor.extractPaginationAttributes(source))
                 .build();
     }

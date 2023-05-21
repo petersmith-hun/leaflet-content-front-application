@@ -15,7 +15,7 @@ public enum AttachmentType {
 
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
 
-    private String mime;
+    private final String mime;
 
     AttachmentType(String mime) {
         this.mime = mime;

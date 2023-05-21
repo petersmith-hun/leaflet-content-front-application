@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 public class UserDataContentRequestAdapterTest {
 
     private static final Long USER_ID = 1L;
-    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getExtendedBuilder().build();
+    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getBuilder().build();
 
     @Mock
     private UserBridgeService userBridgeService;

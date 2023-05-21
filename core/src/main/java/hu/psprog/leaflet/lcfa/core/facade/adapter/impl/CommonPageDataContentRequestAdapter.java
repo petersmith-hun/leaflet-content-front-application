@@ -29,7 +29,7 @@ public class CommonPageDataContentRequestAdapter implements ContentRequestAdapte
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonPageDataContentRequestAdapter.class);
 
-    private EntryBridgeService entryBridgeService;
+    private final EntryBridgeService entryBridgeService;
 
     @Autowired
     public CommonPageDataContentRequestAdapter(EntryBridgeService entryBridgeService) {

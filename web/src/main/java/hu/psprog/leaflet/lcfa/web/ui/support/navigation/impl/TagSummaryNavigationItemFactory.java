@@ -19,7 +19,7 @@ public class TagSummaryNavigationItemFactory implements NavigationItemFactory<Ta
 
     @Override
     public NavigationItem create(TagSummary sourceModel) {
-        return NavigationItem.build(createLink(sourceModel), sourceModel.getName());
+        return NavigationItem.build(createLink(sourceModel), sourceModel.name());
     }
 
     @Override
@@ -29,7 +29,7 @@ public class TagSummaryNavigationItemFactory implements NavigationItemFactory<Ta
 
     private String createLink(TagSummary tagSummary) {
         return BaseController.PATH_FILTER_BY_TAG
-                .replace(TAG_ID, String.valueOf(tagSummary.getId()))
-                .replace(TAG_ALIAS, tagSummary.getAlias());
+                .replace(TAG_ID, String.valueOf(tagSummary.id()))
+                .replace(TAG_ALIAS, tagSummary.alias());
     }
 }

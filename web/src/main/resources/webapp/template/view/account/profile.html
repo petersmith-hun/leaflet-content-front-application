@@ -4,7 +4,7 @@
 <body>
 <div id="entries" class="forms" layout:fragment="content" th:with="local_user = ${#authorization.expr('hasAuthority(''SCOPE_write:users:own'')')}">
 
-    <th:block th:insert="fragment/profile.html :: profile-navigation" />
+    <th:block th:insert="~{fragment/profile.html :: profile-navigation}" />
     <form th:object="${updateProfileRequestModel}" th:action="@{''}" method="post" accept-charset="utf-8">
         <h3 th:text="#{form.profile.baseinfo.title}">placeholder:baseinfo</h3>
         <div class="form-group">

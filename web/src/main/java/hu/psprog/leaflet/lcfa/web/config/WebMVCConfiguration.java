@@ -32,14 +32,14 @@ public class WebMVCConfiguration implements WebMvcConfigurer {
 
     private final WebAppResources webAppResources;
     private final CommonPageDataInterceptor commonPageDataInterceptor;
+    private final Optional<ModelAndViewDebuggerInterceptor> modelAndViewDebuggerInterceptor;
 
     @Autowired
-    private Optional<ModelAndViewDebuggerInterceptor> modelAndViewDebuggerInterceptor;
-
-    @Autowired
-    public WebMVCConfiguration(WebAppResources webAppResources, CommonPageDataInterceptor commonPageDataInterceptor) {
+    public WebMVCConfiguration(WebAppResources webAppResources, CommonPageDataInterceptor commonPageDataInterceptor,
+                               @Autowired(required = false) Optional<ModelAndViewDebuggerInterceptor> modelAndViewDebuggerInterceptor) {
         this.webAppResources = webAppResources;
         this.commonPageDataInterceptor = commonPageDataInterceptor;
+        this.modelAndViewDebuggerInterceptor = modelAndViewDebuggerInterceptor;
     }
 
     @Override

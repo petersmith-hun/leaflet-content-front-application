@@ -36,7 +36,7 @@ public class UserProfileUpdateContentRequestAdapterTest {
     private static final UpdateProfileRequestModel UPDATE_PROFILE_REQUEST_MODEL = new UpdateProfileRequestModel();
     private static final AccountRequestWrapper<UpdateProfileRequestModel> WRAPPED_UPDATE_PROFILE_REQUEST_MODEL =
             new AccountRequestWrapper<>(USER_ID, UPDATE_PROFILE_REQUEST_MODEL);
-    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getExtendedBuilder().build();
+    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getBuilder().build();
 
     @Mock
     private UserBridgeService userBridgeService;

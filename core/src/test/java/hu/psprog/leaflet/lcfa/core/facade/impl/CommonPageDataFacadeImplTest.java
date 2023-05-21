@@ -4,6 +4,7 @@ import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.EntryListDataModel;
 import hu.psprog.leaflet.api.rest.response.sitemap.Sitemap;
+import hu.psprog.leaflet.api.rest.response.sitemap.SitemapLocationItem;
 import hu.psprog.leaflet.lcfa.core.config.CommonPageDataCacheConfigModel;
 import hu.psprog.leaflet.lcfa.core.config.DefaultPaginationAttributes;
 import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
@@ -26,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -61,11 +63,11 @@ public class CommonPageDataFacadeImplTest {
             .entryOrderBy(ORDER_BY)
             .entryOrderDirection(ORDER_DIRECTION)
             .build();
-    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
-            .withBody(EntryListDataModel.getBuilder().withItem(EntryDataModel.getBuilder().withId(3L).build()).build())
+    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.<EntryListDataModel>getBuilder()
+            .withBody(EntryListDataModel.getBuilder().withEntries(List.of(EntryDataModel.getBuilder().withId(3L).build())).build())
             .build();
     private static final Sitemap SITEMAP = Sitemap.getBuilder()
-            .withLocation("/location/test")
+            .withSitemapLocationItemList(List.of(new SitemapLocationItem("/location/test")))
             .build();
     private static final Sitemap EMPTY_SITEMAP = Sitemap.getBuilder().build();
 

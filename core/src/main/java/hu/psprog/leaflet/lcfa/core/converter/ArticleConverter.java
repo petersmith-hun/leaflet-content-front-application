@@ -1,7 +1,6 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
-import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.Article;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
@@ -21,10 +20,10 @@ import java.util.Optional;
 @Component
 public class ArticleConverter implements Converter<WrapperBodyDataModel<ExtendedEntryDataModel>, Article> {
 
-    private AttachmentSummaryListConverter attachmentSummaryListConverter;
-    private TagSummaryListConverter tagSummaryListConverter;
-    private DateFormatterUtility dateFormatterUtility;
-    private CategorySummaryConverter categorySummaryConverter;
+    private final AttachmentSummaryListConverter attachmentSummaryListConverter;
+    private final TagSummaryListConverter tagSummaryListConverter;
+    private final DateFormatterUtility dateFormatterUtility;
+    private final CategorySummaryConverter categorySummaryConverter;
 
     @Autowired
     public ArticleConverter(AttachmentSummaryListConverter attachmentSummaryListConverter, TagSummaryListConverter tagSummaryListConverter,
@@ -38,24 +37,24 @@ public class ArticleConverter implements Converter<WrapperBodyDataModel<Extended
     @Override
     public Article convert(WrapperBodyDataModel<ExtendedEntryDataModel> source) {
         return Article.builder()
-                .id(source.getBody().getId())
-                .author(createAuthorSummary(source.getBody()))
-                .content(source.getBody().getRawContent())
-                .creationDate(dateFormatterUtility.formatGeneral(extractCreationDate(source.getBody())))
-                .link(source.getBody().getLink())
-                .title(source.getBody().getTitle())
-                .tags(tagSummaryListConverter.convert(source.getBody().getTags()))
-                .attachments(attachmentSummaryListConverter.convert(source.getBody().getAttachments()))
-                .category(categorySummaryConverter.convert(source.getBody().getCategory()))
+                .id(source.body().id())
+                .author(createAuthorSummary(source.body()))
+                .content(source.body().rawContent())
+                .creationDate(dateFormatterUtility.formatGeneral(extractCreationDate(source.body())))
+                .link(source.body().link())
+                .title(source.body().title())
+                .tags(tagSummaryListConverter.convert(source.body().tags()))
+                .attachments(attachmentSummaryListConverter.convert(source.body().attachments()))
+                .category(categorySummaryConverter.convert(source.body().category()))
                 .build();
     }
 
-    private AuthorSummary createAuthorSummary(EntryDataModel entryDataModel) {
-        return new AuthorSummary(entryDataModel.getUser().getUsername());
+    private AuthorSummary createAuthorSummary(ExtendedEntryDataModel entryDataModel) {
+        return new AuthorSummary(entryDataModel.user().username());
     }
 
-    private ZonedDateTime extractCreationDate(EntryDataModel entryDataModel) {
-        return Optional.ofNullable(entryDataModel.getPublished())
-                .orElse(entryDataModel.getCreated());
+    private ZonedDateTime extractCreationDate(ExtendedEntryDataModel entryDataModel) {
+        return Optional.ofNullable(entryDataModel.published())
+                .orElse(entryDataModel.created());
     }
 }

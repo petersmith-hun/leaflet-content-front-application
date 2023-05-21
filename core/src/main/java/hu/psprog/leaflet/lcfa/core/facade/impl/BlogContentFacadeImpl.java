@@ -36,9 +36,9 @@ public class BlogContentFacadeImpl implements BlogContentFacade {
     private static final String FAILED_TO_RETRIEVE_PAGE_OF_TAG = "Failed to retrieve page [%d] of tag [%d]";
     private static final String FAILED_TO_RETRIEVE_PAGE_OF_CONTENT_EXPRESSION = "Failed to retrieve page [%d] of content expression [%s]";
 
-    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
-    private ConversionService conversionService;
-    private DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
+    private final ContentRequestAdapterRegistry contentRequestAdapterRegistry;
+    private final ConversionService conversionService;
+    private final DefaultPaginationAttributes<OrderBy.Entry> defaultPaginationAttributes;
 
     @Autowired
     public BlogContentFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, ConversionService conversionService,

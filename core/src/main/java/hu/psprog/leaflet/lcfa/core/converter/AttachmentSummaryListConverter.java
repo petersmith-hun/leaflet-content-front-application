@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class AttachmentSummaryListConverter implements Converter<List<FileDataModel>, List<AttachmentSummary>> {
 
-    private ResourcePathResolver resourcePathResolver;
+    private final ResourcePathResolver resourcePathResolver;
 
     @Autowired
     public AttachmentSummaryListConverter(ResourcePathResolver resourcePathResolver) {
@@ -35,10 +35,10 @@ public class AttachmentSummaryListConverter implements Converter<List<FileDataMo
 
     private AttachmentSummary convert(FileDataModel source) {
         return AttachmentSummary.builder()
-                .name(source.getOriginalFilename())
-                .description(source.getDescription())
-                .link(resourcePathResolver.resolve(source.getReference()))
-                .type(AttachmentType.mapByMime(source.getAcceptedAs()))
+                .name(source.originalFilename())
+                .description(source.description())
+                .link(resourcePathResolver.resolve(source.reference()))
+                .type(AttachmentType.mapByMime(source.acceptedAs()))
                 .build();
     }
 }

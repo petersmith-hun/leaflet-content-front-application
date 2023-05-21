@@ -35,8 +35,10 @@ public class FilteringDataConversionSupportTest {
     private static final CategoryListDataModel CATEGORY_LIST_DATA_MODEL = CategoryListDataModel.getBuilder().build();
     private static final List<CategorySummary> CATEGORY_SUMMARY_LIST = Collections.singletonList(CategorySummary.builder().build());
     private static final CommentListDataModel COMMENT_LIST_DATA_MODEL = CommentListDataModel.getBuilder().withComments(Collections.emptyList()).build();
-    private static final WrapperBodyDataModel<CommentListDataModel> WRAPPED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder().withBody(COMMENT_LIST_DATA_MODEL).build();
-    private static final ExtendedEntryDataModel EXTENDED_ENTRY_DATA_MODEL = ExtendedEntryDataModel.getExtendedBuilder().build();
+    private static final WrapperBodyDataModel<CommentListDataModel> WRAPPED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.<CommentListDataModel>getBuilder()
+            .withBody(COMMENT_LIST_DATA_MODEL)
+            .build();
+    private static final ExtendedEntryDataModel EXTENDED_ENTRY_DATA_MODEL = ExtendedEntryDataModel.getBuilder().build();
     private static final List<CommentSummary> COMMENT_SUMMARY_LIST = Collections.singletonList(CommentSummary.builder().build());
     private static final List<String> EXPECTED_RESULT_FOR_OPTIONAL_WRAPPED = Collections.singletonList("test");
     private static final Converter<CommentListDataModel, List<String>> TEST_CONVERTER = commentListDataModel -> EXPECTED_RESULT_FOR_OPTIONAL_WRAPPED;
@@ -82,7 +84,7 @@ public class FilteringDataConversionSupportTest {
     public void shouldMapCommentsWithPopulatedInput() {
 
         // given
-        given(commentSummaryListTransformer.convert(COMMENT_LIST_DATA_MODEL.getComments(), EXTENDED_ENTRY_DATA_MODEL)).willReturn(COMMENT_SUMMARY_LIST);
+        given(commentSummaryListTransformer.convert(COMMENT_LIST_DATA_MODEL.comments(), EXTENDED_ENTRY_DATA_MODEL)).willReturn(COMMENT_SUMMARY_LIST);
 
         // when
         List<CommentSummary> result = filteringDataConversionSupport.mapComments(WRAPPED_COMMENT_LIST_DATA_MODEL, EXTENDED_ENTRY_DATA_MODEL);
@@ -91,7 +93,7 @@ public class FilteringDataConversionSupportTest {
         assertThat(result, notNullValue());
         assertThat(result, hasSize(1));
         assertThat(result, equalTo(COMMENT_SUMMARY_LIST));
-        verify(commentSummaryListTransformer).convert(COMMENT_LIST_DATA_MODEL.getComments(), EXTENDED_ENTRY_DATA_MODEL);
+        verify(commentSummaryListTransformer).convert(COMMENT_LIST_DATA_MODEL.comments(), EXTENDED_ENTRY_DATA_MODEL);
     }
 
     @Test

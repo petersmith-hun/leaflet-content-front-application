@@ -8,14 +8,18 @@ import hu.psprog.leaflet.api.rest.response.entry.ExtendedEntryDataModel;
 import hu.psprog.leaflet.api.rest.response.tag.TagListDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
+import hu.psprog.leaflet.bridge.service.CategoryBridgeService;
 import hu.psprog.leaflet.bridge.service.CommentBridgeService;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
+import hu.psprog.leaflet.bridge.service.TagBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.raw.ArticlePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -39,11 +43,16 @@ public class ArticleContentRequestAdapter extends AbstractFilteringSupportParall
     private static final OrderBy.Comment COMMENT_ORDER_BY = OrderBy.Comment.CREATED;
     private static final OrderDirection COMMENT_ORDER_DIRECTION = OrderDirection.DESC;
 
-    private EntryBridgeService entryBridgeService;
-    private CommentBridgeService commentBridgeService;
+    private final EntryBridgeService entryBridgeService;
+    private final CommentBridgeService commentBridgeService;
 
     @Autowired
-    public ArticleContentRequestAdapter(EntryBridgeService entryBridgeService, CommentBridgeService commentBridgeService) {
+    public ArticleContentRequestAdapter(@Qualifier("contentAdapterAsyncTaskExecutor") AsyncTaskExecutor contentAdapterExecutor,
+                                        CategoryBridgeService categoryBridgeService,
+                                        TagBridgeService tagBridgeService,
+                                        EntryBridgeService entryBridgeService,
+                                        CommentBridgeService commentBridgeService) {
+        super(contentAdapterExecutor, categoryBridgeService, tagBridgeService);
         this.entryBridgeService = entryBridgeService;
         this.commentBridgeService = commentBridgeService;
     }

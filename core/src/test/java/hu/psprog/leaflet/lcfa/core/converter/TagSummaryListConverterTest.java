@@ -29,10 +29,10 @@ public class TagSummaryListConverterTest {
     private static final String TAG_NAME = "tag name";
     private static final String TAG_ALIAS = "tag-alias";
     private static final TagListDataModel TAG_LIST_DATA_MODEL = TagListDataModel.getBuilder()
-            .withItem(TagDataModel.getBuilder()
+            .withTags(List.of(TagDataModel.getBuilder()
                     .withId(TAG_ID)
                     .withName(TAG_NAME)
-                    .build())
+                    .build()))
             .build();
     private static final TagSummary TAG_SUMMARY = TagSummary.builder()
             .id(TAG_ID)
@@ -67,7 +67,7 @@ public class TagSummaryListConverterTest {
         given(linkAliasGenerator.generateAlias(TAG_NAME)).willReturn(TAG_ALIAS);
 
         // when
-        List<TagSummary> result = tagSummaryListConverter.convert(TAG_LIST_DATA_MODEL.getTags());
+        List<TagSummary> result = tagSummaryListConverter.convert(TAG_LIST_DATA_MODEL.tags());
 
         // then
         assertThat(result, notNullValue());

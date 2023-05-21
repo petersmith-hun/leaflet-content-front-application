@@ -39,14 +39,20 @@ public class ArticleContentConverterTest {
 
     private static final ArticlePageRawResponseWrapper SOURCE_OBJECT = ArticlePageRawResponseWrapper.builder()
             .wrappedExtendedEntryDataModel(WrapperBodyDataModel.<ExtendedEntryDataModel>getBuilder()
-                    .withBody(ExtendedEntryDataModel.getExtendedBuilder().withId(1L).build())
+                    .withBody(ExtendedEntryDataModel.getBuilder().withId(1L).build())
                     .build())
-            .categoryListDataModel(CategoryListDataModel.getBuilder().withItem(CategoryDataModel.getBuilder().withID(4L).build()).build())
+            .categoryListDataModel(CategoryListDataModel.getBuilder()
+                    .withCategories(List.of(CategoryDataModel.getBuilder().withId(4L).build()))
+                    .build())
             .wrappedTagListDataModel(WrapperBodyDataModel.<TagListDataModel>getBuilder()
-                    .withBody(TagListDataModel.getBuilder().withItem(TagDataModel.getBuilder().withId(2L).build()).build())
+                    .withBody(TagListDataModel.getBuilder()
+                            .withTags(List.of(TagDataModel.getBuilder().withId(2L).build()))
+                            .build())
                     .build())
             .wrappedCommentListDataModel(WrapperBodyDataModel.<CommentListDataModel>getBuilder()
-                    .withBody(CommentListDataModel.getBuilder().withItem(CommentDataModel.getBuilder().withId(3L).build()).build())
+                    .withBody(CommentListDataModel.getBuilder()
+                            .withComments(List.of(CommentDataModel.getBuilder().withId(3L).build()))
+                            .build())
                     .build())
             .build();
     private static final Article ARTICLE = Article.builder().id(1L).build();
@@ -81,11 +87,11 @@ public class ArticleContentConverterTest {
     public void shouldConvert() {
 
         // given
-        given(articleConverter.convert(SOURCE_OBJECT.getWrappedExtendedEntryDataModel())).willReturn(ARTICLE);
-        given(filteringDataConversionSupport.mapCategories(SOURCE_OBJECT.getCategoryListDataModel())).willReturn(CATEGORY_SUMMARY_LIST);
-        given(filteringDataConversionSupport.mapOptionalWrapped(SOURCE_OBJECT.getWrappedTagListDataModel(), tagSummaryListConverter)).willReturn(TAG_SUMMARY_LIST);
-        given(wrappedDataExtractor.extractSEOAttributes(SOURCE_OBJECT.getWrappedExtendedEntryDataModel())).willReturn(SEO_ATTRIBUTES);
-        given(filteringDataConversionSupport.mapComments(SOURCE_OBJECT.getWrappedCommentListDataModel(), SOURCE_OBJECT.getWrappedExtendedEntryDataModel().getBody())).willReturn(COMMENT_SUMMARY_LIST);
+        given(articleConverter.convert(SOURCE_OBJECT.wrappedExtendedEntryDataModel())).willReturn(ARTICLE);
+        given(filteringDataConversionSupport.mapCategories(SOURCE_OBJECT.categoryListDataModel())).willReturn(CATEGORY_SUMMARY_LIST);
+        given(filteringDataConversionSupport.mapOptionalWrapped(SOURCE_OBJECT.wrappedTagListDataModel(), tagSummaryListConverter)).willReturn(TAG_SUMMARY_LIST);
+        given(wrappedDataExtractor.extractSEOAttributes(SOURCE_OBJECT.wrappedExtendedEntryDataModel())).willReturn(SEO_ATTRIBUTES);
+        given(filteringDataConversionSupport.mapComments(SOURCE_OBJECT.wrappedCommentListDataModel(), SOURCE_OBJECT.wrappedExtendedEntryDataModel().body())).willReturn(COMMENT_SUMMARY_LIST);
 
         // when
         ArticleContent result = converter.convert(SOURCE_OBJECT);

@@ -37,12 +37,12 @@ public class WrappedDataExtractor {
      * @return extracted {@link PaginationAttributes} or instantiated empty object if not present
      */
     public PaginationAttributes extractPaginationAttributes(WrapperBodyDataModel<?> wrapperBodyDataModel) {
-        return Optional.ofNullable(wrapperBodyDataModel.getPagination())
+        return Optional.ofNullable(wrapperBodyDataModel.pagination())
                 .map(pagination -> PaginationAttributes.builder()
-                        .hasNext(pagination.isHasNext())
-                        .hasPrevious(pagination.isHasPrevious())
-                        .pageCount(pagination.getPageCount())
-                        .pageNumber(pagination.getPageNumber())
+                        .hasNext(pagination.hasNext())
+                        .hasPrevious(pagination.hasPrevious())
+                        .pageCount(pagination.pageCount())
+                        .pageNumber(pagination.pageNumber())
                         .build())
                 .orElse(DEFAULT_PAGINATION_ATTRIBUTES);
     }
@@ -54,12 +54,12 @@ public class WrappedDataExtractor {
      * @return extracted {@link SEOAttributes} or instantiated empty object if not present
      */
     public SEOAttributes extractSEOAttributes(WrapperBodyDataModel<?> wrapperBodyDataModel) {
-        return Optional.ofNullable(wrapperBodyDataModel.getSeo())
+        return Optional.ofNullable(wrapperBodyDataModel.seo())
                 .map(seo -> SEOAttributes.builder()
-                        .pageTitle(seo.getPageTitle())
-                        .metaTitle(seo.getMetaTitle())
-                        .metaDescription(seo.getMetaDescription())
-                        .metaKeywords(seo.getMetaKeywords())
+                        .pageTitle(seo.pageTitle())
+                        .metaTitle(seo.metaTitle())
+                        .metaDescription(seo.metaDescription())
+                        .metaKeywords(seo.metaKeywords())
                         .build())
                 .orElse(DEFAULT_SEO_ATTRIBUTES);
     }
@@ -71,7 +71,7 @@ public class WrappedDataExtractor {
      * @return extracted {@link List} of {@link MenuItem} objects or {@code null} if not present
      */
     public List<MenuItem> extractHeaderMenu(WrapperBodyDataModel<?> wrapperBodyDataModel) {
-        return extractMenu(wrapperBodyDataModel.getMenu().getHeader());
+        return extractMenu(wrapperBodyDataModel.menu().header());
     }
 
     /**
@@ -81,7 +81,7 @@ public class WrappedDataExtractor {
      * @return extracted {@link List} of {@link MenuItem} objects or {@code null} if not present
      */
     public List<MenuItem> extractFooterMenu(WrapperBodyDataModel<?> wrapperBodyDataModel) {
-        return extractMenu(wrapperBodyDataModel.getMenu().getFooter());
+        return extractMenu(wrapperBodyDataModel.menu().footer());
     }
 
     /**
@@ -91,7 +91,7 @@ public class WrappedDataExtractor {
      * @return extracted {@link List} of {@link MenuItem} objects or {@code null} if not present
      */
     public List<MenuItem> extractStandaloneMenuItems(WrapperBodyDataModel<?> wrapperBodyDataModel) {
-        return extractMenu(wrapperBodyDataModel.getMenu().getStandalone());
+        return extractMenu(wrapperBodyDataModel.menu().standalone());
     }
 
     private List<MenuItem> extractMenu(List<FrontEndRouteDataModel> menuItemList) {
@@ -104,10 +104,10 @@ public class WrappedDataExtractor {
 
     private Function<FrontEndRouteDataModel, MenuItem> mapMenuItem() {
         return frontEndRouteDataModel -> MenuItem.builder()
-                .name(frontEndRouteDataModel.getName())
-                .routeId(frontEndRouteDataModel.getRouteId())
-                .url(frontEndRouteDataModel.getUrl())
-                .authRequirement(FrontEndRouteAuthRequirement.valueOf(frontEndRouteDataModel.getAuthRequirement()))
+                .name(frontEndRouteDataModel.name())
+                .routeId(frontEndRouteDataModel.routeId())
+                .url(frontEndRouteDataModel.url())
+                .authRequirement(FrontEndRouteAuthRequirement.valueOf(frontEndRouteDataModel.authRequirement()))
                 .build();
     }
 }

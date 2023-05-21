@@ -80,7 +80,7 @@ public class CommentSummaryListTransformerTest {
                     .withId(USER_ID_1)
                     .build())
             .build();
-    private static final ExtendedCommentDataModel EXTENDED_COMMENT_DATA_MODEL = ExtendedCommentDataModel.getExtendedBuilder()
+    private static final ExtendedCommentDataModel EXTENDED_COMMENT_DATA_MODEL = ExtendedCommentDataModel.getBuilder()
             .withId(COMMENT_ID_5)
             .withOwner(UserDataModel.getBuilder()
                     .withId(USER_ID_1)
@@ -142,8 +142,7 @@ public class CommentSummaryListTransformerTest {
         // given
         given(dateFormatterUtility.formatComments(CREATED)).willReturn(FORMATTED_CREATED_DATE);
         CommentListDataModel commentListDataModel = CommentListDataModel.getBuilder()
-                .withItem(COMMENT_DATA_MODEL_USER_1)
-                .withItem(COMMENT_DATA_MODEL_USER_2)
+                .withComments(List.of(COMMENT_DATA_MODEL_USER_1, COMMENT_DATA_MODEL_USER_2))
                 .build();
 
         // when
@@ -161,7 +160,7 @@ public class CommentSummaryListTransformerTest {
         // given
         given(dateFormatterUtility.formatComments(CREATED)).willReturn(FORMATTED_CREATED_DATE);
         ExtendedCommentListDataModel commentListDataModel = ExtendedCommentListDataModel.getBuilder()
-                .withItem(EXTENDED_COMMENT_DATA_MODEL)
+                .withComments(List.of(EXTENDED_COMMENT_DATA_MODEL))
                 .build();
 
         // when

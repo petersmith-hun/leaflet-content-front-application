@@ -3,12 +3,16 @@ package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 import hu.psprog.leaflet.api.rest.response.common.BaseBodyDataModel;
 import hu.psprog.leaflet.bridge.client.domain.OrderBy;
 import hu.psprog.leaflet.bridge.client.domain.OrderDirection;
+import hu.psprog.leaflet.bridge.service.CategoryBridgeService;
 import hu.psprog.leaflet.bridge.service.EntryBridgeService;
+import hu.psprog.leaflet.bridge.service.TagBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.PaginatedContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.raw.HomePageRawResponseWrapper;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -24,10 +28,14 @@ import java.util.concurrent.Callable;
 @Component
 public class HomePageContentRequestAdapter extends AbstractFilteredEntryPageContentRequestAdapter<PaginatedContentRequest> {
 
-    private EntryBridgeService entryBridgeService;
+    private final EntryBridgeService entryBridgeService;
 
     @Autowired
-    public HomePageContentRequestAdapter(EntryBridgeService entryBridgeService) {
+    public HomePageContentRequestAdapter(@Qualifier("contentAdapterAsyncTaskExecutor") AsyncTaskExecutor contentAdapterExecutor,
+                                         CategoryBridgeService categoryBridgeService,
+                                         TagBridgeService tagBridgeService,
+                                         EntryBridgeService entryBridgeService) {
+        super(contentAdapterExecutor, categoryBridgeService, tagBridgeService);
         this.entryBridgeService = entryBridgeService;
     }
 

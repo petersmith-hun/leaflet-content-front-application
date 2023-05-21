@@ -4,7 +4,7 @@
 <body>
     <div id="entries" layout:fragment="content">
 
-        <th:block th:insert="fragment/common.html :: filter" />
+        <th:block th:insert="~{fragment/common.html :: filter}" />
 
         <div id="entryList" th:if="${entries != null}">
             <div th:each="entry : ${entries}">
@@ -26,7 +26,7 @@
             </div>
             <div class="clear">&nbsp;</div>
 
-            <th:block th:insert="fragment/common.html :: pagination" />
+            <th:block th:insert="~{fragment/common.html :: pagination}" />
 
         </div>
         <div class="clear">&nbsp;</div>

@@ -18,7 +18,7 @@ public class ArticleNavigationItemFactory implements NavigationItemFactory<Artic
 
     @Override
     public NavigationItem create(Article sourceModel) {
-        return NavigationItem.build(createLink(sourceModel), sourceModel.getTitle());
+        return NavigationItem.build(createLink(sourceModel), sourceModel.title());
     }
 
     @Override
@@ -28,6 +28,6 @@ public class ArticleNavigationItemFactory implements NavigationItemFactory<Artic
 
     private String createLink(Article article) {
         return BaseController.PATH_ARTICLE_BY_LINK
-                .replace(LINK, article.getLink());
+                .replace(LINK, article.link());
     }
 }

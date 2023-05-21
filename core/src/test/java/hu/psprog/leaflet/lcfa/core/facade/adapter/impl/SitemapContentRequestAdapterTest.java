@@ -1,6 +1,7 @@
 package hu.psprog.leaflet.lcfa.core.facade.adapter.impl;
 
 import hu.psprog.leaflet.api.rest.response.sitemap.Sitemap;
+import hu.psprog.leaflet.api.rest.response.sitemap.SitemapLocationItem;
 import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.service.SitemapBridgeService;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.doThrow;
 public class SitemapContentRequestAdapterTest {
 
     private static final Sitemap SITEMAP = Sitemap.getBuilder()
-            .withLocation("/location/test")
+            .withSitemapLocationItemList(List.of(new SitemapLocationItem("/location/test")))
             .build();
 
     @Mock

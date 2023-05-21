@@ -27,7 +27,7 @@ import static org.mockito.Mockito.doThrow;
 abstract class AbstractParallalContentRequestAdapterBaseTest {
 
     static final CategoryListDataModel CATEGORY_LIST_DATA_MODEL = CategoryListDataModel.getBuilder().build();
-    static final WrapperBodyDataModel<TagListDataModel> WRAPPED_TAG_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    static final WrapperBodyDataModel<TagListDataModel> WRAPPED_TAG_LIST_DATA_MODEL = WrapperBodyDataModel.<TagListDataModel>getBuilder()
             .withBody(TagListDataModel.getBuilder().build())
             .build();
 
@@ -37,7 +37,7 @@ abstract class AbstractParallalContentRequestAdapterBaseTest {
     @Mock
     TagBridgeService tagBridgeService;
 
-    private AsyncTaskExecutor contentAdapterExecutor = new SimpleAsyncTaskExecutor();
+    private final AsyncTaskExecutor contentAdapterExecutor = new SimpleAsyncTaskExecutor();
 
     @BeforeEach
     public void setup() throws CommunicationFailureException {

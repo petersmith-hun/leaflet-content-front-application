@@ -26,7 +26,7 @@ public class UserPasswordChangeContentRequestAdapter implements ContentRequestAd
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserPasswordChangeContentRequestAdapter.class);
 
-    private UserBridgeService userBridgeService;
+    private final UserBridgeService userBridgeService;
 
     @Autowired
     public UserPasswordChangeContentRequestAdapter(UserBridgeService userBridgeService) {

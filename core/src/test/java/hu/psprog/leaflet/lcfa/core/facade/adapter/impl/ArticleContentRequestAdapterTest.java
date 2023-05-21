@@ -40,10 +40,10 @@ public class ArticleContentRequestAdapterTest extends AbstractParallalContentReq
     private static final OrderBy.Comment COMMENT_ORDER_BY = OrderBy.Comment.CREATED;
     private static final OrderDirection COMMENT_ORDER_DIRECTION = OrderDirection.DESC;
     private static final String ENTRY_LINK = "entry-link";
-    private static final WrapperBodyDataModel<ExtendedEntryDataModel> WRAPPED_ENTRY_DATA_MODEL = WrapperBodyDataModel.getBuilder()
-            .withBody(ExtendedEntryDataModel.getExtendedBuilder().withLink(ENTRY_LINK).build())
+    private static final WrapperBodyDataModel<ExtendedEntryDataModel> WRAPPED_ENTRY_DATA_MODEL = WrapperBodyDataModel.<ExtendedEntryDataModel>getBuilder()
+            .withBody(ExtendedEntryDataModel.getBuilder().withLink(ENTRY_LINK).build())
             .build();
-    private static final WrapperBodyDataModel<CommentListDataModel> WRAPPED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<CommentListDataModel> WRAPPED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.<CommentListDataModel>getBuilder()
             .withBody(CommentListDataModel.getBuilder().build())
             .build();
 
@@ -70,10 +70,10 @@ public class ArticleContentRequestAdapterTest extends AbstractParallalContentReq
 
         // when
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getCategoryListDataModel(), equalTo(CATEGORY_LIST_DATA_MODEL));
-        assertThat(result.get().getWrappedTagListDataModel(), equalTo(WRAPPED_TAG_LIST_DATA_MODEL));
-        assertThat(result.get().getWrappedCommentListDataModel(), equalTo(WRAPPED_COMMENT_LIST_DATA_MODEL));
-        assertThat(result.get().getWrappedExtendedEntryDataModel(), equalTo(WRAPPED_ENTRY_DATA_MODEL));
+        assertThat(result.get().categoryListDataModel(), equalTo(CATEGORY_LIST_DATA_MODEL));
+        assertThat(result.get().wrappedTagListDataModel(), equalTo(WRAPPED_TAG_LIST_DATA_MODEL));
+        assertThat(result.get().wrappedCommentListDataModel(), equalTo(WRAPPED_COMMENT_LIST_DATA_MODEL));
+        assertThat(result.get().wrappedExtendedEntryDataModel(), equalTo(WRAPPED_ENTRY_DATA_MODEL));
     }
 
     @Test
@@ -90,10 +90,10 @@ public class ArticleContentRequestAdapterTest extends AbstractParallalContentReq
 
         // when
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getWrappedCommentListDataModel(), nullValue());
-        assertThat(result.get().getCategoryListDataModel(), nullValue());
-        assertThat(result.get().getWrappedTagListDataModel(), nullValue());
-        assertThat(result.get().getWrappedExtendedEntryDataModel(), equalTo(WRAPPED_ENTRY_DATA_MODEL));
+        assertThat(result.get().wrappedCommentListDataModel(), nullValue());
+        assertThat(result.get().categoryListDataModel(), nullValue());
+        assertThat(result.get().wrappedTagListDataModel(), nullValue());
+        assertThat(result.get().wrappedExtendedEntryDataModel(), equalTo(WRAPPED_ENTRY_DATA_MODEL));
     }
 
     @Test

@@ -24,8 +24,8 @@ public class ContactRequestContentRequestAdapter implements ContentRequestAdapte
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactRequestContentRequestAdapter.class);
 
-    private ContactBridgeService contactBridgeService;
-    private ContactRequestModelConverter contactRequestModelConverter;
+    private final ContactBridgeService contactBridgeService;
+    private final ContactRequestModelConverter contactRequestModelConverter;
 
     @Autowired
     public ContactRequestContentRequestAdapter(ContactBridgeService contactBridgeService, ContactRequestModelConverter contactRequestModelConverter) {

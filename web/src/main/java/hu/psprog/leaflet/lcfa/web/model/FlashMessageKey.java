@@ -27,7 +27,7 @@ public enum FlashMessageKey {
     FAILED_COMMENT_REQUEST("flash.comment.failure"),
     FAILED_COMMENT_DELETION("flash.comment.delete.failure");
 
-    private String messageKey;
+    private final String messageKey;
 
     FlashMessageKey(String messageKey) {
         this.messageKey = messageKey;

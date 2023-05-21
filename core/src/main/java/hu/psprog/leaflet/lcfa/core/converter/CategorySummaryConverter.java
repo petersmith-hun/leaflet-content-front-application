@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategorySummaryConverter implements Converter<CategoryDataModel, CategorySummary> {
 
-    private LinkAliasGenerator linkAliasGenerator;
+    private final LinkAliasGenerator linkAliasGenerator;
 
     @Autowired
     public CategorySummaryConverter(LinkAliasGenerator linkAliasGenerator) {
@@ -24,9 +24,9 @@ public class CategorySummaryConverter implements Converter<CategoryDataModel, Ca
     @Override
     public CategorySummary convert(CategoryDataModel source) {
         return CategorySummary.builder()
-                .id(source.getId())
-                .title(source.getTitle())
-                .alias(linkAliasGenerator.generateAlias(source.getTitle()))
+                .id(source.id())
+                .title(source.title())
+                .alias(linkAliasGenerator.generateAlias(source.title()))
                 .build();
     }
 }

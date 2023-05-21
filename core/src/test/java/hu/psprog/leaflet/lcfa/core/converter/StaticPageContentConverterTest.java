@@ -30,7 +30,9 @@ public class StaticPageContentConverterTest {
             .withTitle(DOCUMENT_TITLE)
             .withRawContent(RAW_CONTENT)
             .build();
-    private static final WrapperBodyDataModel<DocumentDataModel> WRAPPER_BODY_DATA_MODEL = WrapperBodyDataModel.getBuilder().withBody(DOCUMENT_DATA_MODEL).build();
+    private static final WrapperBodyDataModel<DocumentDataModel> WRAPPER_BODY_DATA_MODEL = WrapperBodyDataModel.<DocumentDataModel>getBuilder()
+            .withBody(DOCUMENT_DATA_MODEL)
+            .build();
     private static final SEOAttributes SEO_ATTRIBUTES = SEOAttributes.builder().pageTitle("page-title").build();
     private static final StaticPageContent EXPECTED_STATIC_PAGE_CONTENT = StaticPageContent.builder()
             .page(new StaticPage(DOCUMENT_TITLE, RAW_CONTENT))

@@ -24,7 +24,7 @@ public class UserCommentDeletionContentRequestAdapter implements ContentRequestA
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCommentDeletionContentRequestAdapter.class);
 
-    private CommentBridgeService commentBridgeService;
+    private final CommentBridgeService commentBridgeService;
 
     @Autowired
     public UserCommentDeletionContentRequestAdapter(CommentBridgeService commentBridgeService) {

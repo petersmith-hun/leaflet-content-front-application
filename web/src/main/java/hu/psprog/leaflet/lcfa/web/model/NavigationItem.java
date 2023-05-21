@@ -1,36 +1,23 @@
 package hu.psprog.leaflet.lcfa.web.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
 
 /**
  * Model class for navigation bar items.
  *
  * @author Peter Smith
  */
+@Data
 public class NavigationItem {
 
-    private String link;
-    private String title;
-    private boolean translatable;
+    private final String link;
+    private final String title;
+    private final boolean translatable;
 
     private NavigationItem(String link, String title, boolean translatable) {
         this.link = link;
         this.title = title;
         this.translatable = translatable;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public boolean isTranslatable() {
-        return translatable;
     }
 
     /**
@@ -55,36 +42,4 @@ public class NavigationItem {
         return new NavigationItem(link, tag, true);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        NavigationItem that = (NavigationItem) o;
-
-        return new EqualsBuilder()
-                .append(link, that.link)
-                .append(title, that.title)
-                .append(translatable, that.translatable)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(link)
-                .append(title)
-                .append(translatable)
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("link", link)
-                .append("title", title)
-                .append("translatable", translatable)
-                .toString();
-    }
 }

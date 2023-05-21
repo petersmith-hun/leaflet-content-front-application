@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,10 +36,10 @@ public class ArticleController extends BaseController {
 
     private static final String VIEW_BLOG_DETAILS = "view/blog/article";
 
-    private ModelAndViewFactory modelAndViewFactory;
-    private BlogContentFacade blogContentFacade;
-    private ArticleOperationFacade articleOperationFacade;
-    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
+    private final ModelAndViewFactory modelAndViewFactory;
+    private final BlogContentFacade blogContentFacade;
+    private final ArticleOperationFacade articleOperationFacade;
+    private final NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
     public ArticleController(ModelAndViewFactory modelAndViewFactory, BlogContentFacade blogContentFacade,
@@ -63,11 +63,11 @@ public class ArticleController extends BaseController {
         ArticleContent articleContent = blogContentFacade.getArticle(link);
 
         return modelAndViewFactory.createForView(VIEW_BLOG_DETAILS)
-                .withAttribute(ModelField.ARTICLE, articleContent.getArticle())
-                .withAttribute(ModelField.COMMENTS, articleContent.getComments())
-                .withAttribute(ModelField.LIST_CATEGORIES, articleContent.getCategories())
-                .withAttribute(ModelField.LIST_TAGS, articleContent.getTags())
-                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), articleContent.getSeo())
+                .withAttribute(ModelField.ARTICLE, articleContent.article())
+                .withAttribute(ModelField.COMMENTS, articleContent.comments())
+                .withAttribute(ModelField.LIST_CATEGORIES, articleContent.categories())
+                .withAttribute(ModelField.LIST_TAGS, articleContent.tags())
+                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), articleContent.seo())
                 .withAttribute(ModelField.VALIDATED_MODEL, articleCommentRequest)
                 .withAttribute(ModelField.NAVIGATION, createNavigation(articleContent))
                 .build();
@@ -108,13 +108,13 @@ public class ArticleController extends BaseController {
     private NavigationItem getArticleNavigationItem(ArticleContent articleContent) {
         return navigationItemFactoryRegistry
                 .getFactory(Article.class)
-                .create(articleContent.getArticle());
+                .create(articleContent.article());
     }
 
     private NavigationItem getCategoryNavigationItem(ArticleContent articleContent) {
         return navigationItemFactoryRegistry
                 .getFactory(CategorySummary.class)
-                .create(articleContent.getArticle().getCategory());
+                .create(articleContent.article().category());
     }
 
     private String replaceEntryLinkInPath(String link) {

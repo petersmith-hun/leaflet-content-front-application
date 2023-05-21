@@ -113,8 +113,8 @@ public class AccountManagementFacadeImpl implements AccountManagementFacade {
     }
 
     private boolean isUpdateSuccessful(UpdateProfileRequestModel updateProfileRequestModel, ExtendedUserDataModel currentUserDataModel) {
-        return updateProfileRequestModel.getEmail().equals(currentUserDataModel.getEmail())
-                && updateProfileRequestModel.getUsername().equals(currentUserDataModel.getUsername());
+        return updateProfileRequestModel.getEmail().equals(currentUserDataModel.email())
+                && updateProfileRequestModel.getUsername().equals(currentUserDataModel.username());
     }
 
     private FilteredPaginationContentRequest<Long, OrderBy.Comment> createFilteredRequest(Long userID, int page) {

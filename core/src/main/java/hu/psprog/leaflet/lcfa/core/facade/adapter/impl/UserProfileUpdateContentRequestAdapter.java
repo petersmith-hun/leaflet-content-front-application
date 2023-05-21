@@ -27,7 +27,7 @@ public class UserProfileUpdateContentRequestAdapter implements ContentRequestAda
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileUpdateContentRequestAdapter.class);
 
-    private UserBridgeService userBridgeService;
+    private final UserBridgeService userBridgeService;
 
     @Autowired
     public UserProfileUpdateContentRequestAdapter(UserBridgeService userBridgeService) {

@@ -4,18 +4,17 @@ import hu.psprog.leaflet.lcfa.core.config.PageConfigModel;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageData;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageDataField;
 import hu.psprog.leaflet.lcfa.core.facade.CommonPageDataFacade;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Interceptor to write {@link CommonPageData} information into the current {@link ModelAndView} instance.
@@ -28,15 +27,15 @@ import java.util.stream.Collectors;
  * @author Peter Smith
  */
 @Component
-public class CommonPageDataInterceptor extends HandlerInterceptorAdapter {
+public class CommonPageDataInterceptor implements HandlerInterceptor {
 
     private static final String PAGE_CONFIG_ATTRIBUTE = "pageConfig";
     private static final List<String> COMMON_PAGE_DATE_FIELDS = Arrays.stream(CommonPageDataField.values())
             .map(CommonPageDataField::getFieldName)
-            .collect(Collectors.toList());
+            .toList();
 
-    private CommonPageDataFacade commonPageDataFacade;
-    private PageConfigModel pageConfigModel;
+    private final CommonPageDataFacade commonPageDataFacade;
+    private final PageConfigModel pageConfigModel;
 
     @Autowired
     public CommonPageDataInterceptor(CommonPageDataFacade commonPageDataFacade, PageConfigModel pageConfigModel) {
@@ -45,16 +44,20 @@ public class CommonPageDataInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
 
-        if (Objects.nonNull(modelAndView) && !isCommonPageDataPopulated(modelAndView) && isRequestDispatcher(request)) {
-            CommonPageData commonPageData = commonPageDataFacade.getCommonPageData();
-            Arrays.stream(CommonPageDataField.values()).forEach(field -> {
-                if (Objects.isNull(modelAndView.getModel().get(field.getFieldName()))) {
-                    modelAndView.getModel().put(field.getFieldName(), field.getMapperFunction().apply(commonPageData));
-                }
-            });
-            modelAndView.addObject(PAGE_CONFIG_ATTRIBUTE, pageConfigModel);
+        if (Objects.nonNull(modelAndView) && isRequestDispatcher(request)) {
+            if (!isCommonPageDataPopulated(modelAndView)) {
+                CommonPageData commonPageData = commonPageDataFacade.getCommonPageData();
+                Arrays.stream(CommonPageDataField.values()).forEach(field -> {
+                    if (Objects.isNull(modelAndView.getModel().get(field.getFieldName()))) {
+                        modelAndView.getModel().put(field.getFieldName(), field.getMapperFunction().apply(commonPageData));
+                    }
+                });
+                modelAndView.addObject(PAGE_CONFIG_ATTRIBUTE, pageConfigModel);
+            }
+
+            modelAndView.addObject("request", request);
         }
     }
 

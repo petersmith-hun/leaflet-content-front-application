@@ -17,7 +17,7 @@ public class CommentCreateRequestFactory {
     /**
      * Creates a properly populated {@link CommentCreateRequestModel}.
      * If {@code authenticatedUserID} is a non-null value, adds it the request object and ignores email/name fields of {@link ArticleCommentRequest} object.
-     * Otherwise it populates the relevant fields in the request.
+     * Otherwise, it populates the relevant fields in the request.
      *
      * @param authenticatedUserID ID of the authenticated user ({@code null} for anonymous users)
      * @param articleCommentRequest {@link ArticleCommentRequest} object containing request data

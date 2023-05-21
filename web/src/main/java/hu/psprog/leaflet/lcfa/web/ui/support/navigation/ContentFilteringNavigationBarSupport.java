@@ -22,7 +22,7 @@ public class ContentFilteringNavigationBarSupport {
     private static final String CONTENT_FILTER_PATH = BaseController.PATH_FILTER_BY_CONTENT + "?content=%s";
     private static final String CONTENT_EXPRESSION_AS_TITLE = "\"%s\"";
 
-    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
+    private final NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
     public ContentFilteringNavigationBarSupport(NavigationItemFactoryRegistry navigationItemFactoryRegistry) {
@@ -70,14 +70,14 @@ public class ContentFilteringNavigationBarSupport {
     }
 
     private Optional<CategorySummary> extractCategorySummary(HomePageContent homePageContent, Long categoryID) {
-        return homePageContent.getCategories().stream()
-                .filter(category -> category.getId().equals(categoryID))
+        return homePageContent.categories().stream()
+                .filter(category -> category.id().equals(categoryID))
                 .findFirst();
     }
 
     private Optional<TagSummary> extractTagSummary(HomePageContent homePageContent, Long tagID) {
-        return homePageContent.getTags().stream()
-                .filter(tagSummary -> tagSummary.getId().equals(tagID))
+        return homePageContent.tags().stream()
+                .filter(tagSummary -> tagSummary.id().equals(tagID))
                 .findFirst();
     }
 

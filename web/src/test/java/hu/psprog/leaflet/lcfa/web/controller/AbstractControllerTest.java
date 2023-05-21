@@ -13,8 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ public abstract class AbstractControllerTest {
     private static final String INVALID_FIELD_NAME = "field-1";
     private static final String INVALID_FIELD_VIOLATION = "field restriction violated";
     private static final ValidationErrorMessageListResponse VALIDATION_ERROR_MESSAGE_LIST_RESPONSE = ValidationErrorMessageListResponse.getBuilder()
-            .withValidation(Collections.singletonList(ValidationErrorMessageResponse.getExtendedBuilder()
+            .withValidation(Collections.singletonList(ValidationErrorMessageResponse.getBuilder()
                     .withField(INVALID_FIELD_NAME)
                     .withMessage(INVALID_FIELD_VIOLATION)
                     .build()))
@@ -54,16 +54,16 @@ public abstract class AbstractControllerTest {
     @Mock
     RedirectAttributes redirectAttributes;
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     Response response;
 
     @Mock
     BindingResult bindingResult;
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     ModelAndViewFactory modelAndViewFactory;
 
-    @Mock(lenient = true)
+    @Mock(strictness = Mock.Strictness.LENIENT)
     private ModelAndViewFactory.ModelAndViewWrapper modelAndViewWrapper;
 
     @Mock

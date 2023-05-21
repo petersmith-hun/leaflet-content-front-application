@@ -38,32 +38,6 @@ $.fn.passwordCheck = function() {
 };
 
 /**
- * Copies transportation data values to billing data fields.
- * 
- * @param modelName model name (defaults to 'UserProfile') 
- */
-$.fn.copyTr2B = function(modelName) {
-	
-	if(modelName === undefined)
-		modelName = 'UserProfile';
-	
-	// fire handler on click event
-	this.on('click', function() {
-		$('form input[type="text"]').each(function() {
-			var id = $(this).attr('id');
-			
-			var exp = new RegExp(modelName + 'Tr');
-			
-			if(id.match(exp)) {
-				var value = $(this).val();
-				var targetInput = id.replace(exp, modelName + 'B');
-				$('#' + targetInput).val(value);
-			}
-		});
-	});
-};
-
-/**
  * Marks active menu. 
  */
 $.fn.markActive = function() {
