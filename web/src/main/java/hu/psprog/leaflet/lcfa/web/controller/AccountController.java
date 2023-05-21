@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Optional;
 
 /**
@@ -144,8 +144,8 @@ public class AccountController extends BaseController {
         UserCommentsPageContent pageContent = accountManagementFacade.getCommentsForUser(currentUserID(), extractPageNumber(page));
 
         return modelAndViewFactory.createForView(VIEW_ACCOUNT_COMMENTS)
-                .withAttribute(ModelField.COMMENTS, pageContent.getComments())
-                .withAttribute(ModelField.PAGINATION, pageContent.getPaginationAttributes())
+                .withAttribute(ModelField.COMMENTS, pageContent.comments())
+                .withAttribute(ModelField.PAGINATION, pageContent.paginationAttributes())
                 .withAttribute(ModelField.LINK_TEMPLATE, COMMENT_PAGINATION_LINK_TEMPLATE)
                 .withAttribute(ModelField.NAVIGATION, accountNavigationBarSupport.myComments())
                 .build();

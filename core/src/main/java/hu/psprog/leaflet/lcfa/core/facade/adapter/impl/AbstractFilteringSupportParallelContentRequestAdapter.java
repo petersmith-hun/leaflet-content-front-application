@@ -6,7 +6,7 @@ import hu.psprog.leaflet.bridge.service.TagBridgeService;
 import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +21,16 @@ abstract class AbstractFilteringSupportParallelContentRequestAdapter<T, P> exten
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractFilteringSupportParallelContentRequestAdapter.class);
 
-    @Autowired
-    private CategoryBridgeService categoryBridgeService;
+    private final CategoryBridgeService categoryBridgeService;
+    private final TagBridgeService tagBridgeService;
 
-    @Autowired
-    private TagBridgeService tagBridgeService;
+    public AbstractFilteringSupportParallelContentRequestAdapter(AsyncTaskExecutor contentAdapterExecutor,
+                                                                 CategoryBridgeService categoryBridgeService,
+                                                                 TagBridgeService tagBridgeService) {
+        super(contentAdapterExecutor);
+        this.categoryBridgeService = categoryBridgeService;
+        this.tagBridgeService = tagBridgeService;
+    }
 
     @Override
     Map<CallType, Callable<BaseBodyDataModel>> callers(P contentRequestParameter) {

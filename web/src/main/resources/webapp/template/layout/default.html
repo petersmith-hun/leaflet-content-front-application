@@ -12,7 +12,7 @@
         <meta property="og:image" th:content="@{__${pageConfig.ogImage}__}" />
         <meta property="og:title" th:content="${seo.metaTitle}" />
         <meta property="og:description" th:content="${seo.metaDescription}" />
-        <meta property="og:url" th:content="${#request.getRequestURL()}" />
+        <meta property="og:url" th:content="${request.getRequestURL()}" />
         <meta property="og:site_name" th:content="${seo.pageTitle}" />
         <meta property="og:type" th:content="${article} ? 'article' : 'website'" />
 
@@ -57,7 +57,7 @@
     </head>
     <body>
 
-        <th:block th:with="flash=${@formLoginFlashMessageHelper.getMessageKey(#request, flash)}">
+        <th:block th:with="flash=${@formLoginFlashMessageHelper.getMessageKey(request, flash)}">
             <div id="flash" th:if="${flash != null}">
                 <div class="message">
                     <th:block th:text="${flash == T(hu.psprog.leaflet.lcfa.web.model.FlashMessageKey).SUCCESSFUL_SIGN_IN.getMessageKey()}

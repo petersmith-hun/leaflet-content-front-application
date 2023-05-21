@@ -9,10 +9,10 @@ import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.NavigationItemFactory;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extensions;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -47,8 +47,13 @@ public class StaticPageControllerTest extends AbstractControllerTest {
     @Mock
     private NavigationItemFactory<String> stringNavigationItemFactory;
 
-    @InjectMocks
     private StaticPageController staticPageController;
+
+    @BeforeEach
+    public void setup() {
+        super.setup();
+        staticPageController = new StaticPageController(modelAndViewFactory, staticPageContentFacade, navigationItemFactoryRegistry);
+    }
 
     @Test
     public void shouldRenderIntroductionPage() {
@@ -56,7 +61,7 @@ public class StaticPageControllerTest extends AbstractControllerTest {
         // given
         given(staticPageContentFacade.getStaticPage(StaticPageType.INTRODUCTION)).willReturn(STATIC_PAGE_CONTENT);
         given(navigationItemFactoryRegistry.getFactory(String.class)).willReturn(stringNavigationItemFactory);
-        given(stringNavigationItemFactory.create(STATIC_PAGE.getTitle())).willReturn(NAVIGATION_ITEM);
+        given(stringNavigationItemFactory.create(STATIC_PAGE.title())).willReturn(NAVIGATION_ITEM);
 
         // when
         staticPageController.introduction();

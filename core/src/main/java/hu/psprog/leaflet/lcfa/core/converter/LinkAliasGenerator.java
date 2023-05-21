@@ -17,7 +17,7 @@ public class LinkAliasGenerator {
     private static final char CHAR_DASH = '-';
 
     /**
-     * Generates an URL-safe link alias from the given input. Steps done:
+     * Generates a URL-safe link alias from the given input. Steps done:
      *  - converts string to lowercase
      *  - removes accents
      *  - changes spaces to dashes

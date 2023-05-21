@@ -37,7 +37,7 @@ public class StaticPageContentFacadeImplTest {
     private static final String TITLE = "title";
     private static final String CONTENT = "content";
     private static final String INTRODUCTION_PAGE_LINK = "introduction";
-    private static final WrapperBodyDataModel<DocumentDataModel> WRAPPED_DOCUMENT_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<DocumentDataModel> WRAPPED_DOCUMENT_DATA_MODEL = WrapperBodyDataModel.<DocumentDataModel>getBuilder()
             .withBody(DocumentDataModel.getBuilder()
                     .withTitle(TITLE)
                     .withRawContent(CONTENT)

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class TagSummaryListConverter implements Converter<TagListDataModel, List<TagSummary>> {
 
-    private LinkAliasGenerator linkAliasGenerator;
+    private final LinkAliasGenerator linkAliasGenerator;
 
     @Autowired
     public TagSummaryListConverter(LinkAliasGenerator linkAliasGenerator) {
@@ -27,7 +27,7 @@ public class TagSummaryListConverter implements Converter<TagListDataModel, List
 
     @Override
     public List<TagSummary> convert(TagListDataModel source) {
-        return convert(source.getTags());
+        return convert(source.tags());
     }
 
     public List<TagSummary> convert(List<TagDataModel> source) {
@@ -38,9 +38,9 @@ public class TagSummaryListConverter implements Converter<TagListDataModel, List
 
     private TagSummary createTagSummary(TagDataModel tagDataModel) {
         return TagSummary.builder()
-                .id(tagDataModel.getId())
-                .name(tagDataModel.getName())
-                .alias(linkAliasGenerator.generateAlias(tagDataModel.getName()))
+                .id(tagDataModel.id())
+                .name(tagDataModel.name())
+                .alias(linkAliasGenerator.generateAlias(tagDataModel.name()))
                 .build();
     }
 }

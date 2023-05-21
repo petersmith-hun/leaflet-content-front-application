@@ -22,7 +22,7 @@ public class ArticleOperationFacadeImpl implements ArticleOperationFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleOperationFacadeImpl.class);
 
-    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
+    private final ContentRequestAdapterRegistry contentRequestAdapterRegistry;
 
     @Autowired
     public ArticleOperationFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry) {

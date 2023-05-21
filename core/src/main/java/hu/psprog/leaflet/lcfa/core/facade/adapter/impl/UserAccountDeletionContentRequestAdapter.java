@@ -25,7 +25,7 @@ public class UserAccountDeletionContentRequestAdapter implements ContentRequestA
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountDeletionContentRequestAdapter.class);
     private static final String FAILED_TO_DELETE_USER_ACCOUNT = "Failed to delete user account for user [{}]";
 
-    private UserBridgeService userBridgeService;
+    private final UserBridgeService userBridgeService;
 
     @Autowired
     public UserAccountDeletionContentRequestAdapter(UserBridgeService userBridgeService) {

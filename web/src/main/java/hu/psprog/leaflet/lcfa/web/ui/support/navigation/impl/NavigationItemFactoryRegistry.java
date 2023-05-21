@@ -21,7 +21,7 @@ public class NavigationItemFactoryRegistry {
 
     private static final String FACTORY_IMPLEMENTATION_NOT_FOUND = "NavigationItemFactory implementation not found for model class %s";
 
-    private Map<Class<?>, NavigationItemFactory<?>> registry;
+    private final Map<Class<?>, NavigationItemFactory<?>> registry;
 
     @Autowired
     public NavigationItemFactoryRegistry(List<NavigationItemFactory<?>> navigationItemFactoryList) {

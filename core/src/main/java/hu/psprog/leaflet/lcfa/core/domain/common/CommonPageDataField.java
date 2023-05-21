@@ -10,14 +10,14 @@ import java.util.function.Function;
  */
 public enum CommonPageDataField {
 
-    HEADER_MENU("headerMenu", CommonPageData::getHeaderMenu),
-    FOOTER_MENU("footerMenu", CommonPageData::getFooterMenu),
-    STANDALONE_MENU_ITEMS("standaloneMenuItems", CommonPageData::getStandaloneMenuItems),
-    LATEST_ENTRIES("latest", CommonPageData::getLatestEntries),
-    SEO_ATTRIBUTES("seo", CommonPageData::getSeo);
+    HEADER_MENU("headerMenu", CommonPageData::headerMenu),
+    FOOTER_MENU("footerMenu", CommonPageData::footerMenu),
+    STANDALONE_MENU_ITEMS("standaloneMenuItems", CommonPageData::standaloneMenuItems),
+    LATEST_ENTRIES("latest", CommonPageData::latestEntries),
+    SEO_ATTRIBUTES("seo", CommonPageData::seo);
 
-    private String fieldName;
-    private Function<CommonPageData, Object> mapperFunction;
+    private final String fieldName;
+    private final Function<CommonPageData, Object> mapperFunction;
 
     CommonPageDataField(String fieldName, Function<CommonPageData, Object> mapperFunction) {
         this.fieldName = fieldName;

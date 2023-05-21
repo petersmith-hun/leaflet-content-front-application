@@ -4,7 +4,7 @@
 <body>
 <div id="entries" class="forms" layout:fragment="content">
 
-    <th:block th:insert="fragment/profile.html :: profile-navigation" />
+    <th:block th:insert="~{fragment/profile.html :: profile-navigation}" />
     <div id="comments" class="user">
         <p th:if="${comments == null or comments.isEmpty()}" style="font-weight: bold; padding-left: 10px;" th:text="#{common.comment_block.no_comments_by_user}"></p>
         <th:block th:if="${comments != null}" th:each="comment : ${comments}">
@@ -30,7 +30,7 @@
             </div>
             <div class="clear">&nbsp;</div>
         </th:block>
-        <th:block th:insert="fragment/common.html :: pagination" />
+        <th:block th:insert="~{fragment/common.html :: pagination}" />
     </div>
 
     <script th:inline="javascript" type="text/javascript">

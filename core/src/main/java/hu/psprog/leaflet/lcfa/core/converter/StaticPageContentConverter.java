@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StaticPageContentConverter implements Converter<WrapperBodyDataModel<DocumentDataModel>, StaticPageContent> {
 
-    private WrappedDataExtractor wrappedDataExtractor;
+    private final WrappedDataExtractor wrappedDataExtractor;
 
     @Autowired
     public StaticPageContentConverter(WrappedDataExtractor wrappedDataExtractor) {
@@ -26,12 +26,12 @@ public class StaticPageContentConverter implements Converter<WrapperBodyDataMode
     @Override
     public StaticPageContent convert(WrapperBodyDataModel<DocumentDataModel> source) {
         return StaticPageContent.builder()
-                .page(convert(source.getBody()))
+                .page(convert(source.body()))
                 .seo(wrappedDataExtractor.extractSEOAttributes(source))
                 .build();
     }
 
     private StaticPage convert(DocumentDataModel source) {
-        return new StaticPage(source.getTitle(), source.getRawContent());
+        return new StaticPage(source.title(), source.rawContent());
     }
 }

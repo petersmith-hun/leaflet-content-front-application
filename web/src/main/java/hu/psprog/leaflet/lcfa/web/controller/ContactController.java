@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * Controller implementation for contact handling requests.
@@ -31,9 +31,9 @@ public class ContactController extends BaseController {
 
     private static final String VIEW_CONTACT_FORM = "view/contact/form";
 
-    private ModelAndViewFactory modelAndViewFactory;
-    private ContactPageFacade contactPageFacade;
-    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
+    private final ModelAndViewFactory modelAndViewFactory;
+    private final ContactPageFacade contactPageFacade;
+    private final NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
     public ContactController(ModelAndViewFactory modelAndViewFactory, ContactPageFacade contactPageFacade,
@@ -54,12 +54,12 @@ public class ContactController extends BaseController {
     public ModelAndView renderContactForm(@ModelAttribute ContactRequestModel contactRequestModel) {
         ContactPageContent contactPageContent = contactPageFacade.getContactPageContent();
         return modelAndViewFactory.createForView(VIEW_CONTACT_FORM)
-                .withAttribute(ModelField.STATIC, contactPageContent.getContactInfo().getPage())
-                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), contactPageContent.getContactInfo().getSeo())
+                .withAttribute(ModelField.STATIC, contactPageContent.contactInfo().page())
+                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), contactPageContent.contactInfo().seo())
                 .withAttribute(ModelField.VALIDATED_MODEL, contactRequestModel)
                 .withAttribute(ModelField.NAVIGATION, navigationItemFactoryRegistry
                         .getFactory(String.class)
-                        .create(contactPageContent.getContactInfo().getPage().getTitle()))
+                        .create(contactPageContent.contactInfo().page().title()))
                 .build();
     }
 

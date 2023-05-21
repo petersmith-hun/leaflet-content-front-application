@@ -29,6 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -59,7 +60,7 @@ public class AccountManagementFacadeImplTest {
     private static final AccountDeletionRequest ACCOUNT_DELETION_REQUEST = new AccountDeletionRequest();
     private static final long COMMENT_ID = 8L;
     private static final String CONTENT = "comment";
-    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getExtendedBuilder()
+    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getBuilder()
             .withId(USER_ID)
             .withEmail(EMAIL)
             .withUsername(USERNAME)
@@ -75,9 +76,9 @@ public class AccountManagementFacadeImplTest {
             .orderBy(ORDER_BY)
             .orderDirection(ORDER_DIRECTION)
             .build();
-    private static final WrapperBodyDataModel<ExtendedCommentListDataModel> WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<ExtendedCommentListDataModel> WRAPPED_EXTENDED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.<ExtendedCommentListDataModel>getBuilder()
             .withBody(ExtendedCommentListDataModel.getBuilder()
-                    .withItem(ExtendedCommentDataModel.getExtendedBuilder().withContent(CONTENT).build())
+                    .withComments(List.of(ExtendedCommentDataModel.getBuilder().withContent(CONTENT).build()))
                     .build())
             .build();
     private static final UserCommentsPageContent USER_COMMENTS_PAGE_CONTENT = UserCommentsPageContent.builder()
@@ -185,7 +186,7 @@ public class AccountManagementFacadeImplTest {
         given(contentRequestAdapterRegistry.<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_UPDATE))
                 .willReturn(profileUpdateContentRequestAdapter);
         given(profileUpdateContentRequestAdapter.getContent(PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER))
-                .willReturn(Optional.of(ExtendedUserDataModel.getExtendedBuilder()
+                .willReturn(Optional.of(ExtendedUserDataModel.getBuilder()
                         .withUsername("different user")
                         .withEmail(EMAIL)
                         .build()));
@@ -204,7 +205,7 @@ public class AccountManagementFacadeImplTest {
         given(contentRequestAdapterRegistry.<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_UPDATE))
                 .willReturn(profileUpdateContentRequestAdapter);
         given(profileUpdateContentRequestAdapter.getContent(PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER))
-                .willReturn(Optional.of(ExtendedUserDataModel.getExtendedBuilder()
+                .willReturn(Optional.of(ExtendedUserDataModel.getBuilder()
                         .withUsername(USERNAME)
                         .withEmail("different email")
                         .build()));

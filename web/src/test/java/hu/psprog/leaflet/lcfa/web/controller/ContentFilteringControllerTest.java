@@ -9,11 +9,11 @@ import hu.psprog.leaflet.lcfa.core.facade.BlogContentFacade;
 import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.ContentFilteringNavigationBarSupport;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -68,8 +68,13 @@ public class ContentFilteringControllerTest extends AbstractControllerTest {
     @Mock
     private ContentFilteringNavigationBarSupport navigationBarSupport;
 
-    @InjectMocks
     private ContentFilteringController contentFilteringController;
+
+    @BeforeEach
+    public void setup() {
+        super.setup();
+        contentFilteringController = new ContentFilteringController(blogContentFacade, modelAndViewFactory, navigationBarSupport);
+    }
 
     @ParameterizedTest
     @MethodSource("pageParameterDataProvider")

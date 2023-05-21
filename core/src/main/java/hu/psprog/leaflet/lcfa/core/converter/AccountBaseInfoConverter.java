@@ -16,9 +16,9 @@ public class AccountBaseInfoConverter implements Converter<ExtendedUserDataModel
     @Override
     public AccountBaseInfo convert(ExtendedUserDataModel source) {
         return AccountBaseInfo.builder()
-                .email(source.getEmail())
-                .username(source.getUsername())
-                .locale(source.getLocale())
+                .email(source.email())
+                .username(source.username())
+                .locale(source.locale())
                 .build();
     }
 }

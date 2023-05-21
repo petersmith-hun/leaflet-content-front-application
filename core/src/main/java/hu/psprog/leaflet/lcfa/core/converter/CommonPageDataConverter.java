@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonPageDataConverter implements Converter<WrapperBodyDataModel<EntryListDataModel>, CommonPageData> {
 
-    private WrappedDataExtractor wrappedDataExtractor;
-    private EntrySummaryListConverter entrySummaryListConverter;
+    private final WrappedDataExtractor wrappedDataExtractor;
+    private final EntrySummaryListConverter entrySummaryListConverter;
 
     @Autowired
     public CommonPageDataConverter(WrappedDataExtractor wrappedDataExtractor, EntrySummaryListConverter entrySummaryListConverter) {
@@ -31,7 +31,7 @@ public class CommonPageDataConverter implements Converter<WrapperBodyDataModel<E
                 .headerMenu(wrappedDataExtractor.extractHeaderMenu(source))
                 .footerMenu(wrappedDataExtractor.extractFooterMenu(source))
                 .standaloneMenuItems(wrappedDataExtractor.extractStandaloneMenuItems(source))
-                .latestEntries(entrySummaryListConverter.convert(source.getBody()))
+                .latestEntries(entrySummaryListConverter.convert(source.body()))
                 .build();
     }
 }

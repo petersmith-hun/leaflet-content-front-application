@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class CommonPageDataConverterTest {
 
-    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPER_BODY_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPER_BODY_DATA_MODEL = WrapperBodyDataModel.<EntryListDataModel>getBuilder()
             .withBody(EntryListDataModel.getBuilder().build())
             .build();
     private static final SEOAttributes SEO_ATTRIBUTES = SEOAttributes.builder().pageTitle("page-title").build();
@@ -61,7 +61,7 @@ public class CommonPageDataConverterTest {
         given(wrappedDataExtractor.extractHeaderMenu(WRAPPER_BODY_DATA_MODEL)).willReturn(HEADER_MENU_ITEM_LIST);
         given(wrappedDataExtractor.extractFooterMenu(WRAPPER_BODY_DATA_MODEL)).willReturn(FOOTER_MENU_ITEM_LIST);
         given(wrappedDataExtractor.extractStandaloneMenuItems(WRAPPER_BODY_DATA_MODEL)).willReturn(STANDALONE_MENU_ITEM_LIST);
-        given(entrySummaryListConverter.convert(WRAPPER_BODY_DATA_MODEL.getBody())).willReturn(LATEST_ENTRIES);
+        given(entrySummaryListConverter.convert(WRAPPER_BODY_DATA_MODEL.body())).willReturn(LATEST_ENTRIES);
 
         // when
         CommonPageData result = converter.convert(WRAPPER_BODY_DATA_MODEL);

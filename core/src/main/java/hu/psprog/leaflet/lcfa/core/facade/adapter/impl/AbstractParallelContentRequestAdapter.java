@@ -5,8 +5,6 @@ import hu.psprog.leaflet.lcfa.core.domain.CallType;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
 
 import java.util.HashMap;
@@ -28,9 +26,11 @@ abstract class AbstractParallelContentRequestAdapter<T, P> implements ContentReq
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractParallelContentRequestAdapter.class);
 
-    @Autowired
-    @Qualifier("contentAdapterAsyncTaskExecutor")
-    private AsyncTaskExecutor contentAdapterExecutor;
+    private final AsyncTaskExecutor contentAdapterExecutor;
+
+    AbstractParallelContentRequestAdapter(AsyncTaskExecutor contentAdapterExecutor) {
+        this.contentAdapterExecutor = contentAdapterExecutor;
+    }
 
     @Override
     public Optional<T> getContent(P contentRequestParameter) {

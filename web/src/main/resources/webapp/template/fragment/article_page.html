@@ -63,7 +63,7 @@
                           th:placeholder="#{form.comment.placeholder.message}" maxlength="2000" required="required" cols="30" rows="6" id="message"></textarea>
                 <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.comment.validation.error.message}">placeholder:val_err_message</span>
             </div>
-            <th:block th:insert="fragment/security.html :: recaptcha-widget" />
+            <th:block th:insert="~{fragment/security.html :: recaptcha-widget}" />
             <input type="submit" value="placeholder:send" th:value="#{form.comment.label.send}" />
         </form>
     </div>
@@ -93,7 +93,7 @@
     <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; position: relative; top: 20px;">
         <div style="position: relative; margin-bottom: 5px; margin-right: 5px;">
             <div class="fb-like"
-                 th:data-href="${#request.getRequestURL()}"
+                 th:data-href="${request.getRequestURL()}"
                  data-width=""
                  data-layout="button_count"
                  data-action="like"
@@ -105,7 +105,7 @@
         <div style="position: relative; top: 1px; margin-bottom: 10px; margin-right: 5px;">
             <a class="twitter-share-button"
                data-size="large"
-               th:href="@{//twitter.com/intent/tweet(text=${seo.metaTitle}, url=${#request.getRequestURL()})}">Tweet</a>
+               th:href="@{//twitter.com/intent/tweet(text=${seo.metaTitle}, url=${request.getRequestURL()})}">Tweet</a>
             <a class="twitter-follow-button"
                data-show-count="false"
                data-size="large"

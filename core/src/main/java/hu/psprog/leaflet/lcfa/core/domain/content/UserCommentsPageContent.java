@@ -2,9 +2,6 @@ package hu.psprog.leaflet.lcfa.core.domain.content;
 
 import hu.psprog.leaflet.lcfa.core.domain.common.PaginationAttributes;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,14 +11,11 @@ import java.util.List;
  *
  * @author Peter Smith
  */
-@Getter
-@EqualsAndHashCode
-@ToString
 @Builder
-public class UserCommentsPageContent {
+public record UserCommentsPageContent(
+        List<CommentSummary> comments,
+        PaginationAttributes paginationAttributes
+) {
 
     public static final UserCommentsPageContent EMPTY_CONTENT = UserCommentsPageContent.builder().comments(Collections.emptyList()).build();
-
-    private List<CommentSummary> comments;
-    private PaginationAttributes paginationAttributes;
 }

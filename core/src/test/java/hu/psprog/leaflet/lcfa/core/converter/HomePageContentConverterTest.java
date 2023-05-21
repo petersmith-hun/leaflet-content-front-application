@@ -33,8 +33,8 @@ import static org.mockito.BDDMockito.given;
 public class HomePageContentConverterTest {
 
     private static final HomePageRawResponseWrapper POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER = HomePageRawResponseWrapper.builder()
-            .wrappedEntryListDataModel(WrapperBodyDataModel.getBuilder().withBody(EntryListDataModel.getBuilder().build()).build())
-            .wrappedTagListDataModel(WrapperBodyDataModel.getBuilder().withBody(TagListDataModel.getBuilder().build()).build())
+            .wrappedEntryListDataModel(WrapperBodyDataModel.<EntryListDataModel>getBuilder().withBody(EntryListDataModel.getBuilder().build()).build())
+            .wrappedTagListDataModel(WrapperBodyDataModel.<TagListDataModel>getBuilder().withBody(TagListDataModel.getBuilder().build()).build())
             .categoryListDataModel(CategoryListDataModel.getBuilder().build())
             .build();
     private static final PaginationAttributes PAGINATION_ATTRIBUTES = PaginationAttributes.builder().pageNumber(2).build();
@@ -67,13 +67,13 @@ public class HomePageContentConverterTest {
     public void shouldConvertWithPopulatedSource() {
 
         // given
-        given(filteringDataConversionSupport.mapCategories(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.getCategoryListDataModel()))
+        given(filteringDataConversionSupport.mapCategories(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.categoryListDataModel()))
                 .willReturn(CATEGORY_SUMMARY_LIST);
-        given(filteringDataConversionSupport.mapOptionalWrapped(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.getWrappedTagListDataModel(), tagSummaryListConverter))
+        given(filteringDataConversionSupport.mapOptionalWrapped(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.wrappedTagListDataModel(), tagSummaryListConverter))
                 .willReturn(TAG_SUMMARY_LIST);
-        given(entrySummaryListConverter.convert(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.getWrappedEntryListDataModel().getBody()))
+        given(entrySummaryListConverter.convert(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.wrappedEntryListDataModel().body()))
                 .willReturn(ENTRY_SUMMARY_LIST);
-        given(wrappedDataExtractor.extractPaginationAttributes(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.getWrappedEntryListDataModel()))
+        given(wrappedDataExtractor.extractPaginationAttributes(POPULATED_HOME_PAGE_RAW_RESPONSE_WRAPPER.wrappedEntryListDataModel()))
                 .willReturn(PAGINATION_ATTRIBUTES);
 
         // when

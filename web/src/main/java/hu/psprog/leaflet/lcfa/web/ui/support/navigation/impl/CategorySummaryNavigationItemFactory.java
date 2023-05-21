@@ -19,7 +19,7 @@ public class CategorySummaryNavigationItemFactory implements NavigationItemFacto
 
     @Override
     public NavigationItem create(CategorySummary sourceModel) {
-        return NavigationItem.build(createLink(sourceModel), sourceModel.getTitle());
+        return NavigationItem.build(createLink(sourceModel), sourceModel.title());
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CategorySummaryNavigationItemFactory implements NavigationItemFacto
 
     private String createLink(CategorySummary categorySummary) {
         return BaseController.PATH_FILTER_BY_CATEGORY
-                .replace(CATEGORY_ID, String.valueOf(categorySummary.getId()))
-                .replace(CATEGORY_ALIAS, categorySummary.getAlias());
+                .replace(CATEGORY_ID, String.valueOf(categorySummary.id()))
+                .replace(CATEGORY_ALIAS, categorySummary.alias());
     }
 }

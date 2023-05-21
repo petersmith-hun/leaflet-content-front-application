@@ -25,7 +25,7 @@ public class StaticPageContentRequestAdapter implements ContentRequestAdapter<Wr
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StaticPageContentRequestAdapter.class);
 
-    private DocumentBridgeService documentBridgeService;
+    private final DocumentBridgeService documentBridgeService;
 
     @Autowired
     public StaticPageContentRequestAdapter(DocumentBridgeService documentBridgeService) {

@@ -16,10 +16,10 @@ import java.util.Objects;
 @Component
 public class HomePageContentConverter implements Converter<HomePageRawResponseWrapper, HomePageContent> {
 
-    private WrappedDataExtractor wrappedDataExtractor;
-    private EntrySummaryListConverter entrySummaryListConverter;
-    private TagSummaryListConverter tagSummaryListConverter;
-    private FilteringDataConversionSupport filteringDataConversionSupport;
+    private final WrappedDataExtractor wrappedDataExtractor;
+    private final EntrySummaryListConverter entrySummaryListConverter;
+    private final TagSummaryListConverter tagSummaryListConverter;
+    private final FilteringDataConversionSupport filteringDataConversionSupport;
 
     @Autowired
     public HomePageContentConverter(WrappedDataExtractor wrappedDataExtractor, EntrySummaryListConverter entrySummaryListConverter,
@@ -34,12 +34,12 @@ public class HomePageContentConverter implements Converter<HomePageRawResponseWr
     public HomePageContent convert(HomePageRawResponseWrapper source) {
 
         HomePageContent homePageContent = null;
-        if (Objects.nonNull(source.getWrappedEntryListDataModel())) {
+        if (Objects.nonNull(source.wrappedEntryListDataModel())) {
             homePageContent = HomePageContent.builder()
-                    .categories(filteringDataConversionSupport.mapCategories(source.getCategoryListDataModel()))
-                    .tags(filteringDataConversionSupport.mapOptionalWrapped(source.getWrappedTagListDataModel(), tagSummaryListConverter))
-                    .entries(entrySummaryListConverter.convert(source.getWrappedEntryListDataModel().getBody()))
-                    .pagination(wrappedDataExtractor.extractPaginationAttributes(source.getWrappedEntryListDataModel()))
+                    .categories(filteringDataConversionSupport.mapCategories(source.categoryListDataModel()))
+                    .tags(filteringDataConversionSupport.mapOptionalWrapped(source.wrappedTagListDataModel(), tagSummaryListConverter))
+                    .entries(entrySummaryListConverter.convert(source.wrappedEntryListDataModel().body()))
+                    .pagination(wrappedDataExtractor.extractPaginationAttributes(source.wrappedEntryListDataModel()))
                     .build();
         }
 

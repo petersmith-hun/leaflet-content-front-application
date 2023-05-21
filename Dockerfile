@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:17-jre
 
 ARG APP_USER=leaflet
 ARG APP_HOME=/opt/lcfa

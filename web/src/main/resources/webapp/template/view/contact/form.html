@@ -28,7 +28,7 @@
                           th:placeholder="#{form.contact.placeholder.message}" placeholder="placeholder:message" required="required" cols="30" rows="6" id="ContactMessage"></textarea>
                 <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.contact.validation.error.message}">placeholder:val_err_message</span>
             </div>
-            <th:block th:insert="fragment/security.html :: recaptcha-widget" />
+            <th:block th:insert="~{fragment/security.html :: recaptcha-widget}" />
             <input type="submit" th:value="#{form.contact.label.send}" value="placeholder:send" />
         </form>
     </div>

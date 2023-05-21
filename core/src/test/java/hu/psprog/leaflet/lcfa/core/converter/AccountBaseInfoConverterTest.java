@@ -22,7 +22,7 @@ public class AccountBaseInfoConverterTest {
     private static final String EMAIL = "email";
     private static final String USERNAME = "username";
     private static final String LOCALE = "locale";
-    private static final ExtendedUserDataModel SOURCE_OBJECT = ExtendedUserDataModel.getExtendedBuilder()
+    private static final ExtendedUserDataModel SOURCE_OBJECT = ExtendedUserDataModel.getBuilder()
             .withEmail(EMAIL)
             .withUsername(USERNAME)
             .withLocale(LOCALE)

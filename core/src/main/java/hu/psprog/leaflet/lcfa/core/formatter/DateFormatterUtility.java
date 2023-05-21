@@ -20,7 +20,7 @@ import java.util.Optional;
 @Component
 public class DateFormatterUtility {
 
-    private Map<DateFormatType, DateTimeFormatter> dateFormatterMap;
+    private final Map<DateFormatType, DateTimeFormatter> dateFormatterMap;
 
     @Autowired
     public DateFormatterUtility(PageConfigModel pageConfigModel) {

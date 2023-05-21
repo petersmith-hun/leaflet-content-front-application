@@ -4,7 +4,7 @@
 <body>
 <div id="entries" class="forms" layout:fragment="content">
 
-    <th:block th:insert="fragment/profile.html :: profile-navigation" />
+    <th:block th:insert="~{fragment/profile.html :: profile-navigation}" />
     <form th:object="${passwordChangeRequestModel}" th:action="@{''}" method="post" accept-charset="utf-8">
         <h3 class="" th:text="#{form.profile.pwchange.title}">placeholder:pwchange</h3>
         <div class="form-group">

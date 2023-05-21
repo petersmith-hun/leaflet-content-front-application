@@ -3,12 +3,12 @@
       layout:decorate="~{layout/default}">
 <head>
     <title th:text="${seo.metaTitle} + ' - ' + ${seo.pageTitle}">placeholder:title</title>
-    <th:block th:insert="fragment/common.html :: syntax-highlight" />
+    <th:block th:insert="~{fragment/common.html :: syntax-highlight}" />
 </head>
 <body>
 <div id="entries" layout:fragment="content">
 
-    <th:block th:insert="fragment/common.html :: filter" />
+    <th:block th:insert="~{fragment/common.html :: filter}" />
 
     <div id="entryList">
         <div class="entryBox">
@@ -26,9 +26,9 @@
                         </span>
                     </div>
 
-                    <th:block th:insert="fragment/article_page.html :: attachments" />
-                    <th:block th:insert="fragment/article_page.html :: social" />
-                    <th:block th:insert="fragment/article_page.html :: comments" />
+                    <th:block th:insert="~{fragment/article_page.html :: attachments}" />
+                    <th:block th:insert="~{fragment/article_page.html :: social}" />
+                    <th:block th:insert="~{fragment/article_page.html :: comments}" />
 
                 </div>
                 <div class="clear">&nbsp;</div>

@@ -25,7 +25,7 @@ public class UserDataContentRequestAdapter implements ContentRequestAdapter<Exte
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDataContentRequestAdapter.class);
 
-    private UserBridgeService userBridgeService;
+    private final UserBridgeService userBridgeService;
 
     @Autowired
     public UserDataContentRequestAdapter(UserBridgeService userBridgeService) {

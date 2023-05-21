@@ -21,7 +21,7 @@ public class SitemapController {
 
     private static final String PATH_SITEMAP = "/sitemap.xml";
 
-    private CommonPageDataFacade commonPageDataFacade;
+    private final CommonPageDataFacade commonPageDataFacade;
 
     @Autowired
     public SitemapController(CommonPageDataFacade commonPageDataFacade) {

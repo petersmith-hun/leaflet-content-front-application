@@ -39,7 +39,7 @@ public class ModelAndViewFactory {
      */
     public static class ModelAndViewWrapper {
 
-        private ModelAndView modelAndView;
+        private final ModelAndView modelAndView;
 
         private ModelAndViewWrapper(String viewName) {
             this.modelAndView = new ModelAndView(viewName);

@@ -4,7 +4,7 @@
 <body>
 <div id="entries" class="forms" layout:fragment="content">
 
-    <th:block th:insert="fragment/profile.html :: profile-navigation" />
+    <th:block th:insert="~{fragment/profile.html :: profile-navigation}" />
     <form th:action="@{''}" method="post" accept-charset="utf-8">
         <h3 th:text="#{form.profile.delete.title}">placeholder:delete_account</h3>
         <p style="margin: 10px 0px; font-weight: bold; color: #ff0000; padding: 0px 10px;" th:text="#{form.profile.delete.warn}">placeholder:warn</p>

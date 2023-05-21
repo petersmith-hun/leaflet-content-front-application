@@ -37,9 +37,9 @@ public class ContentFilteringController extends BaseController {
     private static final String PAGINATION_LINK_CONTENT_TEMPLATE = "/content/page/{page}?content=%s";
     private static final String PAGINATION_LINK_HOME_TEMPLATE = "/page/{page}";
 
-    private BlogContentFacade blogContentFacade;
-    private ModelAndViewFactory modelAndViewFactory;
-    private ContentFilteringNavigationBarSupport navigationBarSupport;
+    private final BlogContentFacade blogContentFacade;
+    private final ModelAndViewFactory modelAndViewFactory;
+    private final ContentFilteringNavigationBarSupport navigationBarSupport;
 
     @Autowired
     public ContentFilteringController(BlogContentFacade blogContentFacade, ModelAndViewFactory modelAndViewFactory,
@@ -134,10 +134,10 @@ public class ContentFilteringController extends BaseController {
 
     private ModelAndView populateModelAndView(String linkTemplate, HomePageContent homePageContent, int pageNumber, NavigationItem navigationItem) {
         return modelAndViewFactory.createForView(VIEW_BLOG_LIST)
-                .withAttribute(ModelField.LIST_ENTRIES, homePageContent.getEntries())
-                .withAttribute(ModelField.LIST_CATEGORIES, homePageContent.getCategories())
-                .withAttribute(ModelField.LIST_TAGS, homePageContent.getTags())
-                .withAttribute(ModelField.PAGINATION, homePageContent.getPagination())
+                .withAttribute(ModelField.LIST_ENTRIES, homePageContent.entries())
+                .withAttribute(ModelField.LIST_CATEGORIES, homePageContent.categories())
+                .withAttribute(ModelField.LIST_TAGS, homePageContent.tags())
+                .withAttribute(ModelField.PAGINATION, homePageContent.pagination())
                 .withAttribute(ModelField.CURRENT_PAGE_NUMBER, pageNumber)
                 .withAttribute(ModelField.LINK_TEMPLATE, linkTemplate)
                 .withAttribute(ModelField.NAVIGATION, Objects.nonNull(navigationItem)

@@ -28,8 +28,8 @@ public class ArticleCommentRequestContentRequestAdapter implements ContentReques
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleCommentRequestContentRequestAdapter.class);
 
-    private CommentBridgeService commentBridgeService;
-    private CommentCreateRequestFactory commentCreateRequestFactory;
+    private final CommentBridgeService commentBridgeService;
+    private final CommentCreateRequestFactory commentCreateRequestFactory;
 
     @Autowired
     public ArticleCommentRequestContentRequestAdapter(CommentBridgeService commentBridgeService, CommentCreateRequestFactory commentCreateRequestFactory) {

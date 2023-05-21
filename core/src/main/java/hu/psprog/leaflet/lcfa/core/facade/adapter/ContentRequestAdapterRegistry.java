@@ -23,7 +23,7 @@ public class ContentRequestAdapterRegistry implements InitializingBean {
     private static final String NO_REQUEST_ADAPTER_IS_ASSIGNED_TO_TYPE = "No request adapter is assigned to type [%s]";
     private static final String DEFICIENT_CONTENT_REQUEST_ADAPTER_MAPPING = "Deficient content request adapter mapping - stopping context build";
 
-    private Map<ContentRequestAdapterIdentifier, ContentRequestAdapter<?, ?>> contentRequestAdapterMap;
+    private final Map<ContentRequestAdapterIdentifier, ContentRequestAdapter<?, ?>> contentRequestAdapterMap;
 
     @Autowired
     public ContentRequestAdapterRegistry(List<ContentRequestAdapter<?, ?>> contentRequestAdapterList) {
@@ -33,7 +33,7 @@ public class ContentRequestAdapterRegistry implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         assertMappings();
     }
 

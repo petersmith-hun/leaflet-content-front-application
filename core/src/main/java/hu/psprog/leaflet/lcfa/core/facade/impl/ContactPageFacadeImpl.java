@@ -20,8 +20,8 @@ import static hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterId
 @Service
 public class ContactPageFacadeImpl implements ContactPageFacade {
 
-    private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
-    private StaticPageContentFacade staticPageContentFacade;
+    private final ContentRequestAdapterRegistry contentRequestAdapterRegistry;
+    private final StaticPageContentFacade staticPageContentFacade;
 
     @Autowired
     public ContactPageFacadeImpl(ContentRequestAdapterRegistry contentRequestAdapterRegistry, StaticPageContentFacade staticPageContentFacade) {

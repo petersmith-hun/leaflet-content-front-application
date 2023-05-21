@@ -82,7 +82,7 @@ public class EntrySummaryListConverterTest {
         // given
         given(dateFormatterUtility.formatGeneral(CREATED)).willReturn(FORMATTED_CREATED_DATE);
         EntryListDataModel entryListDataModel = EntryListDataModel.getBuilder()
-                .withItem(ENTRY_DATA_MODEL_WITHOUT_PUBLISHED_DATE)
+                .withEntries(List.of(ENTRY_DATA_MODEL_WITHOUT_PUBLISHED_DATE))
                 .build();
 
         // when
@@ -99,7 +99,7 @@ public class EntrySummaryListConverterTest {
         // given
         given(dateFormatterUtility.formatGeneral(PUBLISHED)).willReturn(FORMATTED_PUBLISHED_DATE);
         EntryListDataModel entryListDataModel = EntryListDataModel.getBuilder()
-                .withItem(ENTRY_DATA_MODEL_WITH_PUBLISHED_DATE)
+                .withEntries(List.of(ENTRY_DATA_MODEL_WITH_PUBLISHED_DATE))
                 .build();
 
         // when

@@ -15,10 +15,10 @@ import hu.psprog.leaflet.lcfa.web.model.ModelField;
 import hu.psprog.leaflet.lcfa.web.model.NavigationItem;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.NavigationItemFactory;
 import hu.psprog.leaflet.lcfa.web.ui.support.navigation.impl.NavigationItemFactoryRegistry;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extensions;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -87,8 +87,13 @@ public class ArticleControllerTest extends AbstractControllerTest {
     @Mock
     private NavigationItemFactory<CategorySummary> categorySummaryNavigationItemFactory;
 
-    @InjectMocks
     private ArticleController articleController;
+
+    @BeforeEach
+    public void setup() {
+        super.setup();
+        articleController = new ArticleController(modelAndViewFactory, blogContentFacade, articleOperationFacade, navigationItemFactoryRegistry);
+    }
 
     @Test
     public void shouldShowArticle() {

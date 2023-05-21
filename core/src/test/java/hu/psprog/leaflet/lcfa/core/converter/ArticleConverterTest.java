@@ -45,8 +45,8 @@ public class ArticleConverterTest {
     private static final String TITLE = "title";
     private static final List<TagDataModel> TAG_DATA_MODEL_LIST = Collections.singletonList(TagDataModel.getBuilder().withId(2L).build());
     private static final List<FileDataModel> FILE_DATA_MODEL_LIST = Collections.singletonList(FileDataModel.getBuilder().withReference("file-ref").build());
-    private static final CategoryDataModel CATEGORY_DATA_MODEL = CategoryDataModel.getBuilder().withID(3L).build();
-    private static final ExtendedEntryDataModel EXTENDED_ENTRY_DATA_MODEL_WITHOUT_PUBLISHED_DATE = ExtendedEntryDataModel.getExtendedBuilder()
+    private static final CategoryDataModel CATEGORY_DATA_MODEL = CategoryDataModel.getBuilder().withId(3L).build();
+    private static final ExtendedEntryDataModel EXTENDED_ENTRY_DATA_MODEL_WITHOUT_PUBLISHED_DATE = ExtendedEntryDataModel.getBuilder()
             .withId(ENTRY_ID)
             .withUser(UserDataModel.getBuilder()
                     .withUsername(USERNAME)
@@ -59,7 +59,7 @@ public class ArticleConverterTest {
             .withAttachments(FILE_DATA_MODEL_LIST)
             .withCategory(CATEGORY_DATA_MODEL)
             .build();
-    private static final ExtendedEntryDataModel EXTENDED_ENTRY_DATA_MODEL_WITH_PUBLISHED_DATE = ExtendedEntryDataModel.getExtendedBuilder()
+    private static final ExtendedEntryDataModel EXTENDED_ENTRY_DATA_MODEL_WITH_PUBLISHED_DATE = ExtendedEntryDataModel.getBuilder()
             .withId(ENTRY_ID)
             .withUser(UserDataModel.getBuilder()
                     .withUsername(USERNAME)

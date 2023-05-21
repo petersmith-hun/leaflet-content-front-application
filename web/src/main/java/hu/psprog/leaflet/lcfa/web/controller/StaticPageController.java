@@ -22,9 +22,9 @@ public class StaticPageController extends BaseController {
 
     private static final String VIEW_STATIC_PAGE = "view/static/page";
 
-    private ModelAndViewFactory modelAndViewFactory;
-    private StaticPageContentFacade staticPageContentFacade;
-    private NavigationItemFactoryRegistry navigationItemFactoryRegistry;
+    private final ModelAndViewFactory modelAndViewFactory;
+    private final StaticPageContentFacade staticPageContentFacade;
+    private final NavigationItemFactoryRegistry navigationItemFactoryRegistry;
 
     @Autowired
     public StaticPageController(ModelAndViewFactory modelAndViewFactory, StaticPageContentFacade staticPageContentFacade,
@@ -50,11 +50,11 @@ public class StaticPageController extends BaseController {
         StaticPageContent staticPageContent = staticPageContentFacade.getStaticPage(staticPageType);
 
         return modelAndViewFactory.createForView(VIEW_STATIC_PAGE)
-                .withAttribute(ModelField.STATIC, staticPageContent.getPage())
-                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), staticPageContent.getSeo())
+                .withAttribute(ModelField.STATIC, staticPageContent.page())
+                .withAttribute(CommonPageDataField.SEO_ATTRIBUTES.getFieldName(), staticPageContent.seo())
                 .withAttribute(ModelField.NAVIGATION, navigationItemFactoryRegistry
                         .getFactory(String.class)
-                        .create(staticPageContent.getPage().getTitle()))
+                        .create(staticPageContent.page().title()))
                 .build();
     }
 }

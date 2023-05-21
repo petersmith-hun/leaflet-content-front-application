@@ -34,7 +34,7 @@ import static org.mockito.Mockito.doThrow;
 @ExtendWith(MockitoExtension.class)
 public class TagFilteredContentRequestAdapterTest extends AbstractParallalContentRequestAdapterBaseTest {
 
-    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.<EntryListDataModel>getBuilder()
             .withBody(EntryListDataModel.getBuilder().build())
             .build();
     private static final long TAG_ID = 1L;
@@ -70,9 +70,9 @@ public class TagFilteredContentRequestAdapterTest extends AbstractParallalConten
 
         // then
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getWrappedEntryListDataModel(), equalTo(WRAPPED_ENTRY_LIST_DATA_MODEL));
-        assertThat(result.get().getCategoryListDataModel(), equalTo(CATEGORY_LIST_DATA_MODEL));
-        assertThat(result.get().getWrappedTagListDataModel(), equalTo(WRAPPED_TAG_LIST_DATA_MODEL));
+        assertThat(result.get().wrappedEntryListDataModel(), equalTo(WRAPPED_ENTRY_LIST_DATA_MODEL));
+        assertThat(result.get().categoryListDataModel(), equalTo(CATEGORY_LIST_DATA_MODEL));
+        assertThat(result.get().wrappedTagListDataModel(), equalTo(WRAPPED_TAG_LIST_DATA_MODEL));
     }
 
     @Test
@@ -88,9 +88,9 @@ public class TagFilteredContentRequestAdapterTest extends AbstractParallalConten
 
         // then
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getWrappedEntryListDataModel(), equalTo(WRAPPED_ENTRY_LIST_DATA_MODEL));
-        assertThat(result.get().getCategoryListDataModel(), nullValue());
-        assertThat(result.get().getWrappedTagListDataModel(), nullValue());
+        assertThat(result.get().wrappedEntryListDataModel(), equalTo(WRAPPED_ENTRY_LIST_DATA_MODEL));
+        assertThat(result.get().categoryListDataModel(), nullValue());
+        assertThat(result.get().wrappedTagListDataModel(), nullValue());
     }
 
     @Test
@@ -106,9 +106,9 @@ public class TagFilteredContentRequestAdapterTest extends AbstractParallalConten
 
         // then
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().getWrappedEntryListDataModel(), nullValue());
-        assertThat(result.get().getCategoryListDataModel(), nullValue());
-        assertThat(result.get().getWrappedTagListDataModel(), nullValue());
+        assertThat(result.get().wrappedEntryListDataModel(), nullValue());
+        assertThat(result.get().categoryListDataModel(), nullValue());
+        assertThat(result.get().wrappedTagListDataModel(), nullValue());
     }
 
     @Test

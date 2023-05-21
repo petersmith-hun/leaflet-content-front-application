@@ -1,9 +1,11 @@
 package hu.psprog.leaflet.lcfa.core.converter;
 
+import hu.psprog.leaflet.api.rest.response.comment.CommentData;
 import hu.psprog.leaflet.api.rest.response.comment.CommentDataModel;
 import hu.psprog.leaflet.api.rest.response.comment.CommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentDataModel;
 import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
+import hu.psprog.leaflet.api.rest.response.entry.EntryData;
 import hu.psprog.leaflet.api.rest.response.entry.EntryDataModel;
 import hu.psprog.leaflet.lcfa.core.domain.content.AuthorSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentArticleData;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 @Component
 public class CommentSummaryListTransformer {
 
-    private DateFormatterUtility dateFormatterUtility;
+    private final DateFormatterUtility dateFormatterUtility;
 
     @Autowired
     public CommentSummaryListTransformer(DateFormatterUtility dateFormatterUtility) {
@@ -39,7 +41,7 @@ public class CommentSummaryListTransformer {
      * @return converted {@link List} of {@link CommentSummary} objects.
      */
     public List<CommentSummary> convert(CommentListDataModel source) {
-        return convert(source.getComments(), null);
+        return convert(source.comments(), null);
     }
 
     /**
@@ -50,7 +52,7 @@ public class CommentSummaryListTransformer {
      * @return converted {@link List} of {@link CommentSummary} objects.
      */
     public List<CommentSummary> convert(ExtendedCommentListDataModel source) {
-        return convert(source.getComments(), null);
+        return convert(source.comments(), null);
     }
 
     /**
@@ -58,41 +60,49 @@ public class CommentSummaryListTransformer {
      * Also checks if the given comment is created by the same user as the provided article.
      *
      * @param source source of type {@link CommentListDataModel}
-     * @param entryDataModel {@link EntryDataModel} object to check if the author is the same.
+     * @param entryData {@link EntryData} object to check if the author is the same.
      * @return converted {@link List} of {@link CommentSummary} objects.
      */
-    public List<CommentSummary> convert(List<? extends CommentDataModel> source, EntryDataModel entryDataModel) {
+    public List<CommentSummary> convert(List<? extends CommentData> source, EntryData entryData) {
+
         return source.stream()
-                .map(commentDataModel -> convert(commentDataModel, entryDataModel))
+                .map(commentData -> convert(commentData, entryData))
                 .collect(Collectors.toList());
     }
 
-    private CommentSummary convert(CommentDataModel source, EntryDataModel entryDataModel) {
+    private CommentSummary convert(CommentData source, EntryData entryData) {
 
-        CommentSummary.CommentSummaryBuilder builder = CommentSummary.builder()
-                .id(source.getId())
+        return CommentSummary.builder()
+                .id(source.id())
                 .author(createAuthorSummary(source))
-                .content(source.getContent())
-                .created(dateFormatterUtility.formatComments(source.getCreated()))
-                .enabled(source.isEnabled())
-                .deleted(source.isDeleted())
-                .createdByArticleAuthor(isCreatedByArticleAuthor(source, entryDataModel));
+                .content(source.content())
+                .created(dateFormatterUtility.formatComments(source.created()))
+                .enabled(source.enabled())
+                .deleted(source.deleted())
+                .createdByArticleAuthor(isCreatedByArticleAuthor(source, entryData))
+                .article(createArticleDataIfPresent(source))
+                .build();
+    }
 
-        if (source instanceof ExtendedCommentDataModel) {
-            EntryDataModel entry = ((ExtendedCommentDataModel) source).getAssociatedEntry();
-            builder.article(new CommentArticleData(entry.getTitle(), entry.getLink()));
+    private AuthorSummary createAuthorSummary(CommentData commentData) {
+        return new AuthorSummary(commentData.owner().username());
+    }
+
+    private boolean isCreatedByArticleAuthor(CommentData source, EntryData entryData) {
+
+        return Optional.ofNullable(entryData)
+                .map(entry -> entry.user().id() == source.owner().id())
+                .orElse(false);
+    }
+
+    private CommentArticleData createArticleDataIfPresent(CommentData source) {
+
+        CommentArticleData commentArticleData = null;
+        if (source instanceof ExtendedCommentDataModel extendedCommentDatamodel) {
+            EntryDataModel entry = extendedCommentDatamodel.associatedEntry();
+            commentArticleData = new CommentArticleData(entry.title(), entry.link());
         }
 
-        return builder.build();
-    }
-
-    private AuthorSummary createAuthorSummary(CommentDataModel commentDataModel) {
-        return new AuthorSummary(commentDataModel.getOwner().getUsername());
-    }
-
-    private boolean isCreatedByArticleAuthor(CommentDataModel source, EntryDataModel entryDataModel) {
-        return Optional.ofNullable(entryDataModel)
-                .map(entry -> entry.getUser().getId() == source.getOwner().getId())
-                .orElse(false);
+        return commentArticleData;
     }
 }

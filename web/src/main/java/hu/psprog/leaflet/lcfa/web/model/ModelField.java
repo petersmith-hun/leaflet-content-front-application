@@ -25,7 +25,7 @@ public enum ModelField {
     STATIC("static"),
     VALIDATED_MODEL("validatedModel");
 
-    private String fieldName;
+    private final String fieldName;
 
     ModelField(String fieldName) {
         this.fieldName = fieldName;

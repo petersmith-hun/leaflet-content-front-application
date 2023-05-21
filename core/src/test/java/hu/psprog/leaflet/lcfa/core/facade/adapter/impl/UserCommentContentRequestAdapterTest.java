@@ -48,7 +48,7 @@ public class UserCommentContentRequestAdapterTest {
                     .orderBy(hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy.Comment.CREATED)
                     .orderDirection(hu.psprog.leaflet.lcfa.core.domain.content.request.OrderDirection.DESC)
                     .build();
-    private static final WrapperBodyDataModel<ExtendedCommentListDataModel> WRAPPED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<ExtendedCommentListDataModel> WRAPPED_COMMENT_LIST_DATA_MODEL = WrapperBodyDataModel.<ExtendedCommentListDataModel>getBuilder()
             .withBody(ExtendedCommentListDataModel.getBuilder().build())
             .build();
 

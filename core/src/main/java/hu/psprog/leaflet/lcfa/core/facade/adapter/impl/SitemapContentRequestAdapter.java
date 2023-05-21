@@ -23,7 +23,7 @@ public class SitemapContentRequestAdapter implements ContentRequestAdapter<Sitem
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SitemapContentRequestAdapter.class);
 
-    private SitemapBridgeService sitemapBridgeService;
+    private final SitemapBridgeService sitemapBridgeService;
 
     @Autowired
     public SitemapContentRequestAdapter(SitemapBridgeService sitemapBridgeService) {

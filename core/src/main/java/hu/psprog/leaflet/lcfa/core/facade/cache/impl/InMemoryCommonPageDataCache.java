@@ -24,7 +24,7 @@ import java.util.Optional;
 @Component
 public class InMemoryCommonPageDataCache implements CommonPageDataCache {
 
-    private CommonPageDataCacheConfigModel cacheConfig;
+    private final CommonPageDataCacheConfigModel cacheConfig;
     private ZonedDateTime lastUpdate = null;
     private CommonPageData cachedCommonPageData = null;
 

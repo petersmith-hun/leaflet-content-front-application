@@ -29,7 +29,7 @@ import static org.mockito.Mockito.doThrow;
 public class StaticPageContentRequestAdapterTest {
 
     private static final String DOCUMENT_LINK = "document-link";
-    private static final WrapperBodyDataModel<DocumentDataModel> WRAPPED_DOCUMENT_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<DocumentDataModel> WRAPPED_DOCUMENT_DATA_MODEL = WrapperBodyDataModel.<DocumentDataModel>getBuilder()
             .withBody(DocumentDataModel.getBuilder().withLink(DOCUMENT_LINK).build())
             .build();
 

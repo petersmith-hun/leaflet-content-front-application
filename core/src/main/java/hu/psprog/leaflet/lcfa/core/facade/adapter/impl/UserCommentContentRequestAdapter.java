@@ -29,7 +29,7 @@ public class UserCommentContentRequestAdapter implements ContentRequestAdapter<W
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCommentContentRequestAdapter.class);
 
-    private CommentBridgeService commentBridgeService;
+    private final CommentBridgeService commentBridgeService;
 
     @Autowired
     public UserCommentContentRequestAdapter(CommentBridgeService commentBridgeService) {

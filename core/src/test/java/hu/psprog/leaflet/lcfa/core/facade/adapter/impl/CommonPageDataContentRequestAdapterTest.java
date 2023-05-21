@@ -31,7 +31,7 @@ import static org.mockito.Mockito.doThrow;
 @ExtendWith(MockitoExtension.class)
 public class CommonPageDataContentRequestAdapterTest {
 
-    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.getBuilder()
+    private static final WrapperBodyDataModel<EntryListDataModel> WRAPPED_ENTRY_LIST_DATA_MODEL = WrapperBodyDataModel.<EntryListDataModel>getBuilder()
             .withBody(EntryListDataModel.getBuilder().build())
             .build();
     private static final int PAGE_NUMBER = 1;
