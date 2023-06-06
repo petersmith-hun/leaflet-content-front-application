@@ -9,11 +9,6 @@
     <property name="root.level.console" value="OFF" />
     <property name="root.level.file" value="OFF" />
 
-    <!-- prepare TLP properties -->
-    <springProperty name="tlp.enabled" source="tlp.enabled" />
-    <springProperty name="tlp.host" source="bridge.clients.tlp.host-url" />
-    <springProperty name="tlp.appID" source="tlp.app-id" />
-
     <!-- set logging by profile -->
     <springProfile name="!production">
 
@@ -29,19 +24,24 @@
 
         <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
-        <!-- configure TLP appender -->
-        <appender name="TLP" class="hu.psprog.leaflet.tlp.appender.TinyLogProcessorAppender">
-            <appID>${tlp.appID}</appID>
-            <enabled>${tlp.enabled}</enabled>
-            <host>${tlp.host}</host>
-        </appender>
-        <appender name="ASYNC-TLP" class="ch.qos.logback.classic.AsyncAppender">
-            <appender-ref ref="TLP" />
+        <appender name="CONSOLE-JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <provider class="net.logstash.logback.composite.loggingevent.ThrowableClassNameJsonProvider">
+                    <fieldName>exception_class</fieldName>
+                    <useSimpleClassName>false</useSimpleClassName>
+                </provider>
+                <provider class="net.logstash.logback.composite.loggingevent.ThrowableMessageJsonProvider">
+                    <fieldName>exception_message</fieldName>
+                </provider>
+                <fieldNames>
+                    <mdc>mdc</mdc>
+                </fieldNames>
+            </encoder>
         </appender>
 
         <root level="INFO">
             <appender-ref ref="FILE" />
-            <appender-ref ref="ASYNC-TLP" />
+            <appender-ref ref="CONSOLE-JSON" />
         </root>
 
     </springProfile>
