@@ -5,7 +5,6 @@ import hu.psprog.leaflet.bridge.client.exception.CommunicationFailureException;
 import hu.psprog.leaflet.bridge.client.exception.DefaultNonSuccessfulResponseException;
 import hu.psprog.leaflet.bridge.client.exception.UnauthorizedAccessException;
 import hu.psprog.leaflet.bridge.service.CommentBridgeService;
-import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
 import hu.psprog.leaflet.lcfa.core.domain.request.ArticleCommentRequest;
 import hu.psprog.leaflet.lcfa.core.exception.UserSessionInvalidationRequiredException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
@@ -24,7 +23,7 @@ import java.util.Optional;
  * @author Peter Smith
  */
 @Component
-public class ArticleCommentRequestContentRequestAdapter implements ContentRequestAdapter<Boolean, AccountRequestWrapper<ArticleCommentRequest>> {
+public class ArticleCommentRequestContentRequestAdapter implements ContentRequestAdapter<Boolean, ArticleCommentRequest> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleCommentRequestContentRequestAdapter.class);
 
@@ -38,12 +37,12 @@ public class ArticleCommentRequestContentRequestAdapter implements ContentReques
     }
 
     @Override
-    public Optional<Boolean> getContent(AccountRequestWrapper<ArticleCommentRequest> contentRequestParameter) {
+    public Optional<Boolean> getContent(ArticleCommentRequest contentRequestParameter) {
 
         Boolean successful = null;
-        CommentCreateRequestModel commentCreateRequestModel = createRequest(contentRequestParameter);
+        CommentCreateRequestModel commentCreateRequestModel = commentCreateRequestFactory.create(contentRequestParameter);
         try {
-            commentBridgeService.createComment(commentCreateRequestModel, contentRequestParameter.getRequestPayload().getRecaptchaToken());
+            commentBridgeService.createComment(commentCreateRequestModel, contentRequestParameter.getRecaptchaToken());
             successful = true;
         } catch (UnauthorizedAccessException e) {
             throw new UserSessionInvalidationRequiredException(e);
@@ -57,9 +56,5 @@ public class ArticleCommentRequestContentRequestAdapter implements ContentReques
     @Override
     public ContentRequestAdapterIdentifier getIdentifier() {
         return ContentRequestAdapterIdentifier.COMMENT_POST;
-    }
-
-    private CommentCreateRequestModel createRequest(AccountRequestWrapper<ArticleCommentRequest> contentRequestParameter) {
-        return commentCreateRequestFactory.create(contentRequestParameter.getCurrentUserID(), contentRequestParameter.getRequestPayload());
     }
 }

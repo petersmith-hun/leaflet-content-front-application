@@ -31,44 +31,34 @@
     <div class="sectionTitleType1" th:text="#{common.comment_block.title}"><span>placeholder:comments</span></div>
 
     <div class="forms" style="display: none;">
-        <form th:object="${articleCommentRequest}" th:action="@{/article/__${article.link}__/comment}" method="post" accept-charset="utf-8">
-            <input type="hidden" name="entryId" th:value="${article.id}" />
+        <th:block sec:authorize="isAuthenticated()">
+            <form th:object="${articleCommentRequest}" th:action="@{/article/__${article.link}__/comment}" method="post" accept-charset="utf-8">
+                <p>
+                    <label th:text="#{form.comment.label.send_as}">placeholder:send_as</label>
+                    <strong th:text="${#authentication.getName()}">placeholder:username</strong>
+                </p>
 
-            <th:block sec:authorize="isAnonymous()">
-                <div class="input text">
-                    <label for="name" th:text="#{form.comment.label.name}">placeholder:name</label>
-                    <input name="name"
-                           th:value="${!(validatedModel == null || #fields.hasErrors('name')) ? validatedModel.name : null}"
-                           th:placeholder="#{form.comment.placeholder.name}" required="required" maxlength="255" type="text" id="name" />
-                    <span class="validationError" th:if="${#fields.hasErrors('name')}" th:text="#{form.comment.validation.error.name}">placeholder:val_err_name</span>
+                <div class="input textarea">
+                    <label for="message" th:text="#{form.comment.label.message}">placeholder:message</label>
+                    <textarea name="message"
+                              th:text="${!(validatedModel == null || #fields.hasErrors('message')) ? validatedModel.message : null}"
+                              th:placeholder="#{form.comment.placeholder.message}" maxlength="2000" required="required" cols="30" rows="6" id="message"></textarea>
+                    <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.comment.validation.error.message}">placeholder:val_err_message</span>
                 </div>
-                <div class="input text">
-                    <label for="email" th:text="#{form.comment.label.email}">placeholder:email</label>
-                    <input name="email"
-                           th:value="${!(validatedModel == null || #fields.hasErrors('email')) ? validatedModel.email : null}"
-                           th:placeholder="#{form.comment.placeholder.email}" required="required" maxlength="255" type="email" id="email" />
-                    <span class="validationError" th:if="${#fields.hasErrors('email')}" th:text="#{form.comment.validation.error.email}">placeholder:val_err_email</span>
-                </div>
-            </th:block>
+                <th:block th:insert="~{fragment/security.html :: recaptcha-widget}" />
 
-            <p sec:authorize="isAuthenticated()">
-                <label th:text="#{form.comment.label.send_as}">placeholder:send_as</label>
-                <strong th:text="${#authentication.getName()}">placeholder:username</strong>
-            </p>
-
-            <div class="input textarea">
-                <label for="message" th:text="#{form.comment.label.message}">placeholder:message</label>
-                <textarea name="message"
-                          th:text="${!(validatedModel == null || #fields.hasErrors('message')) ? validatedModel.message : null}"
-                          th:placeholder="#{form.comment.placeholder.message}" maxlength="2000" required="required" cols="30" rows="6" id="message"></textarea>
-                <span class="validationError" th:if="${#fields.hasErrors('message')}" th:text="#{form.comment.validation.error.message}">placeholder:val_err_message</span>
-            </div>
-            <th:block th:insert="~{fragment/security.html :: recaptcha-widget}" />
-            <input type="submit" value="placeholder:send" th:value="#{form.comment.label.send}" />
-        </form>
+                <input type="hidden" name="entryId" th:value="${article.id}" />
+                <input type="submit" value="placeholder:send" th:value="#{form.comment.label.send}" />
+            </form>
+        </th:block>
     </div>
 
-    <div style="text-align: center;">
+    <p sec:authorize="isAnonymous()" style="text-align: center;">
+        <span style="font-weight: bold; margin-bottom: 10px; display: inline-block;" th:text="#{form.comment.label.login-to-continue}">placeholder:login_to_continue</span><br />
+        <a th:if="${loginMenuItem != null}" th:href="@{__${loginMenuItem.url}__}" th:text="#{__${loginMenuItem.name}__}">placeholder:login</a>
+    </p>
+
+    <div style="text-align: center;" sec:authorize="isAuthenticated()">
         <span style="margin-bottom: 10px;" class="commentBtn" onclick="$('.forms').slideDown('slow'); $(this).parent().slideUp('slow');" th:text="#{form.comment.control.open}">placeholder:open</span>
     </div>
 

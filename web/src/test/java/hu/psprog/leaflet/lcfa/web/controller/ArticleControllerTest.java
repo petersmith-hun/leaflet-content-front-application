@@ -42,7 +42,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @WithMockedJWTUser
 public class ArticleControllerTest extends AbstractControllerTest {
 
-    private static final long USER_ID = 1L;
     private static final String LINK = "link";
     private static final String REDIRECTION_PATH = "/article/" + LINK;
     private static final CategorySummary CATEGORY_SUMMARY = CategorySummary.builder().title("category").build();
@@ -112,7 +111,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
     public void shouldProcessCommentRequestWithSuccess() {
 
         // given
-        given(articleOperationFacade.processCommentRequest(USER_ID, ARTICLE_COMMENT_REQUEST)).willReturn(true);
+        given(articleOperationFacade.processCommentRequest(ARTICLE_COMMENT_REQUEST)).willReturn(true);
 
         // when
         articleController.processCommentRequest(LINK, ARTICLE_COMMENT_REQUEST, bindingResult, redirectAttributes);
@@ -126,7 +125,7 @@ public class ArticleControllerTest extends AbstractControllerTest {
     public void shouldProcessCommentRequestWithFailure() {
 
         // given
-        given(articleOperationFacade.processCommentRequest(USER_ID, ARTICLE_COMMENT_REQUEST)).willReturn(false);
+        given(articleOperationFacade.processCommentRequest(ARTICLE_COMMENT_REQUEST)).willReturn(false);
 
         // when
         articleController.processCommentRequest(LINK, ARTICLE_COMMENT_REQUEST, bindingResult, redirectAttributes);

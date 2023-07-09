@@ -14,7 +14,8 @@ public enum CommonPageDataField {
     FOOTER_MENU("footerMenu", CommonPageData::footerMenu),
     STANDALONE_MENU_ITEMS("standaloneMenuItems", CommonPageData::standaloneMenuItems),
     LATEST_ENTRIES("latest", CommonPageData::latestEntries),
-    SEO_ATTRIBUTES("seo", CommonPageData::seo);
+    SEO_ATTRIBUTES("seo", CommonPageData::seo),
+    LOGIN_MENU_ITEM("loginMenuItem", CommonPageData::loginMenuItem);
 
     private final String fieldName;
     private final Function<CommonPageData, Object> mapperFunction;

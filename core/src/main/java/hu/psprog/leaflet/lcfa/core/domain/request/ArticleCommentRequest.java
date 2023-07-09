@@ -15,9 +15,6 @@ import jakarta.validation.constraints.Size;
 @Data
 public class ArticleCommentRequest {
 
-    private String name;
-    private String email;
-
     @NotNull
     @Min(1L)
     private Long entryId;

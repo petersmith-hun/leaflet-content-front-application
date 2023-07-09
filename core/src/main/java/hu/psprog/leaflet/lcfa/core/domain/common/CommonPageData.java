@@ -17,5 +17,6 @@ public record CommonPageData(
         List<MenuItem> headerMenu,
         List<MenuItem> footerMenu,
         List<MenuItem> standaloneMenuItems,
-        List<EntrySummary> latestEntries
+        List<EntrySummary> latestEntries,
+        MenuItem loginMenuItem
 ) { }
