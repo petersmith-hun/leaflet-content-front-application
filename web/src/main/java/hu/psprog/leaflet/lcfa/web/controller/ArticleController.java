@@ -91,7 +91,7 @@ public class ArticleController extends BaseController {
         if (bindingResult.hasErrors()) {
             modelAndView = showArticle(link, articleCommentRequest);
         } else {
-            FlashMessageKey flashMessageKey = articleOperationFacade.processCommentRequest(currentUserID(), articleCommentRequest)
+            FlashMessageKey flashMessageKey = articleOperationFacade.processCommentRequest(articleCommentRequest)
                     ? FlashMessageKey.SUCCESSFUL_COMMENT_REQUEST
                     : FlashMessageKey.FAILED_COMMENT_REQUEST;
             flash(redirectAttributes, flashMessageKey);

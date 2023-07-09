@@ -32,7 +32,10 @@ public class CommonPageDataConverterTest {
             .withBody(EntryListDataModel.getBuilder().build())
             .build();
     private static final SEOAttributes SEO_ATTRIBUTES = SEOAttributes.builder().pageTitle("page-title").build();
-    private static final List<MenuItem> HEADER_MENU_ITEM_LIST = Collections.singletonList(MenuItem.builder().routeId("route-1").build());
+    private static final List<MenuItem> HEADER_MENU_ITEM_LIST = List.of(
+            MenuItem.builder().routeId("route-1").build(),
+            MenuItem.builder().routeId("LOGIN").build()
+    );
     private static final List<MenuItem> FOOTER_MENU_ITEM_LIST = Collections.singletonList(MenuItem.builder().routeId("route-2").build());
     private static final List<MenuItem> STANDALONE_MENU_ITEM_LIST = Collections.singletonList(MenuItem.builder().routeId("route-3").build());
     private static final List<EntrySummary> LATEST_ENTRIES = Collections.singletonList(EntrySummary.builder().title("entry").build());
@@ -42,6 +45,7 @@ public class CommonPageDataConverterTest {
             .footerMenu(FOOTER_MENU_ITEM_LIST)
             .standaloneMenuItems(STANDALONE_MENU_ITEM_LIST)
             .latestEntries(LATEST_ENTRIES)
+            .loginMenuItem(HEADER_MENU_ITEM_LIST.get(1))
             .build();
 
     @Mock
