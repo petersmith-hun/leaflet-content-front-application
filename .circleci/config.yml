@@ -1,8 +1,9 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@1.3.1
-  jq: circleci/jq@2.2.0
+  jira: circleci/jira@2.1.0
+  jq: circleci/jq@3.0.0
+  gh: circleci/github-cli@2.3.0
 
 # Common parameters for CircleCI build config
 parameters:
@@ -36,21 +37,23 @@ commands:
         default: "rc"
         enum: ["rc", "release"]
     steps:
+      - checkout
       - attach_workspace:
           at: << pipeline.parameters.workspace_dir >>
+      - gh/setup
       - run:
           name: "Publish Release on GitHub"
           command: |
             [[ "<< parameters.release-type >>" = "release" ]] && VERSION_QUALIFIER="-release" || VERSION_QUALIFIER=""
             VERSION=v$(cat << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>)$VERSION_QUALIFIER
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.executable_file >>
+            gh release create ${VERSION} --target ${CIRCLE_SHA1} --title ${VERSION} << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.executable_file >>
 
 jobs:
 
   # Leaflet Content Front Application - Build and test application
   build:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/openjdk:21.0
     steps:
       - checkout
       - run:
@@ -94,8 +97,9 @@ jobs:
   # Leaflet Content Front Application - Deploy to production
   deploy:
     docker:
-      - image: cimg/openjdk:17.0
+      - image: cimg/openjdk:21.0
     steps:
+      - checkout
       - attach_workspace:
           at: << pipeline.parameters.workspace_dir >>
       - run:
@@ -151,7 +155,7 @@ jobs:
   # Leaflet Content Front Application - Publish tag (and release) on GitHub for RC versions
   publish-github-rc:
     docker:
-      - image: cibuilds/github:0.10
+      - image: cimg/base:stable
     steps:
       - github_release:
           release-type: rc
@@ -159,7 +163,7 @@ jobs:
   # Leaflet Content Front Application - Publish tag (and release) on GitHub for RELEASE versions
   publish-github-release:
     docker:
-      - image: cibuilds/github:0.10
+      - image: cimg/base:stable
     steps:
       - github_release:
           release-type: release
@@ -177,8 +181,8 @@ workflows:
                - master
          post-steps:
            - jira/notify:
-               environment_type: development
-               job_type: build
+               pipeline_id: << pipeline.id >>
+               pipeline_number: << pipeline.number >>
 
       - publish-github-rc:
           context: leaflet_ci
@@ -196,8 +200,8 @@ workflows:
                 - deploy
           post-steps:
             - jira/notify:
-                environment_type: development
-                job_type: build
+                pipeline_id: << pipeline.id >>
+                pipeline_number: << pipeline.number >>
 
       - deploy-approval:
           context: leaflet_ci
@@ -211,8 +215,11 @@ workflows:
             - deploy-approval
           post-steps:
             - jira/notify:
+                environment: production
                 environment_type: production
                 job_type: deployment
+                pipeline_id: << pipeline.id >>
+                pipeline_number: << pipeline.number >>
 
       - publish-github-release:
           context: leaflet_ci
