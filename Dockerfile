@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-jammy
 
 ARG APP_USER=leaflet
 ARG APP_HOME=/opt/lcfa

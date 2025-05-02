@@ -1,9 +1,8 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@2.1.0
-  jq: circleci/jq@3.0.0
-  gh: circleci/github-cli@2.3.0
+  jira: circleci/jira@2.2.0
+  gh: circleci/github-cli@2.7.0
 
 # Common parameters for CircleCI build config
 parameters:
@@ -35,7 +34,7 @@ commands:
       release-type:
         type: enum
         default: "rc"
-        enum: ["rc", "release"]
+        enum: [ "rc", "release" ]
     steps:
       - checkout
       - attach_workspace:
@@ -48,12 +47,22 @@ commands:
             VERSION=v$(cat << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>)$VERSION_QUALIFIER
             gh release create ${VERSION} --target ${CIRCLE_SHA1} --title ${VERSION} << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.executable_file >>
 
+executors:
+  java:
+    docker:
+      - image: cimg/openjdk:21.0
+  python:
+    docker:
+      - image: cimg/python:3.12
+  base:
+    docker:
+      - image: cimg/base:stable
+
 jobs:
 
   # Leaflet Content Front Application - Build and test application
   build:
-    docker:
-      - image: cimg/openjdk:21.0
+    executor: java
     steps:
       - checkout
       - run:
@@ -74,8 +83,15 @@ jobs:
           name: Extract project version
       - setup_remote_docker
       - run:
-          command: mvn clean deploy -s .circleci/settings.xml
+          command: mvn clean install -s .circleci/settings.xml
           name: Build
+      - run:
+          command: |
+            mvn -pl web dockerfile:push@tag-with-project-version -s .circleci/settings.xml -Ddocker.skip-latest=true
+            if [[ $CIRCLE_BRANCH == "deploy" ]]; then
+              mvn -pl web dockerfile:push@tag-with-latest -s .circleci/settings.xml -Ddocker.skip-latest=false
+            fi
+          name: Push Docker image
       - run:
           command: |
             mkdir -p << pipeline.parameters.workspace_dir >>
@@ -96,8 +112,7 @@ jobs:
 
   # Leaflet Content Front Application - Deploy to production
   deploy:
-    docker:
-      - image: cimg/openjdk:21.0
+    executor: python
     steps:
       - checkout
       - attach_workspace:
@@ -105,65 +120,38 @@ jobs:
       - run:
           command: echo 'export PROJECT_VERSION="$(cat << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.version_file >>)"' >> $BASH_ENV
           name: Set project version
-      - jq/install
+      - run:
+          command: pip install domino-cli
+          name: Install Domino CLI
       - run:
           command: |
-            set +e
-
-            oauth_token_response=${LEAFLET_CI_DOMINO_AUTH_TOKEN}
-            if ! [[ $oauth_token_response ]]
-            then
-                oauth_token_response=$(curl \
-                    --silent \
-                    --request POST "${LEAFLET_CI_DOMINO_OAUTH_TOKEN_ENDPOINT}" \
-                    --header "Authorization: Basic ${LEAFLET_CI_DOMINO_OAUTH_CLIENT_AUTH}" \
-                    --form "client_id=${LEAFLET_CI_DOMINO_OAUTH_CLIENT_ID}" \
-                    --form "scope=${LEAFLET_CI_DOMINO_OAUTH_SCOPE}" \
-                    --form "audience=${LEAFLET_CI_DOMINO_OAUTH_AUDIENCE}" \
-                    --form "grant_type=${LEAFLET_CI_DOMINO_OAUTH_GRANT_TYPE}" | jq -r '.access_token')
+            set -e
             
-                if [[ $oauth_token_response == "null" ]]
-                then
-                  echo "Authorization failed" && exit 1
-                fi
-            fi
+            echo "Requesting access token ..."
+            token="$(domino-cli --cicd auth --generate-token)" || exit 1
+            export DOMINO_CLI_PREAUTHORIZED_TOKEN=$token
+            
+            domino-cli --cicd import
+            echo "Deployment definition successfully imported"
+            
+            domino-cli --cicd deploy << pipeline.parameters.app_name >> ${PROJECT_VERSION}
+            echo "Successfully deployed application << pipeline.parameters.app_name >> v${PROJECT_VERSION}"
+            
+            domino-cli --cicd start << pipeline.parameters.app_name >>
+            echo "Successfully started application << pipeline.parameters.app_name >>"
 
-            domino_deploy_response=$(curl \
-                 --silent --write-out "%{http_code}" --output /dev/null \
-                 --request PUT \
-                 --header "Authorization: Bearer $oauth_token_response" \
-                 "${LEAFLET_CI_DOMINO_HOST}/lifecycle/<< pipeline.parameters.app_name >>/deploy/${PROJECT_VERSION}")
-
-            case $domino_deploy_response in
-              201 | 202) echo "Domino deployment request was successful, deployment may continue" ;;
-              *) echo "Domino deployment request returned with status_code=$domino_deploy_response" && exit 1 ;;
-            esac
-
-            domino_start_response=$(curl \
-                 --silent --write-out "%{http_code}" --output /dev/null \
-                 --request PUT \
-                 --header "Authorization: Bearer $oauth_token_response" \
-                 "${LEAFLET_CI_DOMINO_HOST}/lifecycle/<< pipeline.parameters.app_name >>/start")
-
-            case $domino_start_response in
-              201 | 202) exit 0 ;;
-              *) echo "Domino application start request returned with status_code=$domino_start_response" && exit 1 ;;
-            esac
-
-          name: Instruct Domino to start deployment and spin up the application
+          name: Deploy via Domino
 
   # Leaflet Content Front Application - Publish tag (and release) on GitHub for RC versions
   publish-github-rc:
-    docker:
-      - image: cimg/base:stable
+    executor: base
     steps:
       - github_release:
           release-type: rc
 
   # Leaflet Content Front Application - Publish tag (and release) on GitHub for RELEASE versions
   publish-github-release:
-    docker:
-      - image: cimg/base:stable
+    executor: base
     steps:
       - github_release:
           release-type: release
@@ -174,18 +162,22 @@ workflows:
     jobs:
 
       - build:
-         context: leaflet_ci
-         filters:
-          branches:
-            only:
-               - master
-         post-steps:
-           - jira/notify:
-               pipeline_id: << pipeline.id >>
-               pipeline_number: << pipeline.number >>
+          context:
+            - common-tech
+            - docker-registry
+            - github-packages
+          filters:
+            branches:
+              only:
+                - master
+          post-steps:
+            - jira/notify:
+                pipeline_id: << pipeline.id >>
+                pipeline_number: << pipeline.number >>
 
       - publish-github-rc:
-          context: leaflet_ci
+          context:
+            - common-tech
           requires:
             - build
 
@@ -193,7 +185,10 @@ workflows:
     jobs:
 
       - build:
-          context: leaflet_ci
+          context:
+            - common-tech
+            - docker-registry
+            - github-packages
           filters:
             branches:
               only:
@@ -204,13 +199,14 @@ workflows:
                 pipeline_number: << pipeline.number >>
 
       - deploy-approval:
-          context: leaflet_ci
           type: approval
           requires:
             - build
 
       - deploy:
-          context: leaflet_ci
+          context:
+            - common-tech
+            - domino
           requires:
             - deploy-approval
           post-steps:
@@ -222,7 +218,8 @@ workflows:
                 pipeline_number: << pipeline.number >>
 
       - publish-github-release:
-          context: leaflet_ci
+          context:
+            - common-tech
           requires:
             - deploy
 

@@ -6,7 +6,7 @@
 
     <artifactId>leaflet-content-front-application</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.0-dev</version>
+    <version>2.5.1-dev</version>
 
     <modules>
         <module>web</module>
@@ -16,7 +16,7 @@
     <parent>
         <groupId>hu.psprog.leaflet</groupId>
         <artifactId>leaflet-stack-base-bom</artifactId>
-        <version>4.0-r2405.1</version>
+        <version>5.0-r2505.1</version>
     </parent>
 
     <properties>
@@ -33,6 +33,7 @@
         <docker.repository>${LEAFLET_DOCKER_REGISTRY_HOST}</docker.repository>
         <docker.image-name>lcfa</docker.image-name>
         <docker.skip>true</docker.skip>
+        <docker.skip-latest>true</docker.skip-latest>
 
         <!-- compiler settings -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
