@@ -1,0 +1,39 @@
+domino:
+  deployments:
+    lcfa:
+      source:
+        type: DOCKER
+        home: "[dsm:common.home.docker]"
+        resource: lcfa
+      target:
+        hosts:
+          - psproghu
+      execution:
+        command-name: app_lcfa
+        via: STANDARD
+        args:
+          ports:
+            9084: 9084
+          network-mode: host
+          environment:
+            APP_ARGS: |
+              --spring.profiles.active=production
+              --spring.config.location=/opt/lcfa/appconfig_lcfa.yml
+          volumes:
+            "[dsm:volume.logs]": "/opt/lcfa/logs:rw"
+            "[dsm:volume.config.lcfa]": "/opt/lcfa/appconfig_lcfa.yml:ro"
+            "/etc/timezone": "/etc/timezone:ro"
+            "/etc/localtime": "/etc/localtime:ro"
+          restart-policy: unless-stopped
+      health-check:
+        enabled: true
+        delay: 15 seconds
+        timeout: 2 seconds
+        max-attempts: 3
+        endpoint: "https://psprog.hu/actuator/health"
+      info:
+        enabled: true
+        endpoint: "https://psprog.hu/actuator/info"
+        field-mapping:
+          abbreviation: $.app.abbreviation
+          version: $.build.version
