@@ -1,25 +1,18 @@
 package hu.psprog.leaflet.lcfa.core.facade.impl;
 
-import hu.psprog.leaflet.api.rest.request.user.PasswordChangeRequestModel;
-import hu.psprog.leaflet.api.rest.request.user.UpdateProfileRequestModel;
 import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentDataModel;
 import hu.psprog.leaflet.api.rest.response.comment.ExtendedCommentListDataModel;
 import hu.psprog.leaflet.api.rest.response.common.WrapperBodyDataModel;
-import hu.psprog.leaflet.api.rest.response.user.ExtendedUserDataModel;
 import hu.psprog.leaflet.lcfa.core.config.DefaultPaginationAttributes;
-import hu.psprog.leaflet.lcfa.core.domain.account.AccountBaseInfo;
 import hu.psprog.leaflet.lcfa.core.domain.content.CommentSummary;
 import hu.psprog.leaflet.lcfa.core.domain.content.UserCommentsPageContent;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.FilteredPaginationContentRequest;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderBy;
 import hu.psprog.leaflet.lcfa.core.domain.content.request.OrderDirection;
-import hu.psprog.leaflet.lcfa.core.domain.request.AccountDeletionRequest;
-import hu.psprog.leaflet.lcfa.core.domain.request.AccountRequestWrapper;
 import hu.psprog.leaflet.lcfa.core.exception.UserRequestProcessingException;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapter;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterIdentifier;
 import hu.psprog.leaflet.lcfa.core.facade.adapter.ContentRequestAdapterRegistry;
-import hu.psprog.leaflet.lcfa.core.facade.impl.utility.AccountDeletionHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,28 +40,12 @@ import static org.mockito.BDDMockito.given;
 public class AccountManagementFacadeImplTest {
 
     private static final long USER_ID = 1L;
-    private static final String EMAIL = "email";
-    private static final String USERNAME = "username";
-    private static final UpdateProfileRequestModel UPDATE_PROFILE_REQUEST_MODEL = new UpdateProfileRequestModel();
-    private static final AccountRequestWrapper<UpdateProfileRequestModel> PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER = new AccountRequestWrapper<>(USER_ID, UPDATE_PROFILE_REQUEST_MODEL);
-    private static final PasswordChangeRequestModel PASSWORD_CHANGE_REQUEST_MODEL = new PasswordChangeRequestModel();
-    private static final AccountRequestWrapper<PasswordChangeRequestModel> PASSWORD_UPDATE_ACCOUNT_REQUEST_WRAPPER = new AccountRequestWrapper<>(USER_ID, PASSWORD_CHANGE_REQUEST_MODEL);
     private static final int PAGE_NUMBER = 3;
     private static final int ITEM_LIMIT_ON_PAGE = 10;
     private static final OrderBy.Comment ORDER_BY = OrderBy.Comment.CREATED;
     private static final OrderDirection ORDER_DIRECTION = OrderDirection.ASC;
-    private static final AccountDeletionRequest ACCOUNT_DELETION_REQUEST = new AccountDeletionRequest();
     private static final long COMMENT_ID = 8L;
     private static final String CONTENT = "comment";
-    private static final ExtendedUserDataModel EXTENDED_USER_DATA_MODEL = ExtendedUserDataModel.getBuilder()
-            .withId(USER_ID)
-            .withEmail(EMAIL)
-            .withUsername(USERNAME)
-            .build();
-    private static final AccountBaseInfo ACCOUNT_BASE_INFO = AccountBaseInfo.builder()
-            .email(EMAIL)
-            .username(USERNAME)
-            .build();
     private static final FilteredPaginationContentRequest<Long, OrderBy.Comment> FILTERED_PAGINATION_CONTENT_REQUEST = FilteredPaginationContentRequest.<Long, OrderBy.Comment>builder()
             .filterValue(USER_ID)
             .page(PAGE_NUMBER)
@@ -85,32 +62,14 @@ public class AccountManagementFacadeImplTest {
             .comments(Collections.singletonList(CommentSummary.builder().content(CONTENT).build()))
             .build();
 
-    static {
-        UPDATE_PROFILE_REQUEST_MODEL.setEmail(EMAIL);
-        UPDATE_PROFILE_REQUEST_MODEL.setUsername(USERNAME);
-        PASSWORD_CHANGE_REQUEST_MODEL.setPassword("new password");
-    }
-
     @Mock
     private ContentRequestAdapterRegistry contentRequestAdapterRegistry;
-
-    @Mock
-    private AccountDeletionHandler accountDeletionHandler;
 
     @Mock
     private ConversionService conversionService;
 
     @Mock
     private DefaultPaginationAttributes<OrderBy.Comment> defaultPaginationAttributes;
-
-    @Mock
-    private ContentRequestAdapter<ExtendedUserDataModel, Long> profileBaseInfoContentRequestAdapter;
-    
-    @Mock
-    private ContentRequestAdapter<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>> profileUpdateContentRequestAdapter;
-
-    @Mock
-    private ContentRequestAdapter<Boolean, AccountRequestWrapper<PasswordChangeRequestModel>> passwordUpdateContentRequestAdapter;
 
     @Mock
     private ContentRequestAdapter<WrapperBodyDataModel<ExtendedCommentListDataModel>, FilteredPaginationContentRequest<Long, OrderBy.Comment>> userCommentsContentRequestAdapter;
@@ -120,169 +79,6 @@ public class AccountManagementFacadeImplTest {
 
     @InjectMocks
     private AccountManagementFacadeImpl accountManagementFacade;
-
-    @Test
-    public void shouldGetAccountBaseInfoReturnWithSuccess() {
-
-        // given
-        given(contentRequestAdapterRegistry.<ExtendedUserDataModel, Long>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_BASE_INFO))
-                .willReturn(profileBaseInfoContentRequestAdapter);
-        given(profileBaseInfoContentRequestAdapter.getContent(USER_ID)).willReturn(Optional.of(EXTENDED_USER_DATA_MODEL));
-        given(conversionService.convert(EXTENDED_USER_DATA_MODEL, AccountBaseInfo.class)).willReturn(ACCOUNT_BASE_INFO);
-
-        // when
-        AccountBaseInfo result = accountManagementFacade.getAccountBaseInfo(USER_ID);
-
-        // then
-        assertThat(result, notNullValue());
-        assertThat(result, equalTo(ACCOUNT_BASE_INFO));
-    }
-
-    @Test
-    public void shouldGetAccountBaseInfoThrowUserRequestProcessingExceptionForNullUserID() {
-
-        // when
-        Assertions.assertThrows(UserRequestProcessingException.class, () -> accountManagementFacade.getAccountBaseInfo(null));
-
-        // then
-        // exception expected
-    }
-
-    @Test
-    public void shouldGetAccountBaseInfoThrowUserRequestProcessingExceptionForMissingData() {
-
-        // given
-        given(contentRequestAdapterRegistry.<ExtendedUserDataModel, Long>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_BASE_INFO))
-                .willReturn(profileBaseInfoContentRequestAdapter);
-        given(profileBaseInfoContentRequestAdapter.getContent(USER_ID)).willReturn(Optional.empty());
-
-        // when
-        Assertions.assertThrows(UserRequestProcessingException.class, () -> accountManagementFacade.getAccountBaseInfo(USER_ID));
-
-        // then
-        // exception expected
-    }
-
-    @Test
-    public void shouldUpdateAccountBaseInfoReturnWithSuccess() {
-        
-        // given
-        given(contentRequestAdapterRegistry.<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_UPDATE))
-                .willReturn(profileUpdateContentRequestAdapter);
-        given(profileUpdateContentRequestAdapter.getContent(PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER))
-                .willReturn(Optional.of(EXTENDED_USER_DATA_MODEL));
-
-        // when
-        boolean result = accountManagementFacade.updateAccountBaseInfo(USER_ID, UPDATE_PROFILE_REQUEST_MODEL);
-
-        // then
-        assertThat(result, is(true));
-    }
-
-    @Test
-    public void shouldUpdateAccountBaseInfoReturnWithFailureForNonPersistedUsername() {
-
-        // given
-        given(contentRequestAdapterRegistry.<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_UPDATE))
-                .willReturn(profileUpdateContentRequestAdapter);
-        given(profileUpdateContentRequestAdapter.getContent(PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER))
-                .willReturn(Optional.of(ExtendedUserDataModel.getBuilder()
-                        .withUsername("different user")
-                        .withEmail(EMAIL)
-                        .build()));
-
-        // when
-        boolean result = accountManagementFacade.updateAccountBaseInfo(USER_ID, UPDATE_PROFILE_REQUEST_MODEL);
-
-        // then
-        assertThat(result, is(false));
-    }
-
-    @Test
-    public void shouldUpdateAccountBaseInfoReturnWithFailureForNonPersistedEmail() {
-
-        // given
-        given(contentRequestAdapterRegistry.<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_UPDATE))
-                .willReturn(profileUpdateContentRequestAdapter);
-        given(profileUpdateContentRequestAdapter.getContent(PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER))
-                .willReturn(Optional.of(ExtendedUserDataModel.getBuilder()
-                        .withUsername(USERNAME)
-                        .withEmail("different email")
-                        .build()));
-
-        // when
-        boolean result = accountManagementFacade.updateAccountBaseInfo(USER_ID, UPDATE_PROFILE_REQUEST_MODEL);
-
-        // then
-        assertThat(result, is(false));
-    }
-
-    @Test
-    public void shouldUpdateAccountBaseInfoThrowUserRequestProcessingExceptionForNullUserID() {
-
-        // when
-        Assertions.assertThrows(UserRequestProcessingException.class,
-                () -> accountManagementFacade.updateAccountBaseInfo(null, UPDATE_PROFILE_REQUEST_MODEL));
-
-        // then
-        // exception expected
-    }
-
-    @Test
-    public void shouldUpdateAccountBaseInfoReturnWithFailureForMissingData() {
-
-        // given
-        given(contentRequestAdapterRegistry.<ExtendedUserDataModel, AccountRequestWrapper<UpdateProfileRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_UPDATE))
-                .willReturn(profileUpdateContentRequestAdapter);
-        given(profileUpdateContentRequestAdapter.getContent(PROFILE_UPDATE_ACCOUNT_REQUEST_WRAPPER)).willReturn(Optional.empty());
-
-        // when
-        boolean result = accountManagementFacade.updateAccountBaseInfo(USER_ID, UPDATE_PROFILE_REQUEST_MODEL);
-
-        // then
-        assertThat(result, is(false));
-    }
-
-    @Test
-    public void shouldUpdatePasswordReturnWithSuccess() {
-
-        // given
-        given(contentRequestAdapterRegistry.<Boolean, AccountRequestWrapper<PasswordChangeRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_PASSWORD_CHANGE))
-                .willReturn(passwordUpdateContentRequestAdapter);
-        given(passwordUpdateContentRequestAdapter.getContent(PASSWORD_UPDATE_ACCOUNT_REQUEST_WRAPPER)).willReturn(Optional.of(true));
-
-        // when
-        boolean result = accountManagementFacade.updatePassword(USER_ID, PASSWORD_CHANGE_REQUEST_MODEL);
-
-        // then
-        assertThat(result, is(true));
-    }
-
-    @Test
-    public void shouldUpdatePasswordThrowUserRequestProcessingExceptionForNullUserID() {
-
-        // when
-        Assertions.assertThrows(UserRequestProcessingException.class,
-                () -> accountManagementFacade.updatePassword(null, PASSWORD_CHANGE_REQUEST_MODEL));
-
-        // then
-        // exception expected
-    }
-
-    @Test
-    public void shouldUpdatePasswordReturnWithFailureForMissingData() {
-
-        // given
-        given(contentRequestAdapterRegistry.<Boolean, AccountRequestWrapper<PasswordChangeRequestModel>>getContentRequestAdapter(ContentRequestAdapterIdentifier.PROFILE_PASSWORD_CHANGE))
-                .willReturn(passwordUpdateContentRequestAdapter);
-        given(passwordUpdateContentRequestAdapter.getContent(PASSWORD_UPDATE_ACCOUNT_REQUEST_WRAPPER)).willReturn(Optional.empty());
-
-        // when
-        boolean result = accountManagementFacade.updatePassword(USER_ID, PASSWORD_CHANGE_REQUEST_MODEL);
-
-        // then
-        assertThat(result, is(false));
-    }
 
     @Test
     public void shouldGetCommentForUserReturnWithSuccess() {
@@ -332,32 +128,6 @@ public class AccountManagementFacadeImplTest {
         // then
         assertThat(result, notNullValue());
         assertThat(result, equalTo(UserCommentsPageContent.EMPTY_CONTENT));
-    }
-
-    @Test
-    public void shouldDeleteAccountReturnWithSuccess() {
-
-        // given
-        given(accountDeletionHandler.deleteAccount(USER_ID)).willReturn(true);
-
-        // when
-        boolean result = accountManagementFacade.deleteAccount(USER_ID);
-
-        // then
-        assertThat(result, is(true));
-    }
-
-    @Test
-    public void shouldDeleteAccountReturnWithFailure() {
-
-        // given
-        given(accountDeletionHandler.deleteAccount(USER_ID)).willReturn(false);
-
-        // when
-        boolean result = accountManagementFacade.deleteAccount(USER_ID);
-
-        // then
-        assertThat(result, is(false));
     }
 
     @Test
