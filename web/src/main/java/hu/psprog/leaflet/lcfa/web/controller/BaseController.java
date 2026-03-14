@@ -44,18 +44,13 @@ public class BaseController {
     public static final String PATH_FILTER_BY_CONTENT_PAGED = "/content/page/{page}";
     public static final String PATH_INTRODUCTION = "/introduction";
     public static final String PATH_CONTACT = "/contact";
-    public static final String PATH_SIGN_IN = "/signin";
-    public static final String PATH_SIGN_UP = "/signup";
     public static final String PATH_COMMENT = "/article/{link}/comment";
     public static final String PATH_ARTICLE_BY_LINK = "/article/{link}";
-    public static final String PATH_CHANGE_PASSWORD = "/change-password";
     public static final String PATH_MY_COMMENTS = "/my-comments";
     public static final String PATH_MY_COMMENTS_PAGED = "/my-comments/{page}";
     public static final String PATH_MY_COMMENTS_DELETE = "/my-comments/delete";
-    public static final String PATH_DELETE_ACCOUNT = "/delete-account";
     public static final String PATH_PROFILE = "/profile";
-    public static final String PATH_PROFILE_DELETE_ACCOUNT = PATH_PROFILE + PATH_DELETE_ACCOUNT;
-    public static final String PATH_PROFILE_CHANGE_PASSWORD = PATH_PROFILE + PATH_CHANGE_PASSWORD;
+    public static final String PATH_PROFILE_MANAGE = "/manage-profile";
     public static final String PATH_PROFILE_MY_COMMENTS = PATH_PROFILE + PATH_MY_COMMENTS;
 
     /**

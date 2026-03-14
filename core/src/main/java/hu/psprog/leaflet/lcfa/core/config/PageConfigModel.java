@@ -32,6 +32,7 @@ public class PageConfigModel {
     private Map<DateFormatType, DateTimeFormatter> dateFormatterMap;
     private Map<StaticPageType, String> staticPageMapping = new HashMap<>();
     private CommonPageDataCacheConfigModel commonPageDataCache;
+    private String profileManagementEndpoint;
     private String logoutEndpoint;
     private GoogleSiteTrackingConfigModel googleSiteTracking;
 
