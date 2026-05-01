@@ -1,12 +1,8 @@
 package hu.psprog.leaflet.lcfa.web.thymeleaf.support.markdown;
 
-import hu.psprog.leaflet.lcfa.core.utility.ResourcePathResolver;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.thymeleaf.processor.IProcessor;
 
@@ -25,15 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @ExtendWith(MockitoExtension.class)
 public class ExtendedLayoutDialectTest {
 
-    @Mock
-    private Parser parser;
-
-    @Mock
-    private HtmlRenderer htmlRenderer;
-
-    @Mock
-    private ResourcePathResolver resourcePathResolver;
-
     @InjectMocks
     private ExtendedLayoutDialect extendedLayoutDialect;
 
@@ -45,7 +32,7 @@ public class ExtendedLayoutDialectTest {
 
         // then
         assertThat(result, notNullValue());
-        assertThat(result.size(), equalTo(16));
+        assertThat(result.size(), equalTo(17));
         assertThat(result.stream().anyMatch(iProcessor -> iProcessor instanceof MarkdownAttributeTagProcessor), is(true));
     }
 }

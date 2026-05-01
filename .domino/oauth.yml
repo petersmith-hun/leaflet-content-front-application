@@ -1,0 +1,19 @@
+domino:
+  oauth:
+    lcfa:
+      behavior:
+        target-provider: gateway-psproghu
+        roll-client-secret-on-deploy: true
+        use-secret-manager-for:
+          - client-secret
+          - client-id
+      tenant:
+        environment: prod
+        name: psproghu
+      client:
+        allowed-callbacks:
+          - https://psprog.hu/login/oauth2/code/leaflet
+        required-permissions:
+          - read:comments:own
+          - write:comments:own
+          - write:mail:system_startup

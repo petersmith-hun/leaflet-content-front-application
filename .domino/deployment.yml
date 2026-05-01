@@ -19,6 +19,8 @@ domino:
             APP_ARGS: |
               --spring.profiles.active=production
               --spring.config.location=/opt/lcfa/appconfig_lcfa.yml
+              --oauth.client-id=[dsm:domino.oauth.psproghu.prod.lcfa.client-id]
+              --oauth.client-secret=[dsm:domino.oauth.psproghu.prod.lcfa.client-secret]
           volumes:
             "[dsm:volume.logs]": "/opt/lcfa/logs:rw"
             "[dsm:volume.config.lcfa]": "/opt/lcfa/appconfig_lcfa.yml:ro"

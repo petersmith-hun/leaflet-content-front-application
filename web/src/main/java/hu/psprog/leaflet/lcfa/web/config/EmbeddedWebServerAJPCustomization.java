@@ -4,14 +4,16 @@ import org.apache.coyote.ProtocolHandler;
 import org.apache.coyote.ajp.AbstractAjpProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 
 /**
  * Embedded Tomcat server customization.
  *
  * @author Peter Smith
+ * @deprecated Will be removed in upcoming major version
  */
+@Deprecated
 public class EmbeddedWebServerAJPCustomization implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmbeddedWebServerAJPCustomization.class);

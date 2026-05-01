@@ -1,7 +1,5 @@
 package hu.psprog.leaflet.lcfa.web.controller;
 
-import hu.psprog.leaflet.bridge.client.domain.error.ValidationErrorMessageListResponse;
-import hu.psprog.leaflet.bridge.client.domain.error.ValidationErrorMessageResponse;
 import hu.psprog.leaflet.lcfa.core.domain.common.CommonPageDataField;
 import hu.psprog.leaflet.lcfa.core.domain.common.SEOAttributes;
 import hu.psprog.leaflet.lcfa.web.factory.ModelAndViewFactory;
@@ -12,12 +10,6 @@ import org.mockito.Mock;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.core.Response;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,29 +25,10 @@ import static org.mockito.Mockito.verify;
 public abstract class AbstractControllerTest {
 
     private static final String VIEW_NAME_FORMAT = "view/%s/%s";
-    private static final String INVALID_FIELD_NAME = "field-1";
-    private static final String INVALID_FIELD_VIOLATION = "field restriction violated";
-    private static final ValidationErrorMessageListResponse VALIDATION_ERROR_MESSAGE_LIST_RESPONSE = ValidationErrorMessageListResponse.getBuilder()
-            .withValidation(Collections.singletonList(ValidationErrorMessageResponse.getBuilder()
-                    .withField(INVALID_FIELD_NAME)
-                    .withMessage(INVALID_FIELD_VIOLATION)
-                    .build()))
-            .build();
-    private static final Map<String, String> VALIDATION_RESULTS_MAP = new HashMap<>();
     private static final String FLASH_MESSAGE = ModelField.FLASH.getFieldName();
-
-    static {
-        VALIDATION_RESULTS_MAP.put(INVALID_FIELD_NAME, INVALID_FIELD_VIOLATION);
-    }
-
-    @Mock
-    HttpServletRequest request;
 
     @Mock
     RedirectAttributes redirectAttributes;
-
-    @Mock(strictness = Mock.Strictness.LENIENT)
-    Response response;
 
     @Mock
     BindingResult bindingResult;
@@ -76,7 +49,6 @@ public abstract class AbstractControllerTest {
         given(modelAndViewWrapper.withAttribute(anyString(), nullable(Object.class))).willReturn(modelAndViewWrapper);
         given(modelAndViewWrapper.withAttribute(any(ModelField.class), nullable(Object.class))).willReturn(modelAndViewWrapper);
         given(modelAndViewWrapper.build()).willReturn(modelAndView);
-        given(response.readEntity(ValidationErrorMessageListResponse.class)).willReturn(VALIDATION_ERROR_MESSAGE_LIST_RESPONSE);
     }
 
     void verifyViewCreated(String name) {
