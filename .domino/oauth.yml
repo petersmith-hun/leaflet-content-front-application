@@ -14,6 +14,6 @@ domino:
         allowed-callbacks:
           - https://psprog.hu/login/oauth2/code/leaflet
         required-permissions:
+          - read:access:profile
           - read:comments:own
           - write:comments:own
-          - write:mail:system_startup
