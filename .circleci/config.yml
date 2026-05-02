@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   jira: circleci/jira@2.2.0
-  gh: circleci/github-cli@2.7.0
+  gh: circleci/github-cli@2.7.2
 
 # Common parameters for CircleCI build config
 parameters:
@@ -24,6 +24,9 @@ parameters:
   version_file:
     type: string
     default: "version"
+  deploy_name:
+    type: string
+    default: "prod-deploy-lcfa"
 
 # Reusable commands
 commands:
@@ -93,6 +96,15 @@ jobs:
             fi
           name: Push Docker image
       - run:
+          name: Plan deployment
+          command: |
+            if [[ $CIRCLE_BRANCH == "deploy" ]]; then
+              circleci run release plan << pipeline.parameters.deploy_name >> \
+                --environment-name=production \
+                --component-name=<< pipeline.parameters.app_name >> \
+                --target-version="${PROJECT_VERSION}"
+            fi
+      - run:
           command: |
             mkdir -p << pipeline.parameters.workspace_dir >>
             cp ./<< pipeline.parameters.executable_source_dir >><< pipeline.parameters.executable_file >> << pipeline.parameters.workspace_dir >>/<< pipeline.parameters.executable_file >>
@@ -127,12 +139,17 @@ jobs:
           command: |
             set -e
             
+            circleci run release update << pipeline.parameters.deploy_name >> --status=running
+            
             echo "Requesting access token ..."
             token="$(domino-cli --cicd auth --generate-token)" || exit 1
             export DOMINO_CLI_PREAUTHORIZED_TOKEN=$token
             
             domino-cli --cicd import
             echo "Deployment definition successfully imported"
+            
+            domino-cli --cicd oauth-import << pipeline.parameters.app_name >>
+            echo "Deployment OAuth descriptor successfully imported"
             
             domino-cli --cicd deploy << pipeline.parameters.app_name >> ${PROJECT_VERSION}
             echo "Successfully deployed application << pipeline.parameters.app_name >> v${PROJECT_VERSION}"
@@ -141,6 +158,24 @@ jobs:
             echo "Successfully started application << pipeline.parameters.app_name >>"
 
           name: Deploy via Domino
+      - run:
+          name: Update planned release to SUCCESS
+          command: |
+            circleci run release update << pipeline.parameters.deploy_name >> --status=SUCCESS
+          when: on_success
+      - run:
+          name: Update planned release to FAILED
+          command: |
+            circleci run release update << pipeline.parameters.deploy_name >> --status=FAILED
+          when: on_fail
+
+  cancel-deploy:
+    executor: base
+    steps:
+      - run:
+          name: Update planned release to CANCELED
+          command: |
+            circleci run release update << pipeline.parameters.deploy_name >> --status=CANCELED
 
   # Leaflet Content Front Application - Publish tag (and release) on GitHub for RC versions
   publish-github-rc:
@@ -216,6 +251,11 @@ workflows:
                 job_type: deployment
                 pipeline_id: << pipeline.id >>
                 pipeline_number: << pipeline.number >>
+
+      - cancel-deploy:
+          requires:
+            - deploy:
+                - canceled
 
       - publish-github-release:
           context:

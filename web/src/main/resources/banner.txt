@@ -4,3 +4,5 @@
               _/        _/        _/_/_/    _/_/_/_/
              _/        _/        _/        _/    _/
             _/_/_/_/    _/_/_/  _/        _/    _/
+
+          --== Powered by Spring Boot v${spring-boot.version} ==--

@@ -23,7 +23,7 @@ public class SecurityConfiguration {
     private static final String PATH_LOGIN_FAILURE = "/signin?auth=failure";
     private static final String PATH_PROFILE = "/profile/**";
     private static final String PATH_LOGOUT_REDIRECT = "/?auth=signout";
-    private static final String PROFILE_READ_AUTHORITY = "SCOPE_read:users:own";
+    private static final String PROFILE_READ_AUTHORITY = "SCOPE_read:access:profile";
 
     private final WebAppResources webAppResources;
     private final String logoutEndpoint;
@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
 
         return http
                 .authorizeHttpRequests(registry -> registry
